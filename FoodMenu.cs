@@ -19,6 +19,10 @@ public static class FoodMenu
         }
         catch (JsonReaderException)
         { return null; }
+        catch (FileNotFoundException)
+        { return null; }
+        catch (UnauthorizedAccessException)
+        { return null; }
     }
 
     public static void Display()
