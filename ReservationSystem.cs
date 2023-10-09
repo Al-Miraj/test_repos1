@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 class ReservationSystem
 {
@@ -19,10 +15,12 @@ class ReservationSystem
     {
         // Ask the user for the number of people
         Console.Write("Enter the number of people in your group: ");
-        while (!int.TryParse(Console.ReadLine(), out numberOfPeople) || numberOfPeople <= 0)
+        while (!int.TryParse(Console.ReadLine(), out numberOfPeople) || numberOfPeople < 0)
         {
             Console.WriteLine("Invalid input. Please enter a valid number of people.");
         }
+
+        //Path.Combine("data", "filename.json")
 
         // Ask the user for a date in the "dd-mm-yyyy" format
         Console.Write("Enter a date (dd-mm-yyyy): ");
@@ -72,7 +70,6 @@ class ReservationSystem
         ConsoleKeyInfo keyInfo;
         do
         {
-            Console.Clear();
             Console.WriteLine("  ______    _____    _____  ");
             Console.WriteLine(" /      \\  /     \\  /     \\  ");
             Console.WriteLine("|   ___  |   ___  |   ___  | ");
@@ -175,16 +172,34 @@ class ReservationSystem
 
     static void InitializeTables()
     {
-        for (int i = 1; i <= 9; i++)
-        {
-            tables.Add(new Table { TableNumber = i, Capacity = 4 });
-        }
-
         // Check if the JSON file exists and load the table data if it does
         if (File.Exists("ReservationsData.json"))
         {
             string json = File.ReadAllText("ReservationsData.json");
-            tables = JsonSerializer.Deserialize<List<Table>>(json);
+            reservations = JsonSerializer.Deserialize<List<Reservation>>(json);
+            List<Table> availableTables = new();
+            List<int> takenTables = new();
+            foreach (Reservation reservation in reservations)
+            {
+                takenTables.Add(reservation.SelectedTable.TableNumber);
+            }
+
+
+            foreach (Table table in tables)
+            {
+                if (takenTables.Contains(table.TableNumber) == false)
+                {
+                    availableTables.Add(table);
+                }
+            }
+            tables = availableTables;
+        }
+        else
+        {
+            for (int i = 1; i <= 9; i++)
+            {
+                tables.Add(new Table { TableNumber = i, Capacity = 4 });
+            }
         }
     }
 
@@ -206,10 +221,13 @@ class ReservationSystem
         }
     }
 
+
+
     class Table
     {
         public int TableNumber { get; set; }
         public int Capacity { get; set; }
+
     }
 
     class Reservation

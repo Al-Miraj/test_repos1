@@ -34,6 +34,7 @@
                     break;
                 case "4":
                     Console.WriteLine("Menu - Check out our delicious dishes.");
+                    FoodMenu.Display();
                     Console.ReadLine();
                     break;
                 case "5":
