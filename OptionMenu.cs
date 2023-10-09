@@ -20,6 +20,8 @@
             {
                 case "1":
                     Console.WriteLine("Reservation - Please contact us to make a reservation.");
+                    ReservationSystem sstm = new ReservationSystem();
+                    sstm.SystemRun();
                     Console.ReadLine();
                     break;
                 case "2":
