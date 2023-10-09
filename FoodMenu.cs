@@ -46,11 +46,11 @@ class FoodMenu
         List<MenuItem> timeslotMenu = new List<MenuItem>();
         if (isDinner)
         {
-            var dinnerMenuItems = allItems.FindAll()
+            //var dinnerMenuItems = allItems.FindAll();
         }
         else
         {
-            var lunchMenuItems = allItems.FindAll()
+            //var lunchMenuItems = allItems.FindAll();
         }
 
         return timeslotMenu;

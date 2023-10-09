@@ -1,6 +1,6 @@
 ﻿public class Menu //change name?
 {
-    public static void Main(string[] args)
+    public void RunMenu()
     {
         while (true)
         {

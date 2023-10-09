@@ -2,6 +2,7 @@
 {
     public static void RestaurantInformation()
     {
+        Console.Clear();
         Console.WriteLine("Welcome to Le Délice Français - A Taste of Paris");
         Console.WriteLine("------------------------------------------------");
         Console.WriteLine("About Us\n");
