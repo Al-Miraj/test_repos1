@@ -30,12 +30,14 @@
                     break;
                 case "3":
                     Console.WriteLine("Contact Us - Get in touch with us.");
+                    Contact.ContactInformation();
+                    Console.ReadLine();
+                    AboutUs.travel();
                     Console.ReadLine();
                     break;
                 case "4":
                     Console.WriteLine("Menu - Check out our delicious dishes.");
                     FoodMenu.Display();
-                    Console.ReadLine();
                     break;
                 case "5":
                     Console.WriteLine("Login - Enter your credentials to log in.");

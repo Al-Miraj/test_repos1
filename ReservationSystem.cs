@@ -172,35 +172,43 @@ class ReservationSystem
 
     static void InitializeTables()
     {
+        // Always initialize the tables list with default values
+        tables = new List<Table>();
+        for (int i = 1; i <= 9; i++)
+        {
+            tables.Add(new Table { TableNumber = i, Capacity = 4 });
+        }
+
         // Check if the JSON file exists and load the table data if it does
         if (File.Exists("ReservationsData.json"))
         {
             string json = File.ReadAllText("ReservationsData.json");
             reservations = JsonSerializer.Deserialize<List<Reservation>>(json);
-            List<Table> availableTables = new();
-            List<int> takenTables = new();
+
+            // Create a list to store the table numbers that are taken
+            List<int> takenTables = new List<int>();
+
+            // Populate the takenTables list with table numbers from reservations
             foreach (Reservation reservation in reservations)
             {
                 takenTables.Add(reservation.SelectedTable.TableNumber);
             }
 
+            // Create a list of available tables based on the original tables list
+            List<Table> availableTables = new List<Table>();
 
             foreach (Table table in tables)
             {
-                if (takenTables.Contains(table.TableNumber) == false)
+                if (!takenTables.Contains(table.TableNumber))
                 {
                     availableTables.Add(table);
                 }
             }
+
+            // Update the tables list with availableTables
             tables = availableTables;
         }
-        else
-        {
-            for (int i = 1; i <= 9; i++)
-            {
-                tables.Add(new Table { TableNumber = i, Capacity = 4 });
-            }
-        }
+        // No else block needed because tables are already initialized above
     }
 
     static void SaveReservationDataToJson(List<Reservation> reservations)

@@ -34,7 +34,15 @@ public static class FoodMenu
             for (int i = 0; i < MenuItems.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {MenuItems[i].Name,-20} {MenuItems[i].Price,74}");
-                Console.WriteLine($"{MenuItems[i].Description,-50} {MenuItems[i].AllergensInfo,50}");
+                if (MenuItems[i].Description.Length > 52)
+                {
+                    Console.WriteLine($"{MenuItems[i].Description.Substring(0, 50)}- {MenuItems[i].AllergensInfo,60}");
+                    Console.WriteLine(MenuItems[i].Description.Substring(50, MenuItems[i].Description.Length - 50));
+                }
+                else
+                {
+                    Console.WriteLine($"{MenuItems[i].Description,-50} {MenuItems[i].AllergensInfo,60}");
+                }
                 Console.WriteLine($"Ingredients: {string.Join(", ", MenuItems[i].Ingredients)}");
                 Console.WriteLine();
             }
@@ -45,7 +53,7 @@ public static class FoodMenu
             Console.WriteLine("2. Dinner");
             Console.WriteLine("3. Exit");
 
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
 
             switch (choice)
             {
