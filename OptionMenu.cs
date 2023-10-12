@@ -148,7 +148,6 @@ public class Menu
                 break;
             case 5:
                 Console.WriteLine("Login - Enter your credentials to log in.");
-                Console.ReadLine();
                 break;
             case 6:
                 Console.WriteLine("Goodbye! Thank you for visiting.");

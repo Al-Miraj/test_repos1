@@ -18,11 +18,17 @@ public static class FoodMenu
             return items;
         }
         catch (JsonReaderException)
-        { return null; }
+        {
+            Console.WriteLine("reader exp");
+            return null; }
         catch (FileNotFoundException)
-        { return null; }
+        {
+            Console.WriteLine("file not not found");
+            return null; }
         catch (UnauthorizedAccessException)
-        { return null; }
+        {
+            Console.WriteLine("Unauthorized acces");
+            return null; }
     }
 
     public static void Display()
