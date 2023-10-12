@@ -64,6 +64,7 @@ public class Menu
 
     public void RunMenu()
     {
+        Console.CursorVisible = false;
         while (true)
         {
             Console.Clear();
@@ -135,14 +136,11 @@ public class Menu
                 break;
             case 2:
                 About.RestaurantInformation();
-                Console.ReadLine();
                 break;
             case 3:
                 Console.WriteLine("Contact Us - Get in touch with us.");
                 Contact.ContactInformation();
-                Console.ReadLine();
                 AboutUs.travel();
-                Console.ReadLine();
                 break;
             case 4:
                 Console.WriteLine("Menu - Check out our delicious dishes.");
@@ -162,7 +160,7 @@ public class Menu
                 break;
         }
 
-        Console.WriteLine("\nPress any key to return to the main menu.");
+        Console.WriteLine("\n\n[Press any key to return to the main menu.]");
         Console.ReadKey();
     }
 }

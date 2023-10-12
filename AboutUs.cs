@@ -10,6 +10,7 @@
     public static void travel()
     {
 
+        Console.WriteLine();
         Console.WriteLine("Are you travelling with public transportation or by car?");
         Console.WriteLine("[1] public transportation, [2] car, [Enter] skip this part");
         string choice = Console.ReadLine();
