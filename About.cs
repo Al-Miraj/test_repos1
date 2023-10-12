@@ -3,9 +3,13 @@
     public static void RestaurantInformation()
     {
         Console.Clear();
+
+
+        Console.WriteLine("     __    ___   ___   _    _____      _     __ ");
+        Console.WriteLine("    / /\\  | |_) / / \\ | | |  | |      | | | ( (` ");
+        Console.WriteLine("   /_/--\\ |_|_) \\_\\_/ \\_\\_/  |_|      \\_\\_/ _)_)\n\n");
         Console.WriteLine("Welcome to Le Délice Français - A Taste of Paris");
         Console.WriteLine("------------------------------------------------");
-        Console.WriteLine("About Us\n");
 
         Console.WriteLine("Le Délice Français is a charming restaurant nestled in the heart of Paris, France.");
         Console.WriteLine("Our journey began over a century ago, when our founder, Gaston Leclerc,");
