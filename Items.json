@@ -49,11 +49,11 @@
   },
   {
     "Name": "Korean Spicy Ramen",
-    "Description": "Spicy ramen served with a side of kimchi",
-    "Ingredients": [ "Noodles", "Kimchi", "Eggs", "Spring Onions", "Seaweed", "Spicy Broth" ],
+    "Description": "Spicy ramen served with a side of kimchi in a beef broth",
+    "Ingredients": [ "Noodles", "Kimchi", "Eggs", "Spring Onions", "Seaweed", "Beef Broth", "Gochujang Chili Powder" ],
     "Price": 18.99,
     "Timeslot": "Dinner",
-    "Icon": "Ramen"
+    "Icon": "Meat"
   },
   {
     "Name": "Grilled Cheese Sandwich",
