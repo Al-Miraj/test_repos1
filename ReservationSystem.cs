@@ -86,6 +86,10 @@ class ReservationSystem
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly selectedDate = GetReservationDate();
         Reservation.Date = selectedDate;
+
+        string timeslot = GetTimeslot();
+        Console.WriteLine(timeslot);
+        Reservation.TimeSlot = timeslot;
     }
 
     public int GetNumberOfPeople()
@@ -151,6 +155,66 @@ class ReservationSystem
         Console.Clear();
         return reservationDate;
     }
+
+    public string GetTimeslot()
+    {
+        Console.CursorVisible = false;
+        int selectedOption = 0;
+        List<string> timeslots = new List<string>()
+        {   "Lunch (12:00-14:00)",
+            "The Afternoon (14:00-16:00)",
+            "The Evening (16:00-18:00)",
+            "Dinner (18:00-20:00)",
+            "Late Dinner (20:00-22:00)"
+        };
+        string timeslot;
+
+        while (true)
+        {
+            DisplayTimeslots(timeslots, selectedOption);
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 0)
+            {
+                selectedOption--;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
+            {
+                selectedOption++;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                timeslot = timeslots[selectedOption];
+                break;
+            }
+        }
+
+        Console.CursorVisible = true;
+        return timeslot;
+    }
+
+    public void DisplayTimeslots(List<string> timeslots, int selectedOption)
+    {
+        Console.Clear();
+        Console.WriteLine("Select a time slot:");
+        for (int i = 0; i < 5; i++)
+        {
+            if (i == selectedOption)
+            {
+                Console.WriteLine($"> {timeslots[i]}");
+            }
+            else
+            {
+                Console.WriteLine($"  {timeslots[i]}");
+            }
+        }
+    }
+
+
+
+
+
 
 
 
