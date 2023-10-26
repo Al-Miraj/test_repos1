@@ -228,13 +228,4 @@ class ReservationSystem
             Console.WriteLine($"An error occurred while saving the reservation data: {ex.Message}");
         }
     }
-
-    class Reservation
-    {
-        public int ReservationNumber { get; set; }
-        public int NumberOfPeople { get; set; }
-        public string Date { get; set; }
-        public string TimeSlot { get; set; }
-        public Table SelectedTable { get; set; }
-    }
 }
