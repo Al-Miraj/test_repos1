@@ -229,15 +229,6 @@ class ReservationSystem
         }
     }
 
-
-
-    class Table
-    {
-        public int TableNumber { get; set; }
-        public int Capacity { get; set; }
-
-    }
-
     class Reservation
     {
         public int ReservationNumber { get; set; }
