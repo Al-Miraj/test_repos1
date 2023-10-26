@@ -131,7 +131,7 @@ public class Menu
         {
             case 1:
                 Console.WriteLine("Reservation - Please contact us to make a reservation.");
-                RS.SystemRun();
+                RS.RunSystem();
                 Console.ReadLine();
                 break;
             case 2:

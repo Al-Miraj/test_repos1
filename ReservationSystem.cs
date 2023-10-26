@@ -11,7 +11,7 @@ class ReservationSystem
     static Random random = new Random();
     static int reservationNumber = 0;
 
-    public void SystemRun()
+    public void RunSystem()
     {
         // Ask the user for the number of people
         Console.Write("Enter the number of people in your group: ");
