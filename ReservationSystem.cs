@@ -78,7 +78,38 @@ class ReservationSystem
     }
 
     public void Reservate()
-    { }
+    {
+        Console.Write("Enter the number of people in your group: ");
+        int numberOfPeople = GetNumberOfPeople();
+        Reservation.NumberOfPeople = numberOfPeople;
+    }
+
+    public int GetNumberOfPeople()
+    {
+        int numberOfPeople;
+        bool IsIncorrectFormat;
+        bool IsSmallerThan0;
+        bool IsBiggerThan6;
+
+        do
+        {
+            string number = Console.ReadLine().Trim();
+            IsIncorrectFormat = !int.TryParse(number, out numberOfPeople); //true if the format is incorrect
+            IsSmallerThan0 = numberOfPeople <= 0;
+            IsBiggerThan6 = numberOfPeople > 6;
+            if (IsIncorrectFormat)
+                Console.WriteLine("Invalid input. Please enter a valid number of people like: 7, 1, 12, etc");
+            else if (IsSmallerThan0)
+                Console.WriteLine("Invalid input. Please enter a number greater than 0.");
+            else if (IsBiggerThan6)
+                Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
+
+        }
+        while (IsIncorrectFormat || IsSmallerThan0 || IsBiggerThan6);
+
+        Console.Clear();
+        return numberOfPeople;
+    }
 
 
 
@@ -89,9 +120,7 @@ class ReservationSystem
 
 
 
-
-
-        public void RunSystem()
+    public void RunSystem()
     {
         // Ask the user for the number of people
         Console.Write("Enter the number of people in your group: ");
