@@ -211,7 +211,27 @@ class ReservationSystem
         }
     }
 
-
+    public void DisplayTablesMap()
+    {
+        Console.WriteLine("  ______    _____    _____  ");
+        Console.WriteLine(" /      \\  /     \\  /     \\  ");
+        Console.WriteLine("|   ___  |   ___  |   ___  | ");
+        Console.WriteLine("|  |   |    |   |    |   | | ");
+        Console.WriteLine("|  |[1]|    |[2]|    |[3]| | ");
+        Console.WriteLine("|  |___|    |___|    |___| | ");
+        Console.WriteLine("|                          | ");
+        Console.WriteLine("|   ___      ___      ___  | ");
+        Console.WriteLine("|  |   |    |   |    |   | | ");
+        Console.WriteLine("|  |[4]|    |[5]|    |[6]| | ");
+        Console.WriteLine("|  |___|    |___|    |___| | ");
+        Console.WriteLine("|                          | ");
+        Console.WriteLine("|   ___      ___      ___  | ");
+        Console.WriteLine("|  |   |    |   |    |   | | ");
+        Console.WriteLine("|  |[7]|    |[8]|    |[9]| | ");
+        Console.WriteLine("|  |___|    |___|    |___| | ");
+        Console.WriteLine("|                          | ");
+        Console.WriteLine("|________|________|________| ");
+    }
 
 
 
