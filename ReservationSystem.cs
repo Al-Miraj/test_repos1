@@ -1,15 +1,91 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
+using System.Text.Json;
 
 class ReservationSystem
 {
+    public string TablesJson = "Tables.json"; //
+    public Reservation Reservation;
     static int selectedTableIndex = 0;
-    static List<Table> tables = new List<Table>();
+    static List<Table> Tables;
     static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
     static int numberOfPeople = 0; // Store the number of people specified by the user
     static DateTime selectedDate; // Store the selected date
 
     static Random random = new Random();
     static int reservationNumber = 0;
+
+    public ReservationSystem()
+    {
+        // all the restaurant tables are put in a list upon
+        // initializing a ReservationSystem object
+        Tables = InitializeTabless(); // todo: change name
+        // todo create mechanism that creates a new reservation object when reservating
+        Reservation = new Reservation(); 
+    }
+
+    public List<Table> InitializeTabless() 
+    {
+        List<Table> tables;
+
+        if (File.Exists(TablesJson))
+        {
+            tables = ReadFromFile(TablesJson);
+        }
+        else
+        {
+            // Create the JSON file and write integers 1 to 
+            tables = new List<Table>()
+            {
+                new Table(1, (1, 1), 2, false),
+                new Table(2, (2, 1), 2, false),
+                new Table(3, (3, 1), 2, false),
+                new Table(4, (1, 2), 2, false),
+                new Table(5, (2, 2), 2, false),
+                new Table(6, (3, 2), 2, false),
+                new Table(7, (1, 3), 2, false),
+                new Table(8, (2, 3), 2, false),
+                new Table(9, (3, 3), 4, false),
+                new Table(10, (1, 4), 4, false),
+                new Table(11, (2, 4), 4, false),
+                new Table(12, (3, 4), 4, false),
+                new Table(13, (1, 5), 4, false),
+                new Table(14, (2, 5), 6, false),
+                new Table(15, (3, 5), 6, false),
+            };
+            WriteToFile(tables, TablesJson);
+        }
+        return tables;
+    }
+    public void WriteToFile(List<Table> tables, string TableFileName) //todo change name
+    {
+        StreamWriter writer = new StreamWriter(TableFileName);
+        writer.Write(JsonConvert.SerializeObject(tables, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+        writer.Close();
+    }
+
+    public List<Table> ReadFromFile(string TableFileName) //
+    {
+        StreamReader reader = new StreamReader(TableFileName);
+        string jsonString = reader.ReadToEnd();
+        reader.Close();
+        List<Table> tables = JsonConvert.DeserializeObject<List<Table>>(jsonString)!;
+        return tables;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void RunSystem()
     {
@@ -99,14 +175,14 @@ class ReservationSystem
                 for (int col = 0; col < columnCount; col++)
                 {
                     int index = row * columnCount + col;
-                    if (index < tables.Count)
+                    if (index < Tables.Count)
                     {
-                        Table table = tables[index];
+                        Table table = Tables[index];
                         ConsoleColor backgroundColor = (index == selectedTableIndex) ? ConsoleColor.Blue : ConsoleColor.Black;
 
                         Console.BackgroundColor = backgroundColor;
 
-                        Console.Write($"[{tables[index].TableNumber}] - Capacity: {tables[index].Capacity}   ");
+                        Console.Write($"[{Tables[index].TableNumber}] - Capacity: {Tables[index].Capacity}   ");
                     }
                     else
                     {
@@ -123,7 +199,7 @@ class ReservationSystem
             }
             else if (keyInfo.Key == ConsoleKey.DownArrow)
             {
-                selectedTableIndex = Math.Min(tables.Count - 1, selectedTableIndex + 3);
+                selectedTableIndex = Math.Min(Tables.Count - 1, selectedTableIndex + 3);
             }
             else if (keyInfo.Key == ConsoleKey.LeftArrow)
             {
@@ -131,12 +207,12 @@ class ReservationSystem
             }
             else if (keyInfo.Key == ConsoleKey.RightArrow)
             {
-                selectedTableIndex = Math.Min(tables.Count - 1, selectedTableIndex + 1);
+                selectedTableIndex = Math.Min(Tables.Count - 1, selectedTableIndex + 1);
             }
         } while (keyInfo.Key != ConsoleKey.Enter);
 
         // User has confirmed the selection
-        Table selectedTable = tables[selectedTableIndex];
+        Table selectedTable = Tables[selectedTableIndex];
 
         if (selectedTable.Capacity < numberOfPeople)
         {
@@ -173,10 +249,10 @@ class ReservationSystem
     static void InitializeTables()
     {
         // Always initialize the tables list with default values
-        tables = new List<Table>();
+        Tables = new List<Table>();
         for (int i = 1; i <= 9; i++)
         {
-            tables.Add(new Table { TableNumber = i, Capacity = 4 });
+            Tables.Add(new Table { TableNumber = i, Capacity = 4 });
         }
 
         // Check if the JSON file exists and load the table data if it does
@@ -197,7 +273,7 @@ class ReservationSystem
             // Create a list of available tables based on the original tables list
             List<Table> availableTables = new List<Table>();
 
-            foreach (Table table in tables)
+            foreach (Table table in Tables)
             {
                 if (!takenTables.Contains(table.TableNumber))
                 {
@@ -206,7 +282,7 @@ class ReservationSystem
             }
 
             // Update the tables list with availableTables
-            tables = availableTables;
+            Tables = availableTables;
         }
         // No else block needed because tables are already initialized above
     }
