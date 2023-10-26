@@ -287,7 +287,22 @@ class ReservationSystem
             }
 
         }
+
+        TableSelectionFeedback(selectedTable);
+
         return selectedTable;
+    }
+
+    public void TableSelectionFeedback(Table selectedTable)
+    {
+        if (selectedTable.IsReservated)
+        {
+            Console.WriteLine($"\nTable {selectedTable.TableNumber} has already been reservated. try another!");
+        }
+        else if (Reservation.NumberOfPeople > selectedTable.Capacity)
+        {
+            Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
+        }
     }
 
     public Table ShowSelectedTable(int xc, int yc)
