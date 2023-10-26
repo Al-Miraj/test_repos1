@@ -90,6 +90,22 @@ class ReservationSystem
         string timeslot = GetTimeslot();
         Console.WriteLine(timeslot);
         Reservation.TimeSlot = timeslot;
+
+        Table selectedTable = GetChosenTable();
+        Console.WriteLine(selectedTable);
+        if (selectedTable != null)
+        {
+            Reservation.SelectedTable = selectedTable;
+
+            int reservationNumber = GenerateReservationNumber();
+            Reservation.ReservationNumber = reservationNumber;
+
+        }
+        else
+        {
+            Console.WriteLine("You weren't able to finish the reservation.");
+            Reservation = new Reservation();
+        }
     }
 
     public int GetNumberOfPeople()
@@ -350,6 +366,13 @@ class ReservationSystem
         }
         return selectedTable;
     }
+
+
+
+
+
+
+
 
 
 
