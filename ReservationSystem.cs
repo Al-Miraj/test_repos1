@@ -100,6 +100,8 @@ class ReservationSystem
             int reservationNumber = GenerateReservationNumber();
             Reservation.ReservationNumber = reservationNumber;
 
+            DisplayReservationDetails();
+            // todo: reservations must be stored somehow
         }
         else
         {
@@ -367,8 +369,17 @@ class ReservationSystem
         return selectedTable;
     }
 
+    public void DisplayReservationDetails()
+    {
+        Reservation R = Reservation;
+        Table T = R.SelectedTable;
+        string numOfPeople = R.NumberOfPeople > 1 ? $"{R.NumberOfPeople} guests" : $"{R.NumberOfPeople} guest";
 
-
+        Console.Clear();
+        Console.WriteLine("R E S E R V A T I O N   D E T A I L S\n");
+        Console.WriteLine($"You reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
+        Console.WriteLine($"Your reservation number: {R.ReservationNumber}");
+    }
 
 
 
