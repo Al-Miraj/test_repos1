@@ -4,7 +4,8 @@
     public int? NumberOfPeople;
     public DateOnly? Date;
     public string? TimeSlot;
-    public Table SelectedTable { get; set; }
+    public List<Deal>? DealsApplied;
+    public Table? SelectedTable;
     public Reservation()
     {
         ReservationNumber = null;
@@ -12,5 +13,6 @@
         Date = null;
         TimeSlot = null;
         SelectedTable = null;
+        DealsApplied = null;
     }
 }
