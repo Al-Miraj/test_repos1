@@ -14,12 +14,12 @@ class ReservationSystem
     {
         // all the restaurant tables are put in a list upon
         // initializing a ReservationSystem object
-        Tables = InitializeTabless(); // todo: change name
+        Tables = InitializeTables(); // todo: change name
         // todo create mechanism that creates a new reservation object when reservating
         Reservation = new Reservation();
     }
 
-    public List<Table> InitializeTabless()
+    public List<Table> InitializeTables()
     {
         List<Table> tables;
 
@@ -29,7 +29,6 @@ class ReservationSystem
         }
         else
         {
-            // Create the JSON file and write integers 1 to 
             tables = new List<Table>()
             {
                 new Table(1, (1, 1), 2, false),
@@ -52,16 +51,16 @@ class ReservationSystem
         }
         return tables;
     }
-    public void WriteToFile(List<Table> tables, string TableFileName) //todo change name
+    public void WriteToFile(List<Table> tables, string TablesFileName) //todo change name
     {
-        StreamWriter writer = new StreamWriter(TableFileName);
+        StreamWriter writer = new StreamWriter(TablesFileName);
         writer.Write(JsonConvert.SerializeObject(tables, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         writer.Close();
     }
 
-    public List<Table> ReadFromFile(string TableFileName) //
+    public List<Table> ReadFromFile(string TablesFileName) //
     {
-        StreamReader reader = new StreamReader(TableFileName);
+        StreamReader reader = new StreamReader(TablesFileName);
         string jsonString = reader.ReadToEnd();
         reader.Close();
         List<Table> tables = JsonConvert.DeserializeObject<List<Table>>(jsonString)!;
