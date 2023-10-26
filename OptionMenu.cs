@@ -130,9 +130,7 @@ public class Menu
         switch (option)
         {
             case 1:
-                Console.WriteLine("Reservation - Please contact us to make a reservation.");
                 RS.RunSystem();
-                Console.ReadLine();
                 break;
             case 2:
                 About.RestaurantInformation();
