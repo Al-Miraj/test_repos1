@@ -71,7 +71,7 @@ public class Menu
             Console.Clear();
 
             // Highlight the currently selected option
-            for (int i = 1; i <= 6; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 if (i == selectedOption)
                 {
@@ -98,9 +98,12 @@ public class Menu
                         Console.WriteLine(" Menu");
                         break;
                     case 5:
-                        Console.WriteLine(" Login");
+                        Console.WriteLine(" Deals");
                         break;
                     case 6:
+                        Console.WriteLine(" Login");
+                        break;
+                    case 7:
                         Console.WriteLine(" Exit");
                         break;
                 }
@@ -112,7 +115,7 @@ public class Menu
             {
                 selectedOption--;
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 6)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 7)
             {
                 selectedOption++;
             }
@@ -145,9 +148,12 @@ public class Menu
                 FoodMenu.Display();
                 break;
             case 5:
-                Console.WriteLine("Login - Enter your credentials to log in.");
+                Console.WriteLine("Here are all the deals we are currently offering:");
                 break;
             case 6:
+                Console.WriteLine("Login - Enter your credentials to log in.");
+                break;
+            case 7:
                 Console.WriteLine("Goodbye! Thank you for visiting.");
                 Environment.Exit(0);
                 break;
