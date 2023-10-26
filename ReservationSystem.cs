@@ -72,22 +72,26 @@ class ReservationSystem
         return tables;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void RunSystem()
+    {
+        Reservate();
+    }
+
+    public void Reservate()
+    { }
+
+
+
+
+
+
+
+
+
+
+
+
+        public void RunSystem()
     {
         // Ask the user for the number of people
         Console.Write("Enter the number of people in your group: ");
