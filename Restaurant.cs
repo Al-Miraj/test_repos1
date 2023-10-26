@@ -30,7 +30,7 @@ public class Restaurant
         }
         return deals;
     }
-    public void WriteToFile(List<Deal> deals, string dealsFileName) //todo change name
+    public void WriteToFile(List<Deal> deals, string dealsFileName)
     {
         StreamWriter writer = new StreamWriter(dealsFileName);
         writer.Write(JsonConvert.SerializeObject(deals, new JsonSerializerSettings { Formatting = Formatting.Indented }));
