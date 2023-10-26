@@ -60,6 +60,7 @@ using System;
 
 public class Menu
 {
+    ReservationSystem RS = new ReservationSystem(); //RS is short for Reservation System
     private static int selectedOption = 1;
 
     public void RunMenu()
@@ -122,7 +123,7 @@ public class Menu
         }
     }
 
-    static void HandleSelection(int option)
+    void HandleSelection(int option)
     {
         Console.Clear();
 
@@ -130,8 +131,7 @@ public class Menu
         {
             case 1:
                 Console.WriteLine("Reservation - Please contact us to make a reservation.");
-                ReservationSystem sstm = new ReservationSystem();
-                sstm.SystemRun();
+                RS.SystemRun();
                 Console.ReadLine();
                 break;
             case 2:
