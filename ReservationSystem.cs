@@ -233,7 +233,108 @@ class ReservationSystem
         Console.WriteLine("|________|________|________| ");
     }
 
+    public Table GetChosenTable()
+    {
+        Console.CursorVisible = false;
+        ConsoleKeyInfo keyInfo;
 
+        int xc = 1;
+        int yc = 1;
+        Table selectedTable;
+
+        while (true)
+        {
+            Console.Clear();
+            DisplayTablesMap();
+            selectedTable = ShowSelectedTable(xc, yc);
+
+            if (selectedTable != null)
+            {
+                keyInfo = Console.ReadKey();
+                if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
+                {
+                    yc--;
+                }
+                else if (keyInfo.Key == ConsoleKey.DownArrow && yc < 5)
+                {
+                    yc++;
+                }
+                else if (keyInfo.Key == ConsoleKey.LeftArrow && xc > 1)
+                {
+                    xc--;
+                }
+                else if (keyInfo.Key == ConsoleKey.RightArrow && xc < 3)
+                {
+                    xc++;
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    if (!selectedTable.IsReservated) // the table has not been reservated yet
+                    {
+                        if (Reservation.NumberOfPeople <= selectedTable.Capacity) // the table has enough seats
+                        {
+                            selectedTable.IsReservated = true; // table at that coordinate has now been reservated
+                            WriteToFile(Tables, TablesJson);
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Sorry! We are booked!");
+                break;
+            }
+
+        }
+        return selectedTable;
+    }
+
+    public Table ShowSelectedTable(int xc, int yc)
+    {
+        Table selectedTable = null;
+        int availableTablesCount = 0;
+
+        // colors tables that are already booked red
+        // tables with too little seats gray
+        // puts [] around the selected table
+        foreach (Table table in Tables)
+        {
+            string ws = table.TableNumber < 10 ? " " : ""; // ws = whitespace to format the table options
+
+            if (table.IsReservated)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                availableTablesCount++;
+            }
+            else if (Reservation.NumberOfPeople > table.Capacity)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                availableTablesCount++;
+            }
+            if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
+            {
+                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity} Seats]  ");
+                selectedTable = table;
+            }
+            else
+            {
+                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity} Seats   ");
+            }
+            Console.ResetColor();
+
+            if (table.Coordinate.Item1 % 3 == 0)
+            {
+                Console.WriteLine(); //creates new row after every 3 tables
+            }
+        }
+
+        if (availableTablesCount >= Tables.Count) // None of the tables are available for this reservation
+        {
+            return null;
+        }
+        return selectedTable;
+    }
 
 
 
