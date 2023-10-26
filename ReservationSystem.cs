@@ -82,6 +82,10 @@ class ReservationSystem
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
         Reservation.NumberOfPeople = numberOfPeople;
+
+        Console.Write("Enter a date (dd-mm-yyyy): ");
+        DateOnly selectedDate = GetReservationDate();
+        Reservation.Date = selectedDate;
     }
 
     public int GetNumberOfPeople()
@@ -111,9 +115,42 @@ class ReservationSystem
         return numberOfPeople;
     }
 
+    public DateOnly GetReservationDate()
+    {
+        DateOnly reservationDate;
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+        DateOnly yearFromNow = today.AddYears(1);
+        bool formatIsIncorrect;
+        bool dateHasPassed;
+        bool dateIsMoreThanYearFromNow;
 
+        do
+        {
+            string date = Console.ReadLine().Trim();
 
+            // formatIsIncorrect is true if the format is incorrect
+            formatIsIncorrect = !DateOnly.TryParseExact(date, "d-M-yyyy", out reservationDate);
+            dateHasPassed = reservationDate < today;
+            dateIsMoreThanYearFromNow = reservationDate > yearFromNow;
+            if (formatIsIncorrect)
+            {
+                Console.WriteLine($"Invalid date format '{date}'. Please enter a date in the dd-mm-yyyy format.");
+            }
+            else if (dateHasPassed)
+            {
+                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not already passed.");
+            }
+            else if (dateIsMoreThanYearFromNow)
+            {
+                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not more than a year from today.");
+            }
 
+        }
+        while (formatIsIncorrect || dateHasPassed);
+
+        Console.Clear();
+        return reservationDate;
+    }
 
 
 
