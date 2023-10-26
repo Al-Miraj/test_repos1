@@ -11,18 +11,12 @@ public static class JsonFileHandler
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error writing to JSON file: {ex.Message}");
+            throw new IOException($"Writing to file '{fileName}' went wrong. " + ex.Message, ex);
         }
     }
 
-    public static List<T>? ReadFromFile<T>(string fileName)
-    {
-        if (!File.Exists(fileName))
-        {
-            Console.WriteLine($"File '{fileName}' does not exist.");
-            return null;
-        }
-        
+    public static List<T> ReadFromFile<T>(string fileName)
+    {        
         try
         {
             string json = File.ReadAllText(fileName);
@@ -31,12 +25,40 @@ public static class JsonFileHandler
         }
         catch (Exception ex )
         {
-            if ( ex is JsonReaderException )
+            if (ex is FileNotFoundException)
             {
-                Console.WriteLine("Invalid JSON. ", ex.Message );
+                throw new FileNotFoundException($"File '{fileName}' does not exist. " + ex.Message, ex );
             }
-            else { Console.WriteLine("Something went wrong. ", ex.Message); }
+            else if ( ex is JsonReaderException )
+            {
+                throw new IOException("Invalid JSON. " + ex.Message, ex);
+            }
+            else { throw new IOException("Something went wrong. " + ex.Message, ex); }
         }
-        return null;
     }
 }
+
+/*
+ O L D   M E T H O D S
+    (Need feedback from the PO, so im saving the old versions just in case)
+ 
+
+public static class JsonFileHandler
+{
+    public static void WriteToFile(List<T> deals, string dealsFileName)
+    {
+        StreamWriter writer = new StreamWriter(dealsFileName);
+        writer.Write(JsonConvert.SerializeObject(deals, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+        writer.Close();
+    }
+
+    public static List<T> ReadFromFile<T>(string DealsFileName)
+    {
+        StreamReader reader = new StreamReader(DealsFileName);
+        string jsonString = reader.ReadToEnd();
+        reader.Close();
+        List<T> deals = JsonConvert.DeserializeObject<List<T>>(jsonString)!;
+        return deals;
+    }
+}
+ */

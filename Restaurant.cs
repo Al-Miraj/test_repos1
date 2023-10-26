@@ -13,36 +13,51 @@ public class Restaurant
     {
         List<Deal> deals;
 
-        if (File.Exists(DealsJson))
+
+        try
         {
-            deals = ReadFromFile(DealsJson);
+            deals = JsonFileHandler.ReadFromFile<Deal>(DealsJson);
         }
-        else
+        catch (FileNotFoundException)
         {
             string dealName = "Party Deal";
             string dealDescription = "For groups of 10 people or more, you get a 10% discount."; //todo: discount on what tho?
             double dealDiscountFactor = 0.10; // 10% discount
             deals = new List<Deal>()
+                {
+                    new Deal(dealName, dealDescription, dealDiscountFactor)
+                };
+            try
             {
-                new Deal(dealName, dealDescription, dealDiscountFactor)
-            };
-            WriteToFile(deals, DealsJson);
+                JsonFileHandler.WriteToFile(deals, DealsJson);
+            }
+            catch (Exception ex) { throw new IOException(ex.Message); }
+        }
+        catch (Exception ex)
+        {
+            throw new IOException(ex.Message);
         }
         return deals;
     }
-    public void WriteToFile(List<Deal> deals, string dealsFileName)
-    {
-        StreamWriter writer = new StreamWriter(dealsFileName);
-        writer.Write(JsonConvert.SerializeObject(deals, new JsonSerializerSettings { Formatting = Formatting.Indented }));
-        writer.Close();
-    }
 
-    public List<Deal> ReadFromFile(string DealsFileName) 
+    public void DisplayDeals()
     {
-        StreamReader reader = new StreamReader(DealsFileName);
-        string jsonString = reader.ReadToEnd();
-        reader.Close();
-        List<Deal> deals = JsonConvert.DeserializeObject<List<Deal>>(jsonString)!;
-        return deals;
+        Console.Clear();
+
+        //prints the title "DEALS"
+        Console.WriteLine(" ___   ____   __    _     __ ");
+        Console.WriteLine("| | \\ | |_   / /\\  | |   ( (` ");
+        Console.WriteLine("|_|_/ |_|__ /_/--\\ |_|__ _)_) ");
+        Console.WriteLine("\n");
+        Console.WriteLine("-------------------------------\n");
+
+
+        foreach (Deal deal in Deals)
+        {
+            Console.WriteLine(deal.Name);
+            Console.WriteLine(deal.Description);
+            Console.WriteLine("===========================================\n");
+        }
     }
 }
+
