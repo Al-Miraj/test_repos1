@@ -60,7 +60,8 @@ using System;
 
 public class Menu
 {
-    ReservationSystem RS = new ReservationSystem(); //RS is short for Reservation System
+    ReservationSystem RSys = new ReservationSystem(); //RS is short for Reservation System
+    Restaurant R = new Restaurant(); // might remove later because this format doesnt make sense
     private static int selectedOption = 1;
 
     public void RunMenu()
@@ -133,7 +134,7 @@ public class Menu
         switch (option)
         {
             case 1:
-                RS.RunSystem();
+                RSys.RunSystem();
                 break;
             case 2:
                 About.RestaurantInformation();
@@ -149,6 +150,7 @@ public class Menu
                 break;
             case 5:
                 Console.WriteLine("Here are all the deals we are currently offering:");
+                R.DisplayDeals();
                 break;
             case 6:
                 Console.WriteLine("Login - Enter your credentials to log in.");
