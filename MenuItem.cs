@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Security;
 
@@ -9,6 +9,7 @@ public class MenuItem
     public string[] Ingredients { get; set; }
     public double Price { get; set; }
     public string Timeslot { get; set; }
+    public string Category { get; set; }
     public string? Icon;
     private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
@@ -19,6 +20,7 @@ public class MenuItem
         Ingredients = ingredients.ToArray();
         Price = price;
         Timeslot = timeslot;
+        Category = icon;
         Icon = icon switch  // Easier then regular switch 
         {
             "Meat" => "🥩",
@@ -30,7 +32,7 @@ public class MenuItem
     }
 
     public string AllergensInfo // Property of the allergens
-    {
+    { 
         get
         {
             // Iterating over the lowercased Allergens array to find match and 

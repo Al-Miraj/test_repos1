@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 
 public static class FoodMenu
 {
+    //parsed data
     public static List<MenuItem> MenuItems = new();
 
+    public static readonly Dictionary<string, string> categoryEmojis = new Dictionary<string, string>
+    {
+        { "Meat", "🥩" },
+        { "Chicken", "🍗" },
+        { "Fish", "🐟" },
+        { "Vegetarian", "🥦" }
+    };
+
+    //raw data
     public static List<MenuItem>? LoadFoodMenuData()
     {
         try
@@ -18,17 +30,11 @@ public static class FoodMenu
             return items;
         }
         catch (JsonReaderException)
-        {
-            Console.WriteLine("reader exp");
-            return null; }
+        { return null; }
         catch (FileNotFoundException)
-        {
-            Console.WriteLine("file not not found");
-            return null; }
+        { return null; }
         catch (UnauthorizedAccessException)
-        {
-            Console.WriteLine("Unauthorized acces");
-            return null; }
+        { return null; }
     }
 
     public static void Display()
@@ -57,7 +63,8 @@ public static class FoodMenu
             Console.WriteLine("Would you like to see the other menu?");
             Console.WriteLine("1. Lunch");
             Console.WriteLine("2. Dinner");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("3. Sort menu by category");
+            Console.WriteLine("4. Exit");
 
             string? choice = Console.ReadLine();
 
@@ -70,15 +77,19 @@ public static class FoodMenu
                     MenuItems = GetDinnerMenu();
                     break;
                 case "3":
+                    MenuItems = SortFoodMenu.SortMenu();
+                    //SortFoodMenu.SortMenu().ForEach(x => Console.WriteLine(x));
+                    break;
+                case "4":
                     return;
                 default:
-                    Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
+                    Console.WriteLine("Invalid choice. Please enter 1, 2, 3 or 4.");
                     break;
             }
         }
     }
 
-    static List<MenuItem> GetDefaultMenu()
+    public static List<MenuItem> GetDefaultMenu()
     {
 
         var allItems = FoodMenu.LoadFoodMenuData();
@@ -110,7 +121,7 @@ public static class FoodMenu
         return timeslotMenu;
     }
 
-    static bool ifDinner(TimeOnly time)
+    public static bool ifDinner(TimeOnly time)
     {
         TimeOnly startTime = new TimeOnly(18, 0);
         TimeOnly endTime = new TimeOnly(22, 0);
@@ -123,7 +134,7 @@ public static class FoodMenu
         return false;
     }
 
-    static (DateOnly date, TimeOnly time) SetTime()
+    public static (DateOnly date, TimeOnly time) SetTime()
     {
         DateTime now = DateTime.Now;
 
@@ -134,7 +145,7 @@ public static class FoodMenu
 
     }
 
-    static List<MenuItem> GetLunchMenu()
+    public static List<MenuItem> GetLunchMenu()
     {
         var allItems = FoodMenu.LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
@@ -145,7 +156,7 @@ public static class FoodMenu
         return tempMenu;
     }
 
-    static List<MenuItem> GetDinnerMenu()
+    public static List<MenuItem> GetDinnerMenu()
     {
         var allItems = FoodMenu.LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
