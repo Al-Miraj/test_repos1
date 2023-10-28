@@ -432,11 +432,11 @@ class ReservationSystem
 
     }
 
-    public static void Main()
-    {
-        Console.OutputEncoding = Encoding.UTF8; // Set the console encoding to UTF-8 - Needed for the EUR sign
-        ReservationSystem reservationSystem = new ReservationSystem();
-        reservationSystem.SystemRun();
-    }
+    // public static void Main()
+    // {
+    //     Console.OutputEncoding = Encoding.UTF8; // Set the console encoding to UTF-8 - Needed for the EUR sign
+    //     ReservationSystem reservationSystem = new ReservationSystem();
+    //     reservationSystem.SystemRun();
+    // }
 
 }
