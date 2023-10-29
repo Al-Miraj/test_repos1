@@ -60,7 +60,7 @@ public static class FoodMenu
             }
             Console.WriteLine("==================================================================================================================");
             Console.WriteLine();
-            Console.WriteLine("Would you like to see the other menu?");
+            Console.WriteLine("What would you like to do/see?");
             Console.WriteLine("1. Lunch");
             Console.WriteLine("2. Dinner");
             Console.WriteLine("3. Sort menu by category");
@@ -92,7 +92,7 @@ public static class FoodMenu
     public static List<MenuItem> GetDefaultMenu()
     {
 
-        var allItems = FoodMenu.LoadFoodMenuData();
+        var allItems = LoadFoodMenuData();
         List<MenuItem> timeslotMenu = new List<MenuItem>();
 
         var dt = SetTime();
@@ -147,8 +147,9 @@ public static class FoodMenu
 
     public static List<MenuItem> GetLunchMenu()
     {
-        var allItems = FoodMenu.LoadFoodMenuData();
+        var allItems = LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
+
 
         var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
         tempMenu.AddRange(lunchMenuItems);
@@ -158,7 +159,7 @@ public static class FoodMenu
 
     public static List<MenuItem> GetDinnerMenu()
     {
-        var allItems = FoodMenu.LoadFoodMenuData();
+        var allItems = LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
 
         var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
