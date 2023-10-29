@@ -1,4 +1,8 @@
 ﻿class Program
 {
-    // sjhfbwbffwrwetq4t
+    public static void Main()
+    {
+        Menu x = new();
+        x.RunMenu();
+    }
 }

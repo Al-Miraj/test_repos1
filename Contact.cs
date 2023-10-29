@@ -2,12 +2,15 @@
 {
     public static void ContactInformation()
     {
-        Console.WriteLine(RestaurantName);
+        Console.Clear();
+        Console.WriteLine($"Restaurant: {RestaurantName}");
         Console.WriteLine($"Phonenumber: {PhoneNumber}");
         Console.WriteLine($"Email: {RestaurantEmail}");
-        foreach (string item in SocialMedia)
+        Console.WriteLine($"Location: {Location}");
+        Console.WriteLine($"Openinghours: {OpeningHours}");
+        /*foreach (string item in SocialMedia)
         {
             Console.WriteLine(item);
-        }
+        }*/
     }
 }

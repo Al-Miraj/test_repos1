@@ -37,7 +37,6 @@ public static class FoodMenu
         { return null; }
     }
 
-
     public static void Display()
     {
         MenuItems = GetDefaultMenu();

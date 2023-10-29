@@ -1,26 +1,25 @@
 ﻿public class AboutUs
 {
     public static string Location = "Wijnhaven 107, 3011 WN, Rotterdam, Zuid-Holland.";
-    public static string RestaurantName = "";
+    public static string RestaurantName = "Le Délice Français";
     public static string OpeningHours = "11 am - 10 pm.";
-    public static string RestaurantEmail = "";
-    public static string PhoneNumber = "1234567890";
+    public static string RestaurantEmail = "Delicemail@outlook.com";
+    public static string PhoneNumber = "06113355749";
     public static List<string> SocialMedia = new List<string>() { "Restaurant: " };
 
-    public static void Info()
+    public static void travel()
     {
-        Console.WriteLine(RestaurantName);
-        Console.WriteLine($"Location: {Location}");
-        Console.WriteLine($"Openinghours: {OpeningHours}");
+
+        Console.WriteLine();
         Console.WriteLine("Are you travelling with public transportation or by car?");
-        Console.WriteLine("1. public transportation, 2. car");
+        Console.WriteLine("[1] public transportation, [2] car, [Enter] skip this part");
         string choice = Console.ReadLine();
 
         if (choice == "1")
         {
             publicTransport();
         }
-        else
+        else if (choice == "2")
         {
             carTransport();
         }
@@ -93,6 +92,18 @@
         Console.WriteLine();
     }
 }
+
+/*"-add option “info” to the interface to see the information
+- add the address, contact information and opening/closing hours.
+-add email, phone number and maybe social media to contact information.
+
+"1. The restaurant's contact information, including phone number and email address, should be prominently displayed on the official website or mobile application's
+""Contact Us"" or ""About Us"" page.
+2. The restaurant's physical address, including street name and number, city, state, and postal code, should be clearly visible on the website or mobile application.
+3. The contact information and address should be easily accessible from the main navigation menu or footer of the website or mobile application,
+ensuring that customers can quickly find this information without unnecessary navigation or searching.
+"
+"*/
 
 /*"-add option “info” to the interface to see the information
 - add the address, contact information and opening/closing hours.
