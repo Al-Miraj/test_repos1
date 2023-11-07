@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-public static class ReservationSystem
+public class ReservationSystem
 {
     static int selectedTableIndex = 0;
     static List<Table> tables = new List<Table>();
@@ -11,7 +11,7 @@ public static class ReservationSystem
     static Random random = new Random();
     static int reservationNumber = 0;
 
-    public static void SystemRun()
+    public void SystemRun()
     {
         // Ask the user for the number of people
         Console.Write("Enter the number of people in your group: ");

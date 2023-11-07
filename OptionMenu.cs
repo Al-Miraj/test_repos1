@@ -147,7 +147,7 @@ public class Menu
                 FoodMenu.Display();
                 break;
             case 5:
-                Console.WriteLine("Login - Enter your credentials to log in.");
+                LoginSystem.Start();
                 break;
             case 6:
                 Console.WriteLine("Goodbye! Thank you for visiting.");
