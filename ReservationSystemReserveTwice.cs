@@ -377,11 +377,11 @@ public class ReservationSystem
                     Table table = tables.Find(t => t.TableNumber == reservation.SelectedTable.TableNumber);
 
                     // Check if the reservation's time slots overlap with the selected time slot
-                    if (IsTimeSlotAvailable(table, selectedDate, selectedTimeSlot))
-                    {
-                        // Add the reservation to the table's Reservations list
-                        table.Reservations.Add(reservation);
-                    }
+                    // if (IsTimeSlotAvailable(table, selectedDate, selectedTimeSlot))
+                    // {
+                    //     // Add the reservation to the table's Reservations list
+                    // }
+                    table.Reservations.Add(reservation);
                 }
             }
 
@@ -391,15 +391,15 @@ public class ReservationSystem
 
     }
 
-    private static bool IsTimeSlotAvailable(Table table, DateTime selectedDate, string selectedTimeSlot)
-    {
-        // Check if any of the table's reservations overlap with the selected time slot
-        return table.Reservations.All(reservation =>
-        {
-            return !(reservation.Date == selectedDate.ToString("dd-MMM-yyyy") &&
-                     (reservation.TimeSlot == selectedTimeSlot || reservation.TimeSlotTwo == selectedTimeSlot));
-        });
-    }
+    // private static bool IsTimeSlotAvailable(Table table, DateTime selectedDate, string selectedTimeSlot)
+    // {
+    //     // Check if any of the table's reservations overlap with the selected time slot
+    //     return table.Reservations.All(reservation =>
+    //     {
+    //         return !(reservation.Date == selectedDate.ToString("dd-MMM-yyyy") &&
+    //                  (reservation.TimeSlot == selectedTimeSlot || reservation.TimeSlotTwo == selectedTimeSlot));
+    //     });
+    // }
 
     private static bool IsTableAvailable(Table table, DateTime selectedDate, string selectedTimeSlot)
     {
