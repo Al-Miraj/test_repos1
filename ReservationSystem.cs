@@ -117,16 +117,16 @@ class ReservationSystem
             string number = Console.ReadLine().Trim();
             IsIncorrectFormat = !int.TryParse(number, out numberOfPeople); //true if the format is incorrect
             IsSmallerThan0 = numberOfPeople <= 0;
-            IsBiggerThan6 = numberOfPeople > 6;
+            //IsBiggerThan6 = numberOfPeople > 6;
             if (IsIncorrectFormat)
                 Console.WriteLine("Invalid input. Please enter a valid number of people like: 7, 1, 12, etc");
             else if (IsSmallerThan0)
                 Console.WriteLine("Invalid input. Please enter a number greater than 0.");
-            else if (IsBiggerThan6)
-                Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
+            //else if (IsBiggerThan6)
+            //    Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
 
         }
-        while (IsIncorrectFormat || IsSmallerThan0 || IsBiggerThan6);
+        while (IsIncorrectFormat || IsSmallerThan0 /*|| IsBiggerThan6*/);
 
         Console.Clear();
         return numberOfPeople;
@@ -226,24 +226,60 @@ class ReservationSystem
 
     public void DisplayTablesMap()
     {
-        Console.WriteLine("  ______    _____    _____  ");
-        Console.WriteLine(" /      \\  /     \\  /     \\  ");
-        Console.WriteLine("|   ___  |   ___  |   ___  | ");
-        Console.WriteLine("|  |   |    |   |    |   | | ");
-        Console.WriteLine("|  |[1]|    |[2]|    |[3]| | ");
-        Console.WriteLine("|  |___|    |___|    |___| | ");
-        Console.WriteLine("|                          | ");
-        Console.WriteLine("|   ___      ___      ___  | ");
-        Console.WriteLine("|  |   |    |   |    |   | | ");
-        Console.WriteLine("|  |[4]|    |[5]|    |[6]| | ");
-        Console.WriteLine("|  |___|    |___|    |___| | ");
-        Console.WriteLine("|                          | ");
-        Console.WriteLine("|   ___      ___      ___  | ");
-        Console.WriteLine("|  |   |    |   |    |   | | ");
-        Console.WriteLine("|  |[7]|    |[8]|    |[9]| | ");
-        Console.WriteLine("|  |___|    |___|    |___| | ");
-        Console.WriteLine("|                          | ");
-        Console.WriteLine("|________|________|________| ");
+        string door = "Entrance";
+        string aisle = "Main Aisle";
+
+        // First row of tables (2 seats)
+        DisplayTableRange(1, 4); // Tables 1-4
+
+        Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
+
+        // Second row of tables (4 seats)
+        DisplayTableRange(5, 8); // Tables 5-8
+
+        Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
+
+        // Third row of tables (2 seats)
+        DisplayTableRange(9, 12); // Tables 9-12
+
+        Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
+
+        // Fourth row of tables (6 seats)
+        DisplayTableRange(13, 15); // Tables 13-15
+    }
+
+    private void DisplayTableRange(int startTable, int endTable)
+    {
+        // Display a range of tables
+        for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
+        {
+            Table table = Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
+            if (table != null)
+            {
+                if (table.IsReservated)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                else
+                    Console.ForegroundColor = ConsoleColor.Green;
+
+                // Display a single table with the appropriate number of seats
+                if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
+                    Console.Write($"  [ {table.TableNumber} ]  ");
+                else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
+                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]  ", table.TableNumber);
+                else // 6-seat tables
+                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]-[ {table.TableNumber} ]  ");
+            }
+            Console.ResetColor();
+        }
+        Console.WriteLine("\n");
+    }
+
+
+    private (int, int) DetermineMaxCoordinates(List<Table> tables)
+    {
+        int maxX = tables.Max(t => t.Coordinate.Item1);
+        int maxY = tables.Max(t => t.Coordinate.Item2);
+        return (maxX, maxY);
     }
 
     public Table GetChosenTable()
@@ -260,6 +296,7 @@ class ReservationSystem
             Console.Clear();
             DisplayTablesMap();
             selectedTable = ShowSelectedTable(xc, yc);
+            TableSelectionFeedback(selectedTable);
 
             if (selectedTable != null)
             {
@@ -301,7 +338,6 @@ class ReservationSystem
 
         }
 
-        TableSelectionFeedback(selectedTable);
 
         return selectedTable;
     }
@@ -340,6 +376,11 @@ class ReservationSystem
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 availableTablesCount++;
             }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green; // Green for available
+            }
+
             if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
             {
                 Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity} Seats]  ");
