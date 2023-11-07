@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -43,12 +43,11 @@ public static class FoodMenu
     public static void Display()
     {
         Console.CursorVisible = false;
-        PrintInfo(GetDefaultMenu().timeslotMenu, GetDefaultMenu().timeslot, true);
 
         while (true)
         {
             Console.Clear();
-            //PrintInfo(GetDefaultMenu().timeslotMenu, GetDefaultMenu().timeslot, false);
+            PrintInfo(GetDefaultMenu().timeslotMenu, GetDefaultMenu().timeslot, false);
             DisplayMenuOptions();
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
@@ -148,7 +147,7 @@ public static class FoodMenu
         default:
             Console.WriteLine("Invalid choice. Please enter 1, 2, 3 or 4.");
             break;
-    }*/
+    }
 
 
     private static void HandleSelection()
@@ -158,6 +157,7 @@ public static class FoodMenu
         switch (selectedOption)
         {
             case 1:
+
                 PrintInfo(GetLunchMenu(), "Lunch");
                 break;
             case 2:
@@ -165,9 +165,8 @@ public static class FoodMenu
                 PrintInfo(GetDinnerMenu(), "Dinner");
                 break;
             case 3:
-                string timeSlot = SortFoodMenu.cursoroptionTimeSlot();
-                PrintInfo(SortFoodMenu.cursoroptionMenu(), timeSlot);
-                //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
+
+                PrintInfo(SortFoodMenu.SortMenu());
                 break;
             case 4:
                 Environment.Exit(0);
@@ -251,4 +250,4 @@ public static class FoodMenu
 
         return tempMenu;
     }
-}
+}*/

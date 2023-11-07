@@ -2,11 +2,21 @@
 
 public static class SortFoodMenu
 {
-    public static List<MenuItem> SortMenu()
+    private static int selectedOption = 1;
+    private static int selectedTimeSlotOption = 1;
+    public static List<MenuItem> menuItems = new List<MenuItem>();
+
+    /*public static int SelectedTimeSlotOption
+    {
+        get { return selectedTimeSlotOption; }
+        set { selectedTimeSlotOption = value; }
+    }*/
+
+    //private static List<string> ingredients = new List<string>();
+    /*public static List<MenuItem> SortMenu()
     {
         List<MenuItem> sortedMenu = new List<MenuItem>();
         List<MenuItem> categories = new List<MenuItem>();
-        List<string> ingredients = new List<string>();
         //List<MenuItem> rawMenu = new List<MenuItem>();
 
         while (true)
@@ -43,7 +53,7 @@ public static class SortFoodMenu
                         }
                         else
                         {
-                            Console.WriteLine("Invalid price input. Please enter a valid number.");
+                            Console.WriteLine("Invalid price input. Please enter a valid price.");
                         }
                         break;
 
@@ -68,6 +78,103 @@ public static class SortFoodMenu
             return sortedMenu;
             
         }
+    }*/
+
+    public static List<MenuItem> cursoroptionMenu()
+    {
+        Console.CursorVisible = false;
+
+        while (true)
+        {
+            menuItems.Clear();
+            Console.Clear();
+            DisplayMenuOptions();
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
+            {
+                selectedOption--;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
+            {
+                selectedOption++;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                return HandleSelection();
+            }
+        }
+    }
+
+    private static void DisplayMenuOptions()
+    {
+
+        for (int i = 1; i <= 4; i++)
+        {
+            if (i == selectedOption)
+            {
+                Console.Write(">");
+            }
+            else
+            {
+                Console.Write(" ");
+            }
+
+            switch (i)
+            {
+                case 1:
+                    Console.WriteLine(" Sort by Ingredients");
+                    break;
+                case 2:
+                    Console.WriteLine(" Sort by Price");
+                    break;
+                case 3:
+                    Console.WriteLine(" Sort by Category");
+                    break;
+                case 4:
+                    Console.WriteLine(" Exit and Save");
+                    break;
+            }
+        }
+
+    }
+
+    private static List<MenuItem> HandleSelection()
+    {
+        Console.Clear();
+        List<string> ingredients = new List<string>();
+
+        switch (selectedOption)
+        {
+            case 1:
+                Console.WriteLine("Enter the ingredients (use comma):");
+                string ingredientRaw = Console.ReadLine().ToLower();
+                ingredients.AddRange(ingredientRaw.Split(", "));
+
+                menuItems.AddRange(SortIngredients(ingredients, selectedTimeSlotOption.ToString()));
+                break;
+
+            case 2:
+                Console.WriteLine("Enter the maximum price:");
+                if (double.TryParse(Console.ReadLine(), out double maxPrice))
+                {
+                    menuItems.AddRange(SortPrice(selectedTimeSlotOption.ToString(), maxPrice));
+                }
+                else
+                {
+                    Console.WriteLine("Invalid price input. Please enter a valid price.");
+                }
+                break;
+
+            case 3:
+                menuItems.AddRange(SortCategory(selectedTimeSlotOption == 2 ? true : false));
+                break;
+            case 4:
+                Environment.Exit(0);
+                break;
+        }
+        return menuItems;
     }
 
     public static List<MenuItem> SortCategory(bool isDinner)
@@ -84,53 +191,124 @@ public static class SortFoodMenu
         Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
         string[] categoryArray = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string category in categoryArray)
+        foreach (string category in categoryArray)
+        {
+            switch (category)
             {
-                if (category == "1")
-                {
+                case "1":
                     selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Meat"));
-                }
-                else if (category == "2")
-                {
+                    break;
+                case "2":
                     selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Chicken"));
-                }
-                else if (category == "3")
-                {
+                    break;
+                case "3":
                     selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Fish"));
-                }
-                else if (category == "4")
-                {
+                    break;
+                case "4":
                     selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Vegetarian"));
-                }
-                else if (category == "5")
-                {
+                    break;
+                case "5":
                     return new List<MenuItem>(); // Return an empty list to indicate the user's exit choice.
-                }
-                else
-                {
+                default:
                     Console.WriteLine("Input incorrect. Please enter 1, 2, 3, 4, or 5.");
-                }
+                    break;
             }
+        }
+
         return selectedCategories;
     }
 
     public static List<MenuItem> SortPrice(string menuType, double price)
     {
         List<MenuItem> finalMenu = new List<MenuItem>();
-
+        Console.WriteLine(menuType);
         finalMenu = menuType == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
-        
+
         List<MenuItem> sortedMenu = finalMenu.Where(x => x.Price <= price).ToList();
+        sortedMenu = sortedMenu.OrderBy(x => x.Price).ToList();
+        
         //in sortedmenu zitten alleen de prijzen als deel van het object
-        return sortedMenu;
+        return (sortedMenu);
     }
 
     public static List<MenuItem> SortIngredients(List<string> ingredients, string menuType)
     {
-        
         List<MenuItem> unsortedItems = menuType == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
         List<MenuItem> temp = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient))).ToList();
+        temp = temp.OrderBy(x => x.Price).ToList();
         return temp;
+    }
+
+    private static void DisplayTimeSlotMenuOptions()
+    {
+        for (int i = 1; i <= 3; i++)
+        {
+            if (i == selectedTimeSlotOption)
+            {
+                Console.Write(">");
+            }
+            else
+            {
+                Console.Write(" ");
+            }
+
+            switch (i)
+            {
+                case 1:
+                    Console.WriteLine(" Lunch");
+                    break;
+                case 2:
+                    Console.WriteLine(" Dinner");
+                    break;
+                case 3:
+                    Console.WriteLine(" Exit");
+                    break;
+            }
+        }
+    }
+
+    public static string cursoroptionTimeSlot()
+    {
+        Console.CursorVisible = false;
+
+        while (true)
+        {
+            Console.Clear();
+            DisplayTimeSlotMenuOptions();
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            if (keyInfo.Key == ConsoleKey.UpArrow && selectedTimeSlotOption > 1)
+            {
+                selectedTimeSlotOption--;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedTimeSlotOption < 3)
+            {
+                selectedTimeSlotOption++;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                return HandleTimeSlotSelection();
+            }
+        }
+    }
+
+    private static string HandleTimeSlotSelection()
+    {
+        Console.Clear();
+
+        switch (selectedTimeSlotOption)
+        {
+            case 1:
+                return "Lunch";
+            case 2:
+                return "Dinner";
+            case 3:
+                Environment.Exit(0);
+                break;
+        }
+
+        return "";
     }
 
 }
