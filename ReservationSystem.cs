@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Text.Json;
 
 class ReservationSystem
@@ -226,53 +226,62 @@ class ReservationSystem
 
     public void DisplayTablesMap()
     {
-        // Table representation format
-        string[] tableRepresentation = new string[]
-        {
-            "  ______  ",
-            " /      \\ ",
-            "|   ___  |",
-            "|  |   | |",
-            "|  |[{0}]| |", 
-            "|  |___| |",
-            "|        |",
-        };
+        // Define a simple door and aisle representation
+        string door = "Entrance";
+        string aisle = "Main Aisle";
 
-        for (int y = 1; y <= 3; y++)
+        // First row of tables (2 seats)
+        DisplayTableRange(1, 4); // Tables 1-4
+
+        Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
+
+        // Second row of tables (4 seats)
+        DisplayTableRange(5, 8); // Tables 5-8
+
+        Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
+
+        // Third row of tables (2 seats)
+        DisplayTableRange(9, 12); // Tables 9-12
+
+        Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
+
+        // Fourth row of tables (6 seats)
+        DisplayTableRange(13, 15); // Tables 13-15
+    }
+
+    private void DisplayTableRange(int startTable, int endTable)
+    {
+        // Display a range of tables
+        for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
         {
-            for (int line = 0; line < tableRepresentation.Length; line++)
+            Table table = Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
+            if (table != null)
             {
-                for (int x = 1; x <= 3; x++)
-                {
-                    Table table = Tables.FirstOrDefault(t => t.Coordinate.Item1 == x && t.Coordinate.Item2 == y);
-                    if (table != null)
-                    {
-                        if (line == 4) 
-                        {
-                            if (table.IsReservated)
-                                Console.ForegroundColor = ConsoleColor.Red;
-                            else
-                                Console.ForegroundColor = ConsoleColor.Green;
+                if (table.IsReservated)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                else
+                    Console.ForegroundColor = ConsoleColor.Green;
 
-                            Console.Write(string.Format(tableRepresentation[line], table.TableNumber.ToString()));
-                        }
-                        else
-                        {
-                            Console.Write(tableRepresentation[line]);
-                        }
-
-                        Console.ResetColor();
-                    }
-                    else if (x < 3 || line != tableRepresentation.Length - 1)
-                    {
-                        Console.Write(new string(' ', tableRepresentation[line].Length)); // Space for no table
-                    }
-                }
-                Console.WriteLine();
+                // Display a single table with the appropriate number of seats
+                if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
+                    Console.Write("  [ {0:D2} ]  ", table.TableNumber);
+                else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
+                    Console.Write("  [ {0:D2} ]-[ {0:D2} ]  ", table.TableNumber);
+                else // 6-seat tables
+                    Console.Write("  [ {0:D2} ]-[ {0:D2} ]-[ {0:D2} ]  ", table.TableNumber);
             }
+            Console.ResetColor();
         }
+        Console.WriteLine();
+    }
 
-        Console.WriteLine("|________|________|________|"); // Last line
+
+
+    private (int, int) DetermineMaxCoordinates(List<Table> tables)
+    {
+        int maxX = tables.Max(t => t.Coordinate.Item1);
+        int maxY = tables.Max(t => t.Coordinate.Item2);
+        return (maxX, maxY);
     }
 
 
