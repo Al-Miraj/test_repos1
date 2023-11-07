@@ -153,7 +153,7 @@ public class Menu
                 R.DisplayDeals();
                 break;
             case 6:
-                Console.WriteLine("Login - Enter your credentials to log in.");
+                LoginSystem.Start();
                 break;
             case 7:
                 Console.WriteLine("Goodbye! Thank you for visiting.");

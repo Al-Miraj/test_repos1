@@ -6,7 +6,7 @@ class ReservationSystem
     public string TablesJson = "Tables.json"; //
     public Reservation Reservation;
     public List<Table> Tables;
-    public List<Reservation> reservations = new List<Reservation>(); // List to store reservations
+    public static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
     public Random Random = new Random();
 
 
