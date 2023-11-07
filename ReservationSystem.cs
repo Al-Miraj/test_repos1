@@ -1,17 +1,17 @@
 ﻿using System.Text.Json;
 
-class ReservationSystem
+public static class ReservationSystem
 {
     static int selectedTableIndex = 0;
     static List<Table> tables = new List<Table>();
-    static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
+    public static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
     static int numberOfPeople = 0; // Store the number of people specified by the user
     static DateTime selectedDate; // Store the selected date
 
     static Random random = new Random();
     static int reservationNumber = 0;
 
-    public void SystemRun()
+    public static void SystemRun()
     {
         // Ask the user for the number of people
         Console.Write("Enter the number of people in your group: ");
@@ -145,14 +145,8 @@ class ReservationSystem
         else
         {
             // Create a reservation object
-            Reservation newReservation = new Reservation
-            {
-                ReservationNumber = GenerateReservationNumber(),
-                NumberOfPeople = numberOfPeople,
-                Date = selectedDate.ToString("dd-MMM-yyyy"),
-                TimeSlot = selectedTimeSlot,
-                SelectedTable = selectedTable,
-            };
+            Reservation newReservation = new(GenerateReservationNumber(), numberOfPeople, selectedDate.ToString("dd-MMM-yyyy"), selectedTimeSlot, selectedTable);
+            
 
             // Add the reservation to the list
             reservations.Add(newReservation);
@@ -231,19 +225,12 @@ class ReservationSystem
 
 
 
-    class Table
+    public class Table
     {
         public int TableNumber { get; set; }
         public int Capacity { get; set; }
 
     }
 
-    class Reservation
-    {
-        public int ReservationNumber { get; set; }
-        public int NumberOfPeople { get; set; }
-        public string Date { get; set; }
-        public string TimeSlot { get; set; }
-        public Table SelectedTable { get; set; }
-    }
+    
 }
