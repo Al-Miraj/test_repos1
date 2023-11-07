@@ -161,7 +161,7 @@ public class ReservationSystem
         } while (keyInfo.Key != ConsoleKey.Enter);
 
         // User has confirmed the selection
-        Table selectedTable = tables[selectedTableIndex];
+        Table selectedTable = new Table(tables[selectedTableIndex].TableNumber, tables[selectedTableIndex].Capacity, tables[selectedTableIndex].TablePrice);
 
         if (tables[selectedTableIndex].Capacity < numberOfPeople)
         {
