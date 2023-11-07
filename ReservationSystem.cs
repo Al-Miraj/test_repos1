@@ -264,15 +264,15 @@ class ReservationSystem
 
                 // Display a single table with the appropriate number of seats
                 if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
-                    Console.Write("  [ {0:D2} ]  ", table.TableNumber);
+                    Console.Write($"  [ {table.TableNumber} ]  ");
                 else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
-                    Console.Write("  [ {0:D2} ]-[ {0:D2} ]  ", table.TableNumber);
+                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]  ", table.TableNumber);
                 else // 6-seat tables
-                    Console.Write("  [ {0:D2} ]-[ {0:D2} ]-[ {0:D2} ]  ", table.TableNumber);
+                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]-[ {table.TableNumber} ]  ");
             }
             Console.ResetColor();
         }
-        Console.WriteLine();
+        Console.WriteLine("\n");
     }
 
 
@@ -299,6 +299,7 @@ class ReservationSystem
             Console.Clear();
             DisplayTablesMap();
             selectedTable = ShowSelectedTable(xc, yc);
+            TableSelectionFeedback(selectedTable);
 
             if (selectedTable != null)
             {
@@ -340,7 +341,7 @@ class ReservationSystem
 
         }
 
-        TableSelectionFeedback(selectedTable);
+        
 
         return selectedTable;
     }
