@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-class ReservationSystem
+public class ReservationSystem
 {
 
     static int selectedTableIndex = 0;
@@ -12,7 +12,6 @@ class ReservationSystem
     static DateTime selectedDate; // Store the selected date
 
     static Random random = new Random();
-    // static int reservationNumber = 0;
 
     public void SystemRun()
     {
@@ -23,13 +22,29 @@ class ReservationSystem
             Console.WriteLine("Invalid input. Please enter a valid number of people.");
         }
 
-        //Path.Combine("data", "filename.json")
 
         // Ask the user for a date in the "dd-mm-yyyy" format
         Console.Write("\nEnter a date (dd-mm-yyyy): ");
-        while (!DateTime.TryParseExact(Console.ReadLine(), "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out selectedDate))
+        while (true)
         {
-            Console.WriteLine("Invalid date format. Please enter a date in the dd-mm-yyyy format.");
+            string input = Console.ReadLine();
+
+            if (DateTime.TryParseExact(input, "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out selectedDate))
+            {
+                // Check if the selected date is the date of tomorrow or in the future
+                if (selectedDate.Date >= DateTime.Today.AddDays(1))
+                {
+                    break; // Valid date, exit the loop
+                }
+                else
+                {
+                    Console.WriteLine("\nPlease enter a date from tomorrow onwards.\n");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid date format. Please enter a date in the dd-MM-yyyy format.\n");
+            }
         }
 
         Console.WriteLine("\nSelect a time slot:");
@@ -68,7 +83,7 @@ class ReservationSystem
                 break;
         }
 
-        InitializeTables();
+        InitializeTables(selectedTimeSlot);
         if (tables.Count == 0)
         {
             Console.WriteLine("\nApologies, there are no tables available.\n");
@@ -148,7 +163,7 @@ class ReservationSystem
         // User has confirmed the selection
         Table selectedTable = tables[selectedTableIndex];
 
-        if (selectedTable.Capacity < numberOfPeople)
+        if (tables[selectedTableIndex].Capacity < numberOfPeople)
         {
             Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough capacity for your group of {numberOfPeople} people.\n");
         }
@@ -194,6 +209,7 @@ class ReservationSystem
                                 noSecondTimeSlot,
                                 selectedTable
                             );
+
 
                             // Add the reservation to the list
                             reservations.Add(newReservation);
@@ -284,6 +300,8 @@ class ReservationSystem
                                 selectedTable
                             );
 
+
+
                             // Add the reservation to the list
                             reservations.Add(newReservation);
 
@@ -315,7 +333,7 @@ class ReservationSystem
         return random.Next(1, 10000); // Generates a random number between 1 and 9999 (inclusive).
     }
 
-    static void InitializeTables()
+    static void InitializeTables(string selectedTimeSlot)
     {
         // Always initialize the tables list with default values
         tables = new List<Table>();
@@ -350,28 +368,21 @@ class ReservationSystem
             string json = File.ReadAllText("ReservationsData.json");
             reservations = JsonSerializer.Deserialize<List<Reservation>>(json);
 
-            // Create a list to store the table numbers that are taken
-            List<int> takenTables = new List<int>();
-
-            // Populate the takenTables list with table numbers from reservations
             foreach (Reservation reservation in reservations)
             {
-                takenTables.Add(reservation.SelectedTable.TableNumber);
-            }
-
-            // Create a list of available tables based on the original tables list
-            List<Table> availableTables = new List<Table>();
-
-            foreach (Table table in tables)
-            {
-                if (!takenTables.Contains(table.TableNumber))
+                // Filter out reservations that have passed
+                if (DateTime.ParseExact(reservation.Date, "dd-MMM-yyyy", null) >= DateTime.Today)
                 {
-                    availableTables.Add(table);
+                    // Find the corresponding table
+                    Table table = tables.Find(t => t.TableNumber == reservation.SelectedTable.TableNumber);
+
+                    // Add the reservation to the table's Reservations list
+                    table.Reservations.Add(reservation);
                 }
             }
 
-            // Update the tables list with availableTables
-            tables = availableTables;
+            // Update the tables list with available tables
+            tables = tables.Where(t => t.Reservations.All(r => r.Date != selectedDate.ToString("dd-MMM-yyyy") || r.TimeSlot != selectedTimeSlot)).ToList();
         }
     }
 
@@ -395,12 +406,12 @@ class ReservationSystem
     }
 
 
-
     class Table
     {
         public int TableNumber { get; set; }
         public int Capacity { get; set; }
         public double TablePrice { get; set; }
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
         public Table(int tableNumber, int capacity, double tablePrice)
         {
@@ -408,8 +419,8 @@ class ReservationSystem
             Capacity = capacity;
             TablePrice = tablePrice;
         }
-
     }
+
 
     class Reservation
     {
@@ -432,11 +443,11 @@ class ReservationSystem
 
     }
 
-    // public static void Main()
-    // {
-    //     Console.OutputEncoding = Encoding.UTF8; // Set the console encoding to UTF-8 - Needed for the EUR sign
-    //     ReservationSystem reservationSystem = new ReservationSystem();
-    //     reservationSystem.SystemRun();
-    // }
+    public static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8; // Set the console encoding to UTF-8 - Needed for the EUR sign
+        ReservationSystem reservationSystem = new ReservationSystem();
+        reservationSystem.SystemRun();
+    }
 
 }
