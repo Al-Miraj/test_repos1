@@ -376,15 +376,41 @@ public class ReservationSystem
                     // Find the corresponding table
                     Table table = tables.Find(t => t.TableNumber == reservation.SelectedTable.TableNumber);
 
-                    // Add the reservation to the table's Reservations list
-                    table.Reservations.Add(reservation);
+                    // Check if the reservation's time slots overlap with the selected time slot
+                    if (IsTimeSlotAvailable(table, selectedDate, selectedTimeSlot))
+                    {
+                        // Add the reservation to the table's Reservations list
+                        table.Reservations.Add(reservation);
+                    }
                 }
             }
 
             // Update the tables list with available tables
-            tables = tables.Where(t => t.Reservations.All(r => r.Date != selectedDate.ToString("dd-MMM-yyyy") || r.TimeSlot != selectedTimeSlot)).ToList();
+            tables = tables.Where(t => IsTableAvailable(t, selectedDate, selectedTimeSlot)).ToList();
         }
+
     }
+
+    private static bool IsTimeSlotAvailable(Table table, DateTime selectedDate, string selectedTimeSlot)
+    {
+        // Check if any of the table's reservations overlap with the selected time slot
+        return table.Reservations.All(reservation =>
+        {
+            return !(reservation.Date == selectedDate.ToString("dd-MMM-yyyy") &&
+                     (reservation.TimeSlot == selectedTimeSlot || reservation.TimeSlotTwo == selectedTimeSlot));
+        });
+    }
+
+    private static bool IsTableAvailable(Table table, DateTime selectedDate, string selectedTimeSlot)
+    {
+        // Check if the table has no reservations that overlap with the selected time slot
+        return table.Reservations.All(reservation =>
+        {
+            return !(reservation.Date == selectedDate.ToString("dd-MMM-yyyy") &&
+                     (reservation.TimeSlot == selectedTimeSlot || reservation.TimeSlotTwo == selectedTimeSlot));
+        });
+    }
+
 
 
     static void SaveReservationDataToJson(List<Reservation> reservations)
