@@ -31,21 +31,21 @@ class ReservationSystem
         {
             tables = new List<Table>()
             {
-                new Table(1, (1, 1), 2, false),
-                new Table(2, (2, 1), 2, false),
-                new Table(3, (3, 1), 2, false),
-                new Table(4, (1, 2), 2, false),
-                new Table(5, (2, 2), 2, false),
-                new Table(6, (3, 2), 2, false),
-                new Table(7, (1, 3), 2, false),
-                new Table(8, (2, 3), 2, false),
-                new Table(9, (3, 3), 4, false),
-                new Table(10, (1, 4), 4, false),
-                new Table(11, (2, 4), 4, false),
-                new Table(12, (3, 4), 4, false),
-                new Table(13, (1, 5), 4, false),
-                new Table(14, (2, 5), 6, false),
-                new Table(15, (3, 5), 6, false),
+                new Table(1, (1, 1), 2, 7.50, false),
+                new Table(2, (2, 1), 2, 7.50, false),
+                new Table(3, (3, 1), 2, 7.50, false),
+                new Table(4, (1, 2), 2, 7.50, false),
+                new Table(5, (2, 2), 2, 7.50, false),
+                new Table(6, (3, 2), 2, 7.50, false),
+                new Table(7, (1, 3), 2, 7.50, false),
+                new Table(8, (2, 3), 2, 7.50, false),
+                new Table(9, (3, 3), 4, 10.0, false),
+                new Table(10, (1, 4), 4, 10.0, false),
+                new Table(11, (2, 4), 4, 10.0, false),
+                new Table(12, (3, 4), 4, 10.0, false),
+                new Table(13, (1, 5), 4, 10.0, false),
+                new Table(14, (2, 5), 6, 15.0, false),
+                new Table(15, (3, 5), 6, 15.0, false),
             };
             WriteToFile(tables, TablesJson);
         }
@@ -365,6 +365,7 @@ class ReservationSystem
         foreach (Table table in Tables)
         {
             string ws = table.TableNumber < 10 ? " " : ""; // ws = whitespace to format the table options
+            string wst = table.TablePrice < 10 ? " " : ""; // wst = whitespace table to format the table options
 
             if (table.IsReservated)
             {
@@ -381,14 +382,15 @@ class ReservationSystem
                 Console.ForegroundColor = ConsoleColor.Green; // Green for available
             }
 
+            string tablePrice = table.TablePrice.ToString("F2");
             if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
             {
-                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity} Seats]  ");
+                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}]  {wst}");
                 selectedTable = table;
             }
             else
             {
-                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity} Seats   ");
+                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}   {wst}");
             }
             Console.ResetColor();
 
