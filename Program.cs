@@ -1,10 +1,8 @@
-﻿namespace MiniProject1_V1
+class Program
 {
-    class Program
+    public static void Main()
     {
-        public static void Main()
-        {
-            Console.WriteLine("Hello World");
-        }
+        Menu x = new();
+        x.RunMenu();
     }
 }
