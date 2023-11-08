@@ -1,13 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
+using System.Threading;
 
 public static class FoodMenu
 {
-    public static List<MenuItem> MenuItems = new();
+    //parsed data
+    //private static List<MenuItem> MenuItems = new();
 
+    private static int selectedOption = 1;
+
+    public static readonly Dictionary<string, string> categoryEmojis = new Dictionary<string, string>
+    {
+        { "Meat", "🥩" },
+        { "Chicken", "🍗" },
+        { "Fish", "🐟" },
+        { "Vegetarian", "🥦" }
+    };
+
+    //raw data
     public static List<MenuItem>? LoadFoodMenuData()
     {
         try
@@ -18,82 +33,163 @@ public static class FoodMenu
             return items;
         }
         catch (JsonReaderException)
-        {
-            Console.WriteLine("reader exp");
-            return null; }
+        { return null; }
         catch (FileNotFoundException)
-        {
-            Console.WriteLine("file not not found");
-            return null; }
+        { return null; }
         catch (UnauthorizedAccessException)
-        {
-            Console.WriteLine("Unauthorized acces");
-            return null; }
+        { return null; }
     }
 
     public static void Display()
     {
-        MenuItems = GetDefaultMenu();
+        Console.CursorVisible = false;
+        PrintInfo(GetDefaultMenu().timeslotMenu, GetDefaultMenu().timeslot, true);
+
         while (true)
         {
-            Console.WriteLine(); Console.WriteLine("==================================================================================================================");
-            for (int i = 0; i < MenuItems.Count; i++)
+            Console.Clear();
+            //PrintInfo(GetDefaultMenu().timeslotMenu, GetDefaultMenu().timeslot, false);
+            DisplayMenuOptions();
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
             {
-                Console.WriteLine($"{i + 1}. {MenuItems[i].Name,-20} {MenuItems[i].Price,74}");
-                if (MenuItems[i].Description.Length > 52)
-                {
-                    Console.WriteLine($"{MenuItems[i].Description.Substring(0, 50)}- {MenuItems[i].AllergensInfo,60}");
-                    Console.WriteLine(MenuItems[i].Description.Substring(50, MenuItems[i].Description.Length - 50));
-                }
-                else
-                {
-                    Console.WriteLine($"{MenuItems[i].Description,-50} {MenuItems[i].AllergensInfo,60}");
-                }
-                Console.WriteLine($"Ingredients: {string.Join(", ", MenuItems[i].Ingredients)}");
-                Console.WriteLine();
+                selectedOption--;
             }
-            Console.WriteLine("==================================================================================================================");
-            Console.WriteLine();
-            Console.WriteLine("Would you like to see the other menu?");
-            Console.WriteLine("1. Lunch");
-            Console.WriteLine("2. Dinner");
-            Console.WriteLine("3. Exit");
-
-            string? choice = Console.ReadLine();
-
-            switch (choice)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
             {
-                case "1":
-                    MenuItems = GetLunchMenu();
+                selectedOption++;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                HandleSelection();
+            }
+        }
+    }
+
+    public static void PrintInfo(List<MenuItem> MenuItems, string timeSlot, bool keyContinue = true)
+    {
+        Console.Clear();
+        Console.WriteLine(timeSlot);
+        Console.WriteLine(); Console.WriteLine("==================================================================================================================");
+        for (int i = 0; i < MenuItems.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {MenuItems[i].Name,-20} {MenuItems[i].Price,74}");
+            if (MenuItems[i].Description.Length > 52)
+            {
+                Console.WriteLine($"{MenuItems[i].Description.Substring(0, 50)}- {MenuItems[i].AllergensInfo,60}");
+                Console.WriteLine(MenuItems[i].Description.Substring(50, MenuItems[i].Description.Length - 50));
+            }
+            else
+            {
+                Console.WriteLine($"{MenuItems[i].Description,-50} {MenuItems[i].AllergensInfo,60}");
+            }
+            Console.WriteLine($"Ingredients: {string.Join(", ", MenuItems[i].Ingredients)}");
+            Console.WriteLine();
+            Thread.Sleep(100);
+        }
+        Console.WriteLine("==================================================================================================================");
+
+        if (keyContinue)
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+        }
+
+    }
+
+    private static void DisplayMenuOptions()
+    {
+        for (int i = 1; i <= 4; i++)
+        {
+            if (i == selectedOption)
+            {
+                Console.Write(">");
+            }
+            else
+            {
+                Console.Write(" ");
+            }
+
+            switch (i)
+            {
+                case 1:
+                    Console.WriteLine(" Lunch");
                     break;
-                case "2":
-                    MenuItems = GetDinnerMenu();
+                case 2:
+                    Console.WriteLine(" Dinner");
                     break;
-                case "3":
-                    return;
-                default:
-                    Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
+                case 3:
+                    Console.WriteLine(" Sort menu by category");
+                    break;
+                case 4:
+                    Console.WriteLine(" Exit");
                     break;
             }
         }
     }
 
-    static List<MenuItem> GetDefaultMenu()
+    /*switch (i)
     {
+        case 1:
+            MenuItems = GetLunchMenu();
+            break;
+        case 2:
+            MenuItems = GetDinnerMenu();
+            break;
+        case 3:
+            MenuItems = SortFoodMenu.SortMenu();
+            //SortFoodMenu.SortMenu().ForEach(x => Console.WriteLine(x));
+            break;
+        case 4:
+            return;
 
-        var allItems = FoodMenu.LoadFoodMenuData();
+        default:
+            Console.WriteLine("Invalid choice. Please enter 1, 2, 3 or 4.");
+            break;
+    }*/
+
+
+    private static void HandleSelection()
+    {
+        Console.Clear();
+
+        switch (selectedOption)
+        {
+            case 1:
+                PrintInfo(GetLunchMenu(), "Lunch");
+                break;
+            case 2:
+
+                PrintInfo(GetDinnerMenu(), "Dinner");
+                break;
+            case 3:
+                string timeSlot = SortFoodMenu.cursoroptionTimeSlot();
+                PrintInfo(SortFoodMenu.cursoroptionMenu(), timeSlot);
+                //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
+                break;
+            case 4:
+                Environment.Exit(0);
+                break;
+        }
+    }
+
+    public static (string timeslot, List<MenuItem> timeslotMenu) GetDefaultMenu()
+    {
+        string x = "";
+        var allItems = LoadFoodMenuData();
         List<MenuItem> timeslotMenu = new List<MenuItem>();
 
         var dt = SetTime();
         DateOnly date = dt.date;
         TimeOnly time = dt.time;
 
-
-
         if (ifDinner(time) && allItems != null)
         {
             var dinnerMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
             timeslotMenu.AddRange(dinnerMenuItems);
+            x = "Dinner Menu";
 
         }
         else
@@ -102,15 +198,14 @@ public static class FoodMenu
             {
                 var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
                 timeslotMenu.AddRange(lunchMenuItems);
+                x = "Lunch Menu";
             }
         }
 
-        FoodMenu.MenuItems.AddRange(timeslotMenu);
-
-        return timeslotMenu;
+        return (x, timeslotMenu);
     }
 
-    static bool ifDinner(TimeOnly time)
+    public static bool ifDinner(TimeOnly time)
     {
         TimeOnly startTime = new TimeOnly(18, 0);
         TimeOnly endTime = new TimeOnly(22, 0);
@@ -123,7 +218,7 @@ public static class FoodMenu
         return false;
     }
 
-    static (DateOnly date, TimeOnly time) SetTime()
+    public static (DateOnly date, TimeOnly time) SetTime()
     {
         DateTime now = DateTime.Now;
 
@@ -134,10 +229,11 @@ public static class FoodMenu
 
     }
 
-    static List<MenuItem> GetLunchMenu()
+    public static List<MenuItem> GetLunchMenu()
     {
-        var allItems = FoodMenu.LoadFoodMenuData();
+        var allItems = LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
+
 
         var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
         tempMenu.AddRange(lunchMenuItems);
@@ -145,9 +241,9 @@ public static class FoodMenu
         return tempMenu;
     }
 
-    static List<MenuItem> GetDinnerMenu()
+    public static List<MenuItem> GetDinnerMenu()
     {
-        var allItems = FoodMenu.LoadFoodMenuData();
+        var allItems = LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
 
         var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
