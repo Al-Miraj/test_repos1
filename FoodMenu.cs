@@ -63,7 +63,8 @@ public static class FoodMenu
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                HandleSelection();
+                bool exitMenu = HandleSelection();
+                if (exitMenu) { break; }
             }
         }
     }
@@ -151,9 +152,10 @@ public static class FoodMenu
     }*/
 
 
-    private static void HandleSelection()
+    private static bool HandleSelection()
     {
         Console.Clear();
+        bool exitMenu = false;
 
         switch (selectedOption)
         {
@@ -166,13 +168,15 @@ public static class FoodMenu
                 break;
             case 3:
                 string timeSlot = SortFoodMenu.cursoroptionTimeSlot();
+                if (timeSlot == "") { break; }
                 PrintInfo(SortFoodMenu.cursoroptionMenu(), timeSlot);
                 //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
                 break;
             case 4:
-                Environment.Exit(0);
+                exitMenu = true;
                 break;
         }
+        return exitMenu;
     }
 
     public static (string timeslot, List<MenuItem> timeslotMenu) GetDefaultMenu()

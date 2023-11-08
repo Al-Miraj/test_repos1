@@ -304,7 +304,6 @@ public static class SortFoodMenu
             case 2:
                 return "Dinner";
             case 3:
-                Environment.Exit(0);
                 break;
         }
 
