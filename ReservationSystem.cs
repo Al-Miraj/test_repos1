@@ -74,9 +74,16 @@ class ReservationSystem
 
     public void Reservate()
     {
+        Deal partyDeal = Restaurant.Deals[0];
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
         Reservation.NumberOfPeople = numberOfPeople;
+        if (partyDeal.PartyDealIsApplicable(numberOfPeople))  // reden voor deze oplossing benoemen in de test rapport
+        {
+            Reservation.Discount = 0.10;
+            partyDeal.DisplayDealIsAplied();
+        }
+        //CheckForDeals();
 
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly selectedDate = GetReservationDate();

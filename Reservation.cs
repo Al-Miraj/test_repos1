@@ -30,6 +30,7 @@ public class Reservation
     public DateOnly? Date { get; set; }
     public string? TimeSlot { get; set; }
     public Table? SelectedTable { get; set; }
+    public double? Discount;
 
     public Reservation(int? reservationNumber, int? numberOfPeople, DateOnly? date, string? timeSlot, Table? selectedTable)
     {
@@ -51,5 +52,25 @@ public class Reservation
         return $"Reservation Number: {ReservationNumber}\nAmount of People: {NumberOfPeople}\nDate: {Date}\nTimeslot: {TimeSlot}\nTable number: {SelectedTable.TableNumber}";
     }
 
+    //public void AddDeal(Deal deal)
+    //{
+    //    if (deal != null)
+    //    {
+    //        if (deal is GuestAmountDiscountDeal)
+    //        { DealsApplied.Add(deal);}
+    //    }
+    //}
 
+    // todo: get the total price of the reservation and store it
+    //public double GetTotalPrice()
+    //{
+    //    if (DealsApplied.Count > 0)
+    //    {
+    //        foreach (Deal deal in DealsApplied)
+    //        {
+
+    //        }
+    //    }
+    //    return TotalPrice;
+    //}
 }
