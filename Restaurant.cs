@@ -1,18 +1,24 @@
 ﻿using Newtonsoft.Json;
 
-public class Restaurant
+public static class Restaurant
 {
-    public List<Deal> Deals = new List<Deal>();
-    public string DealsJson = "Deals.json";
-    public Restaurant()
+    public static int MaxTableCapacity;
+    public static List<Deal> Deals;
+    public static string DealsJson;
+
+    static Restaurant()
     {
+        MaxTableCapacity = 10;
+        DealsJson = "Deals.json";
+
         Deals = InitializeDeals();
+        
     }
 
-    public List<Deal> InitializeDeals()
+
+    static public List<Deal> InitializeDeals()
     {
         List<Deal> deals;
-
 
         try
         {
@@ -40,7 +46,7 @@ public class Restaurant
         return deals;
     }
 
-    public void DisplayDeals()
+    public static void DisplayDeals()
     {
         Console.Clear();
 
@@ -48,8 +54,8 @@ public class Restaurant
         Console.WriteLine(" ___   ____   __    _     __ ");
         Console.WriteLine("| | \\ | |_   / /\\  | |   ( (` ");
         Console.WriteLine("|_|_/ |_|__ /_/--\\ |_|__ _)_) ");
-        Console.WriteLine("\n");
         Console.WriteLine("-------------------------------\n");
+        Console.WriteLine("Deals that we are currently offering!");
 
 
         foreach (Deal deal in Deals)

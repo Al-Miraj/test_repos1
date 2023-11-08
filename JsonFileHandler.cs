@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
-
+﻿
+using Newtonsoft.Json;
+/*
 public static class JsonFileHandler
 {
     public static void WriteToFile<T>(List<T> data, string fileName)
@@ -16,7 +17,7 @@ public static class JsonFileHandler
     }
 
     public static List<T> ReadFromFile<T>(string fileName)
-    {        
+    {
         try
         {
             string json = File.ReadAllText(fileName);
@@ -33,19 +34,19 @@ public static class JsonFileHandler
             {
                 throw new IOException("Invalid JSON. " + ex.Message, ex);
             }
-            else { throw new IOException("Something went wrong. " + ex.Message, ex); }
+            else { throw new IOException("Somethingggg went wrong. " + ex.Message, ex); }
         }
     }
 }
+*/
 
-/*
- O L D   M E T H O D S
-    (Need feedback from the PO, so im saving the old versions just in case)
+// O L D   M E T H O D S
+//   (Need feedback from the PO, so im saving the old versions just in case)
  
 
 public static class JsonFileHandler
 {
-    public static void WriteToFile(List<T> deals, string dealsFileName)
+    public static void WriteToFile<T>(List<T> deals, string dealsFileName)
     {
         StreamWriter writer = new StreamWriter(dealsFileName);
         writer.Write(JsonConvert.SerializeObject(deals, new JsonSerializerSettings { Formatting = Formatting.Indented }));
@@ -61,4 +62,3 @@ public static class JsonFileHandler
         return deals;
     }
 }
- */

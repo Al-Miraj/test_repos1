@@ -31,21 +31,21 @@ class ReservationSystem
         {
             tables = new List<Table>()
             {
-                new Table(1, (1, 1), 2, false),
-                new Table(2, (2, 1), 2, false),
-                new Table(3, (3, 1), 2, false),
-                new Table(4, (1, 2), 2, false),
-                new Table(5, (2, 2), 2, false),
-                new Table(6, (3, 2), 2, false),
-                new Table(7, (1, 3), 2, false),
-                new Table(8, (2, 3), 2, false),
-                new Table(9, (3, 3), 4, false),
-                new Table(10, (1, 4), 4, false),
-                new Table(11, (2, 4), 4, false),
-                new Table(12, (3, 4), 4, false),
-                new Table(13, (1, 5), 4, false),
-                new Table(14, (2, 5), 6, false),
-                new Table(15, (3, 5), 6, false),
+                new Table(1, (1, 1), 2, 7.50, false),
+                new Table(2, (2, 1), 2, 7.50, false),
+                new Table(3, (3, 1), 2, 7.50, false),
+                new Table(4, (1, 2), 2, 7.50, false),
+                new Table(5, (2, 2), 2, 7.50, false),
+                new Table(6, (3, 2), 2, 7.50, false),
+                new Table(7, (1, 3), 2, 7.50, false),
+                new Table(8, (2, 3), 2, 7.50, false),
+                new Table(9, (3, 3), 4, 10, false),
+                new Table(10, (1, 4), 4, 10, false),
+                new Table(11, (2, 4), 4, 10, false),
+                new Table(12, (3, 4), 4, 10, false),
+                new Table(13, (1, 5), 4, 10, false),
+                new Table(14, (2, 5), 6, 15, false),
+                new Table(15, (3, 5), 6, 15, false),
             };
             WriteToFile(tables, TablesJson);
         }
@@ -74,9 +74,16 @@ class ReservationSystem
 
     public void Reservate()
     {
+        Deal partyDeal = Restaurant.Deals[0];
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
         Reservation.NumberOfPeople = numberOfPeople;
+        if (partyDeal.PartyDealIsApplicable(numberOfPeople))  // reden voor deze oplossing benoemen in de test rapport
+        {
+            Reservation.Discount = 0.10;
+            partyDeal.DisplayDealIsAplied();
+        }
+        //CheckForDeals();
 
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly selectedDate = GetReservationDate();
@@ -105,28 +112,44 @@ class ReservationSystem
         }
     }
 
+    //public void CheckForDeals()
+    //{
+    //    foreach (Deal deal in Restaurant.Deals)
+    //    {
+    //        if (deal is GuestAmountDiscountDeal)
+    //        {
+                 
+    //            GuestAmountDiscountDeal guestAmountDiscountDeal = deal as GuestAmountDiscountDeal;
+    //            if (guestAmountDiscountDeal.IsApplicable(Reservation.NumberOfPeople)) 
+    //            { Reservation.AddDeal(deal); deal.DisplayDealIsAplied(); }
+
+    //            return ;
+    //        }
+    //    }
+    //}
+
     public int GetNumberOfPeople()
     {
         int numberOfPeople;
         bool IsIncorrectFormat;
         bool IsSmallerThan0;
-        bool IsBiggerThan6;
+        //bool IsBiggerThan6;
 
         do
         {
             string number = Console.ReadLine().Trim();
             IsIncorrectFormat = !int.TryParse(number, out numberOfPeople); //true if the format is incorrect
             IsSmallerThan0 = numberOfPeople <= 0;
-            IsBiggerThan6 = numberOfPeople > 6;
+            //IsBiggerThan6 = numberOfPeople > 6;
             if (IsIncorrectFormat)
                 Console.WriteLine("Invalid input. Please enter a valid number of people like: 7, 1, 12, etc");
             else if (IsSmallerThan0)
                 Console.WriteLine("Invalid input. Please enter a number greater than 0.");
-            else if (IsBiggerThan6)
-                Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
+            //else if (IsBiggerThan6)
+            //    Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
 
         }
-        while (IsIncorrectFormat || IsSmallerThan0 || IsBiggerThan6);
+        while (IsIncorrectFormat || IsSmallerThan0 /*|| IsBiggerThan6*/);
 
         Console.Clear();
         return numberOfPeople;
@@ -296,7 +319,7 @@ class ReservationSystem
             else
             {
                 Console.WriteLine("Sorry! We are booked!");
-                break;
+                return selectedTable;
             }
 
         }
