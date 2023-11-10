@@ -94,12 +94,15 @@ public class Menu
                         Console.WriteLine(" Contact Us");
                         break;
                     case 4:
-                        Console.WriteLine(" Menu");
+                        Console.WriteLine(" Food");
                         break;
                     case 5:
-                        Console.WriteLine(" Login");
+                        Console.WriteLine(" Drinks");
                         break;
                     case 6:
+                        Console.WriteLine(" Login");
+                        break;
+                    case 7:
                         Console.WriteLine(" Exit");
                         break;
                 }
@@ -147,9 +150,13 @@ public class Menu
                 FoodMenu.Display();
                 break;
             case 5:
-                Console.WriteLine("Login - Enter your credentials to log in.");
+                Console.WriteLine("Drinks lalalalala");
+                DrinksMenu.Display();
                 break;
             case 6:
+                Console.WriteLine("Login - Enter your credentials to log in.");
+                break;
+            case 7:
                 Console.WriteLine("Goodbye! Thank you for visiting.");
                 Environment.Exit(0);
                 break;

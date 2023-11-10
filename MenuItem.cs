@@ -10,10 +10,11 @@ public class MenuItem
     public double Price { get; set; }
     public string Timeslot { get; set; }
     public string Category { get; set; }
+    public List<string> potentialAllergens { get; set; }
     public string? Icon;
     private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
-    public MenuItem(string name, string description, List<string> ingredients, double price, string timeslot, string icon)
+    public MenuItem(string name, string description, List<string> ingredients, double price, string timeslot, List<string> potentialAllergens, string icon)
     {
         Name = name;
         Description = description;
@@ -21,6 +22,7 @@ public class MenuItem
         Price = price;
         Timeslot = timeslot;
         Category = icon;
+        this.potentialAllergens = potentialAllergens;
         Icon = icon switch  // Easier then regular switch 
         {
             "Meat" => "🥩",

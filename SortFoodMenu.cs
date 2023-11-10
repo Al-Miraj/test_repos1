@@ -234,8 +234,9 @@ public static class SortFoodMenu
     public static List<MenuItem> SortIngredients(List<string> ingredients, string menuType)
     {
         List<MenuItem> unsortedItems = menuType == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
-        List<MenuItem> temp = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient))).ToList();
-        temp = temp.OrderBy(x => x.Price).ToList();
+        List<MenuItem> temp = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient.ToLower()))).ToList();
+        //List<MenuItem> temp2 = temp.Where(x => x.potentialAllergens.Select(y => y.ToLower()).Any(allergy => ingredients.Contains(allergy.ToLower()))).ToList();
+        List<MenuItem> sortedMenu = temp.OrderBy(x => x.Price).ToList();
         return temp;
     }
 

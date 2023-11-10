@@ -39,7 +39,6 @@ public static class FoodMenu
         catch (UnauthorizedAccessException)
         { return null; }
     }
-
     public static void Display()
     {
         Console.CursorVisible = false;
@@ -90,6 +89,9 @@ public static class FoodMenu
             Thread.Sleep(100);
         }
         Console.WriteLine("==================================================================================================================");
+
+
+
 
         if (keyContinue)
         {
