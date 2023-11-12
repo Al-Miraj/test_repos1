@@ -74,17 +74,25 @@ class ReservationSystem
 
     public void Reservate()
     {
-        Deal partyDeal = Restaurant.Deals[0];
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
         Reservation.NumberOfPeople = numberOfPeople;
-        if (partyDeal.PartyDealIsApplicable(numberOfPeople))  // reden voor deze oplossing benoemen in de test rapport
+        Deal deal = Restaurant.GetDealByName("Party Deal");
+        if (deal != null)
         {
-            Reservation.Discount = 0.10;
-            partyDeal.DisplayDealIsAplied();
+            PartyDeal partyDeal = PartyDeal.DealToPartyDeal(deal);
+            bool isApplicable = partyDeal.DealIsApplicable(numberOfPeople);
+            if (isApplicable) 
+            { 
+                partyDeal.DisplayDealIsAplied();
+                Reservation.DealsApplied.Add(partyDeal);
+                Reservation.Discount = partyDeal.DiscountFactor;
+                Console.WriteLine("\n [Press any key to continue]");
+                Console.ReadLine();
+            }
         }
-        //CheckForDeals();
-
+        
+        Console.Clear();
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly selectedDate = GetReservationDate();
         Reservation.Date = selectedDate;
@@ -98,6 +106,7 @@ class ReservationSystem
         if (selectedTable != null)
         {
             Reservation.SelectedTable = selectedTable;
+            Reservation.NonDiscountedPrice += selectedTable.TablePrice;
 
             int reservationNumber = GenerateReservationNumber();
             Reservation.ReservationNumber = reservationNumber;
@@ -135,7 +144,6 @@ class ReservationSystem
         }
         while (IsIncorrectFormat || IsSmallerThan0 /*|| IsBiggerThan6*/);
 
-        Console.Clear();
         return numberOfPeople;
     }
 
@@ -303,10 +311,10 @@ class ReservationSystem
             Console.Clear();
             DisplayTablesMap();
             selectedTable = ShowSelectedTable(xc, yc);
-            TableSelectionFeedback(selectedTable);
 
             if (selectedTable != null)
             {
+                TableSelectionFeedback(selectedTable);
                 keyInfo = Console.ReadKey();
                 if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
                 {
@@ -424,6 +432,12 @@ class ReservationSystem
         Console.WriteLine("R E S E R V A T I O N   D E T A I L S\n");
         Console.WriteLine($"You reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
         Console.WriteLine($"Your reservation number: {R.ReservationNumber}");
+        Console.WriteLine($"Deals applied:");
+        foreach (Deal deal in R.DealsApplied)
+        {
+            Console.WriteLine($"  > {deal.Name} ({deal.DiscountFactor * 100}% discount)");
+        }
+        Console.WriteLine($"Total Price: {R.GetTotalPrice()}");
     }
 
     public int GenerateReservationNumber()

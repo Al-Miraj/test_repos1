@@ -30,7 +30,9 @@ public class Reservation
     public DateOnly? Date { get; set; }
     public string? TimeSlot { get; set; }
     public Table? SelectedTable { get; set; }
-    public double? Discount;
+    public List<Deal> DealsApplied = new List<Deal>();
+    public double NonDiscountedPrice = 0;
+    public double Discount = 0;
 
     public Reservation(int? reservationNumber, int? numberOfPeople, DateOnly? date, string? timeSlot, Table? selectedTable)
     {
@@ -50,6 +52,11 @@ public class Reservation
     public override string ToString()
     {
         return $"Reservation Number: {ReservationNumber}\nAmount of People: {NumberOfPeople}\nDate: {Date}\nTimeslot: {TimeSlot}\nTable number: {SelectedTable.TableNumber}";
+    }
+
+    public double GetTotalPrice()
+    {
+        return NonDiscountedPrice * (1 - Discount);
     }
 
     //public void AddDeal(Deal deal)

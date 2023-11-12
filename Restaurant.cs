@@ -4,13 +4,12 @@ public static class Restaurant
 {
     public static int MaxTableCapacity;
     public static List<Deal> Deals;
-    public static string DealsJson;
+    public static string DealsJsonFileName;
 
     static Restaurant()
     {
         MaxTableCapacity = 10;
-        DealsJson = "Deals.json";
-
+        DealsJsonFileName = "Deals.xml";
         Deals = InitializeDeals();
 
     }
@@ -19,31 +18,35 @@ public static class Restaurant
     static public List<Deal> InitializeDeals()
     {
         List<Deal> deals;
-
-        try
+        if (File.Exists(DealsJsonFileName))
         {
-            deals = JsonFileHandler.ReadFromFile<Deal>(DealsJson);
+            deals = XmlFileHandler.ReadFromFile<Deal>(DealsJsonFileName);
         }
-        catch (FileNotFoundException)
+        else
         {
             string dealName = "Party Deal";
             string dealDescription = "For groups of 10 people or more, you get a 10% discount."; //todo: discount on what tho?
             double dealDiscountFactor = 0.10; // 10% discount
+            int minAmountGuests = 6; //todo change back to 10
             deals = new List<Deal>()
-                {
-                    new Deal(dealName, dealDescription, dealDiscountFactor)
-                };
-            try
             {
-                JsonFileHandler.WriteToFile(deals, DealsJson);
-            }
-            catch (Exception ex) { throw new IOException(ex.Message); }
-        }
-        catch (Exception ex)
-        {
-            throw new IOException(ex.Message);
+                new PartyDeal(dealName, dealDescription, dealDiscountFactor, minAmountGuests)
+            };
+            XmlFileHandler.WriteToFile(deals, DealsJsonFileName);
         }
         return deals;
+    }
+
+    public static Deal? GetDealByName(string dealName)
+    {
+        foreach (Deal deal in Deals)
+        {
+            if (deal.Name == dealName)
+            {
+                return deal;
+            }
+        }
+        return null;
     }
 
     public static void DisplayDeals()
@@ -55,14 +58,21 @@ public static class Restaurant
         Console.WriteLine("| | \\ | |_   / /\\  | |   ( (` ");
         Console.WriteLine("|_|_/ |_|__ /_/--\\ |_|__ _)_) ");
         Console.WriteLine("-------------------------------\n");
-        Console.WriteLine("Deals that we are currently offering!");
+        Console.WriteLine("Deals that we are currently offering!\n");
 
-
-        foreach (Deal deal in Deals)
+        if (Deals.Count <= 0) 
+        { 
+            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!"); 
+            return;  
+        }
+        else
         {
-            Console.WriteLine(deal.Name);
-            Console.WriteLine(deal.Description);
-            Console.WriteLine("===========================================\n");
+            foreach (Deal deal in Deals)
+            {
+                Console.WriteLine(deal.Name);
+                Console.WriteLine(deal.Description);
+                Console.WriteLine("===========================================\n");
+            }
         }
     }
 }

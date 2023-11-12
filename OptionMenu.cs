@@ -148,7 +148,6 @@ public class Menu
                 FoodMenu.Display();
                 break;
             case 5:
-                Console.WriteLine("Here are all the deals we are currently offering:");
                 Restaurant.DisplayDeals();
                 break;
             case 6:
