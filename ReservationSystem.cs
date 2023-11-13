@@ -5,9 +5,8 @@ using System.Text.Json;
 public static class ReservationSystem // Made class static so loginsystem and dashboard don't rely on instances
 {
     public static string TablesJson = "Tables.json"; //
-    public static Reservation Reservation;
-    public static List<Table> Tables;
-    public static List<Reservation> Reservations = Utensils.ReadJson<List<Reservation>>("Reservations.json") ?? new List<Reservation>(); // List to store reservations
+    public static List<Table> Tables = InitializeTables();
+    public static List<Reservation> Reservations = Utensils.ReadJson<List<Reservation>>("ReservationsData.json") ?? new List<Reservation>(); // List to store reservations
     public static Random Random = new Random();
 
 
@@ -15,9 +14,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
     {
         // all the restaurant tables are put in a list upon
         // initializing a ReservationSystem object
-        Tables = InitializeTables(); // todo: change name
+        //Tables = InitializeTables(); // todo: change name
         // todo create mechanism that creates a new reservation object when reservating
-        Reservation = new Reservation();
     }
 
     public static List<Table> InitializeTables()
@@ -77,60 +75,63 @@ public static class ReservationSystem // Made class static so loginsystem and da
     {
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
-        Reservation.NumberOfPeople = numberOfPeople;
         Deal deal = Restaurant.GetDealByName("Party Deal");
+        bool addPartyDeal;
+        PartyDeal partyDeal;
         if (deal != null)
         {
-            PartyDeal partyDeal = PartyDeal.DealToPartyDeal(deal);
+            partyDeal = PartyDeal.DealToPartyDeal(deal);
             bool isApplicable = partyDeal.DealIsApplicable(numberOfPeople);
             if (isApplicable) 
             { 
                 partyDeal.DisplayDealIsAplied();
-                Reservation.DealsApplied.Add(partyDeal);
-                Reservation.Discount = partyDeal.DiscountFactor;
+                addPartyDeal = true;
                 Console.WriteLine("\n [Press any key to continue]");
                 Console.ReadLine();
             }
+            else { addPartyDeal = false; partyDeal = null; }
         }
+        else { addPartyDeal = false; partyDeal = null; }
         
         Console.Clear();
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly selectedDate = GetReservationDate();
-        Reservation.Date = selectedDate;
 
         string timeslot = GetTimeslot();
-        Console.WriteLine(timeslot);
-        Reservation.TimeSlot = timeslot;
 
-        Table selectedTable = GetChosenTable();
-        Console.WriteLine(selectedTable);
+        Table selectedTable = GetChosenTable(numberOfPeople);
         if (selectedTable != null)
         {
-            Reservation.SelectedTable = selectedTable;
-            Reservation.NonDiscountedPrice += selectedTable.TablePrice;
             int reservationNumber = GenerateReservationNumber();
-            Reservation.ReservationNumber = reservationNumber;
+            Reservation reservation = new Reservation(reservationNumber, numberOfPeople, selectedDate, timeslot, selectedTable);
+            if (addPartyDeal && partyDeal != null)
+            {
+                reservation.DealsApplied.Add(partyDeal);
+                reservation.Discount = partyDeal.DiscountFactor;
+            }
+            reservation.SelectedTable = selectedTable;
+            reservation.NonDiscountedPrice += selectedTable.TablePrice;
+            UpdateJson(); // Reservation added to json
 
-            HandleSecondReservation();
+            HandleSecondReservation(reservation);
 
             // todo: reservations must be stored somehow
         }
         else
         {
             Console.WriteLine("You weren't able to finish the reservation.");
-            Reservation = new Reservation();
         }
 
     }
 
 
-    public static void HandleSecondReservation()
+    public static void HandleSecondReservation(Reservation reservation)
     {
         bool bookAgain = true;
         while (true)
         {
             Console.Clear();
-            DisplayReservationDetails();
+            DisplayReservationDetails(reservation);
             Console.WriteLine("\nWould you like to book the same table again today?");
             if (bookAgain)
             {
@@ -155,7 +156,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
             {
                 if (bookAgain)
                 {
-                    if (BookAgain()) { break; }
+                    if (BookAgain(reservation)) { break; }
                 }
                 else
                 {
@@ -167,27 +168,26 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
     }
 
-    public static bool BookAgain()
+    public static bool BookAgain(Reservation reservation)
     {
         Console.Clear();
         Console.WriteLine("Booking again...\n");
 
         string secondtimeslot = GetTimeslot();
-        Reservation.SecondTimeSlot = secondtimeslot;
+        reservation.SecondTimeSlot = secondtimeslot;
 
-        Table secondselectedTable = GetChosenTable();
+        Table secondselectedTable = GetChosenTable(reservation.NumberOfPeople);
         if (secondselectedTable != null)
         {
-            Reservation.SecondSelectedTable = secondselectedTable;
-            Reservation.NonDiscountedPrice += secondselectedTable.TablePrice;
+            reservation.SecondSelectedTable = secondselectedTable;
+            reservation.NonDiscountedPrice += secondselectedTable.TablePrice;
             Console.Clear();
-            DisplayReservationDetails();
+            DisplayReservationDetails(reservation);
             return true;
         }
         else
         {
             Console.WriteLine("You weren't able to finish the reservation.");
-            Reservation = new Reservation();
         }
         return false;
     }
@@ -369,7 +369,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return (maxX, maxY);
     }
 
-    public static Table GetChosenTable()
+    public static Table GetChosenTable(int numberOfPeople)
     {
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
@@ -382,11 +382,11 @@ public static class ReservationSystem // Made class static so loginsystem and da
         {
             Console.Clear();
             DisplayTablesMap();
-            selectedTable = ShowSelectedTable(xc, yc);
+            selectedTable = ShowSelectedTable(xc, yc, numberOfPeople);
 
             if (selectedTable != null)
             {
-                TableSelectionFeedback(selectedTable);
+                TableSelectionFeedback(selectedTable, numberOfPeople);
                 keyInfo = Console.ReadKey();
                 if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
                 {
@@ -408,7 +408,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 {
                     if (!selectedTable.IsReservated) // the table has not been reservated yet
                     {
-                        if (Reservation.NumberOfPeople <= selectedTable.Capacity) // the table has enough seats
+                        if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
                         {
                             selectedTable.IsReservated = true; // table at that coordinate has now been reservated
                             WriteToFile(Tables, TablesJson);
@@ -429,19 +429,19 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return selectedTable;
     }
 
-    public static void TableSelectionFeedback(Table selectedTable)
+    public static void TableSelectionFeedback(Table selectedTable, int numberOfPeople)
     {
         if (selectedTable.IsReservated)
         {
             Console.WriteLine($"\nTable {selectedTable.TableNumber} has already been reservated. try another!");
         }
-        else if (Reservation.NumberOfPeople > selectedTable.Capacity)
+        else if (numberOfPeople > selectedTable.Capacity)
         {
             Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
         }
     }
 
-    public static Table ShowSelectedTable(int xc, int yc)
+    public static Table ShowSelectedTable(int xc, int yc, int numberOfPeople)
     {
         Table selectedTable = null;
         int availableTablesCount = 0;
@@ -459,7 +459,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.ForegroundColor = ConsoleColor.Red;
                 availableTablesCount++;
             }
-            else if (Reservation.NumberOfPeople > table.Capacity)
+            else if (numberOfPeople > table.Capacity)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 availableTablesCount++;
@@ -494,9 +494,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return selectedTable;
     }
 
-    public static void DisplayReservationDetails()
+    public static void DisplayReservationDetails(Reservation R)
     {
-        Reservation R = Reservation;
         Table T = R.SelectedTable;
         Table T2 = R.SecondSelectedTable;
         string numOfPeople = R.NumberOfPeople > 1 ? $"{R.NumberOfPeople} guests" : $"{R.NumberOfPeople} guest";
@@ -531,6 +530,6 @@ public static class ReservationSystem // Made class static so loginsystem and da
     }
     public static void UpdateJson()
     {
-        Utensils.WriteJson("Reservations.json", Reservations);
+        Utensils.WriteJson("ReservationsData.json", Reservations);
     }
 }

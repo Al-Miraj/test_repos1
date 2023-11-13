@@ -103,7 +103,7 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
                         Console.WriteLine(" Deals");
                         break;
                     case 6:
-                        Console.WriteLine(" Login");
+                        Console.WriteLine(" Login/Register");
                         break;
                     case 7:
                         Console.WriteLine(" Exit");

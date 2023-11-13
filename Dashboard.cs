@@ -38,7 +38,7 @@
                         Console.WriteLine(!isAdmin ? " Order History" : " Reservation Management");
                         break;
                     case 2:
-                        Console.WriteLine(!isAdmin ? " Cancel Reservation" : " Customer Management");
+                        Console.WriteLine(!isAdmin ? " Reservation Manager" : " Customer Management");
                         break;
                     case 3:
                         Console.WriteLine(" Log out");
@@ -121,27 +121,7 @@
 
     private void CancelCustomerReservation()
     {
-        Console.WriteLine("Which reservation would you like to cancel?");
-        var reservations = CurrentUser.GetReservations();
-        foreach (var item in reservations)
-        {
-            Console.WriteLine(item.ToString());
-            Console.WriteLine();
-        }
-        do
-        {
-            Console.Write("Enter Reservation Number: ");
-            int id = int.Parse(Console.ReadLine()!);
-            var reservation_ids = reservations.Select(reservation => reservation.ReservationNumber);
-            if (reservation_ids.Contains(id))
-            {
-                var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
-                ReservationSystem.Reservations.Remove(reservation!);
-                Console.WriteLine("Reservation cancelled.");
-                Console.ReadLine();
-                return;
-            }
-            Console.WriteLine("Reservation not found.");
-        } while (true);
+        CustomerReservationManagement.CurrentUser = CurrentUser;
+        CustomerReservationManagement.Display();
     }
 }

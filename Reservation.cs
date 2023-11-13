@@ -26,7 +26,7 @@ public class Reservation
 {
     public Account? CustomerAccount { get; set; } = null;
     public int? ReservationNumber { get; set; }
-    public int? NumberOfPeople { get; set; }
+    public int NumberOfPeople { get; set; }
     public DateOnly? Date { get; set; }
     public string? TimeSlot { get; set; }
     public string? SecondTimeSlot { get; set; }
@@ -36,7 +36,7 @@ public class Reservation
     public double NonDiscountedPrice = 0;
     public double Discount = 0;
 
-    public Reservation(int? reservationNumber, int? numberOfPeople, DateOnly? date, string? timeSlot, Table? selectedTable)
+    public Reservation(int? reservationNumber, int numberOfPeople, DateOnly? date, string? timeSlot, Table? selectedTable)
     {
         ReservationNumber = reservationNumber;
         NumberOfPeople = numberOfPeople;
@@ -48,8 +48,6 @@ public class Reservation
             CustomerAccount.Reservations.Add(this);
         }
     }
-
-    public Reservation() : this(null, null, null, null, null) { }
 
     public override string ToString()
     {

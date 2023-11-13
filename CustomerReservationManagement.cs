@@ -52,6 +52,10 @@
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
+                if (selectedOption == 4)
+                {
+                    return;
+                }
                 HandleSelection(selectedOption);
             }
         }

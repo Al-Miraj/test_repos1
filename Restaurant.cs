@@ -25,9 +25,9 @@ public static class Restaurant
         else
         {
             string dealName = "Party Deal";
-            string dealDescription = "For groups of 10 people or more, you get a 10% discount."; //todo: discount on what tho?
+            string dealDescription = "For groups of 6 people or more, you get a 10% discount."; //todo: discount on what tho? // change 6 to 10
             double dealDiscountFactor = 0.10; // 10% discount
-            int minAmountGuests = 6; //todo change back to 10
+            int minAmountGuests = 6; //todo change 6 back to 10
             deals = new List<Deal>()
             {
                 new PartyDeal(dealName, dealDescription, dealDiscountFactor, minAmountGuests)
