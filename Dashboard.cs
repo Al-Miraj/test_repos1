@@ -136,7 +136,7 @@
             if (reservation_ids.Contains(id))
             {
                 var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
-                ReservationSystem.reservations.Remove(reservation!);
+                ReservationSystem.Reservations.Remove(reservation!);
                 Console.WriteLine("Reservation cancelled.");
                 Console.ReadLine();
                 return;

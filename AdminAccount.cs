@@ -4,7 +4,7 @@
 
     public override List<Reservation> GetReservations()
     {
-        return ReservationSystem.reservations;
+        return ReservationSystem.Reservations;
     }
 
     public List<Account>? GetAccounts()

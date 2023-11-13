@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
-using System.Data.SqlTypes;
+using System.Diagnostics.Tracing;
 using System.Text.Json;
 
-static class ReservationSystem
+public static class ReservationSystem // Made class static so loginsystem and dashboard don't rely on instances
 {
     public static string TablesJson = "Tables.json"; //
     public static Reservation Reservation;
     public static List<Table> Tables;
-    public static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
+    public static List<Reservation> Reservations = new List<Reservation>(); // List to store reservations
     public static Random Random = new Random();
 
 
@@ -531,6 +531,6 @@ static class ReservationSystem
     }
     public static void UpdateJson()
     {
-        Utensils.WriteJson("Reservations.json", reservations);
+        Utensils.WriteJson("Reservations.json", Reservations);
     }
 }

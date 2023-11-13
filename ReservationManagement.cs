@@ -89,7 +89,7 @@ public static class ReservationManagement
                        TableNumber = 3,
                        Capacity = 1
                    });
-                    ReservationSystem.reservations.Add(reservation);
+                    ReservationSystem.Reservations.Add(reservation);
                     break;
                 case 3:
                     UpdateReservation();
@@ -179,7 +179,7 @@ public static class ReservationManagement
         var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
         if (reservation != null)
         {
-            ReservationSystem.reservations.Remove(reservation);
+            ReservationSystem.Reservations.Remove(reservation);
             Console.WriteLine("Old data for reservation:");
             Console.WriteLine(reservation.ToString());
             Console.WriteLine("New data for reservation:");
@@ -191,7 +191,7 @@ public static class ReservationManagement
             Console.Write("Timeslot (Lunch, dinner): ");
             string timeslot = Console.ReadLine()!;
             var new_reservation = new Reservation(reservation.ReservationNumber, amount, date, timeslot, reservation.SelectedTable);
-            ReservationSystem.reservations.Add(new_reservation);
+            ReservationSystem.Reservations.Add(new_reservation);
             Console.WriteLine("Reservation updated!");
             Console.ReadLine();
         }
@@ -210,7 +210,7 @@ public static class ReservationManagement
         var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
         if (reservation != null)
         {
-            ReservationSystem.reservations.Remove(reservation);
+            ReservationSystem.Reservations.Remove(reservation);
             Console.WriteLine("Reservation cancelled!");
             Console.ReadLine();
         }
