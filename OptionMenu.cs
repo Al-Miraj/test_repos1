@@ -58,8 +58,11 @@
 
 using System;
 
-public static class Menu
+public static class Menu // Made class static so LoginSystem and Dashboard files don't rely on instances
 {
+    public static bool IsUserLoggedIn = false;
+    public static Account? CurrentUser;
+    public static Dashboard? UserDashboard;
     private static int selectedOption = 1;
 
     public static void RunMenu()
