@@ -73,7 +73,7 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
             Console.Clear();
 
             // Highlight the currently selected option
-            for (int i = 1; i <= 7; i++)
+            for (int i = 1; i <= 8; i++)
             {
                 if (i == selectedOption)
                 {
@@ -100,12 +100,15 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
                         Console.WriteLine(" Menu");
                         break;
                     case 5:
-                        Console.WriteLine(" Deals");
+                        Console.WriteLine(" Drinks");
                         break;
                     case 6:
-                        Console.WriteLine(" Login/Register");
+                        Console.WriteLine(" Deals");
                         break;
                     case 7:
+                        Console.WriteLine(" Login/Register");
+                        break;
+                    case 8:
                         Console.WriteLine(" Exit");
                         break;
                 }
@@ -117,7 +120,7 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
             {
                 selectedOption--;
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 7)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 8)
             {
                 selectedOption++;
             }
@@ -150,12 +153,15 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
                 FoodMenu.Display();
                 break;
             case 5:
-                Restaurant.DisplayDeals();
+                DrinksMenu.Display();
                 break;
             case 6:
-                LoginSystem.Start();
+                Restaurant.DisplayDeals();
                 break;
             case 7:
+                LoginSystem.Start();
+                break;
+            case 8:
                 Console.WriteLine("Goodbye! Thank you for visiting.");
                 Environment.Exit(0);
                 break;
