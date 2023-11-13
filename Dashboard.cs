@@ -86,12 +86,10 @@
                 break;
             case 3:
                 LoginSystem.Logout(CurrentUser);
-                Menu x = new Menu();
-                x.RunMenu();
+                Menu.RunMenu();
                 break;
             case 4:
-                Menu y = new Menu();
-                y.RunMenu();
+                Menu.RunMenu();
                 break;
             default:
                 return;

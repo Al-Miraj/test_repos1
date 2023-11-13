@@ -58,12 +58,11 @@
 
 using System;
 
-public class Menu
+public static class Menu
 {
-    ReservationSystem RSys = new ReservationSystem(); //RS is short for Reservation System
     private static int selectedOption = 1;
 
-    public void RunMenu()
+    public static void RunMenu()
     {
         Console.CursorVisible = false;
         while (true)
@@ -126,14 +125,14 @@ public class Menu
         }
     }
 
-    void HandleSelection(int option)
+    public static void HandleSelection(int option)
     {
         Console.Clear();
 
         switch (option)
         {
             case 1:
-                RSys.RunSystem();
+                ReservationSystem.RunSystem();
                 break;
             case 2:
                 About.RestaurantInformation();

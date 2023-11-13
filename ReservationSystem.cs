@@ -2,16 +2,16 @@
 using System.Data.SqlTypes;
 using System.Text.Json;
 
-class ReservationSystem
+static class ReservationSystem
 {
-    public string TablesJson = "Tables.json"; //
-    public Reservation Reservation;
-    public List<Table> Tables;
+    public static string TablesJson = "Tables.json"; //
+    public static Reservation Reservation;
+    public static List<Table> Tables;
     public static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
-    public Random Random = new Random();
+    public static Random Random = new Random();
 
 
-    public ReservationSystem()
+    static ReservationSystem()
     {
         // all the restaurant tables are put in a list upon
         // initializing a ReservationSystem object
@@ -20,7 +20,7 @@ class ReservationSystem
         Reservation = new Reservation();
     }
 
-    public List<Table> InitializeTables()
+    public static List<Table> InitializeTables()
     {
         List<Table> tables;
 
@@ -52,14 +52,14 @@ class ReservationSystem
         }
         return tables;
     }
-    public void WriteToFile(List<Table> tables, string TablesFileName) //todo change name
+    public static void WriteToFile(List<Table> tables, string TablesFileName) //todo change name
     {
         StreamWriter writer = new StreamWriter(TablesFileName);
         writer.Write(JsonConvert.SerializeObject(tables, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         writer.Close();
     }
 
-    public List<Table> ReadFromFile(string TablesFileName) //
+    public static List<Table> ReadFromFile(string TablesFileName) //
     {
         StreamReader reader = new StreamReader(TablesFileName);
         string jsonString = reader.ReadToEnd();
@@ -68,12 +68,12 @@ class ReservationSystem
         return tables;
     }
 
-    public void RunSystem()
+    public static void RunSystem()
     {
         Reservate();
     }
 
-    public void Reservate()
+    public static void Reservate()
     {
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
@@ -124,7 +124,7 @@ class ReservationSystem
     }
 
 
-    public void HandleSecondReservation()
+    public static void HandleSecondReservation()
     {
         bool bookAgain = true;
         while (true)
@@ -167,7 +167,7 @@ class ReservationSystem
         }
     }
 
-    public bool BookAgain()
+    public static bool BookAgain()
     {
         Console.Clear();
         Console.WriteLine("Booking again...\n");
@@ -193,7 +193,7 @@ class ReservationSystem
     }
 
 
-    public int GetNumberOfPeople()
+    public static int GetNumberOfPeople()
     {
         int numberOfPeople;
         bool IsIncorrectFormat;
@@ -219,7 +219,7 @@ class ReservationSystem
         return numberOfPeople;
     }
 
-    public DateOnly GetReservationDate()
+    public static DateOnly GetReservationDate()
     {
         DateOnly reservationDate;
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
@@ -256,7 +256,7 @@ class ReservationSystem
         return reservationDate;
     }
 
-    public string GetTimeslot()
+    public static string GetTimeslot()
     {
         Console.CursorVisible = false;
         int selectedOption = 0;
@@ -294,7 +294,7 @@ class ReservationSystem
         return timeslot;
     }
 
-    public void DisplayTimeslots(List<string> timeslots, int selectedOption)
+    public static void DisplayTimeslots(List<string> timeslots, int selectedOption)
     {
         Console.Clear();
         Console.WriteLine("Select a time slot:");
@@ -311,7 +311,7 @@ class ReservationSystem
         }
     }
 
-    public void DisplayTablesMap()
+    public static void DisplayTablesMap()
     {
         string door = "Entrance";
         string aisle = "Main Aisle";
@@ -335,7 +335,7 @@ class ReservationSystem
         DisplayTableRange(13, 15); // Tables 13-15
     }
 
-    private void DisplayTableRange(int startTable, int endTable)
+    private static void DisplayTableRange(int startTable, int endTable)
     {
         // Display a range of tables
         for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
@@ -362,14 +362,14 @@ class ReservationSystem
     }
 
 
-    private (int, int) DetermineMaxCoordinates(List<Table> tables)
+    private static (int, int) DetermineMaxCoordinates(List<Table> tables)
     {
         int maxX = tables.Max(t => t.Coordinate.Item1);
         int maxY = tables.Max(t => t.Coordinate.Item2);
         return (maxX, maxY);
     }
 
-    public Table GetChosenTable()
+    public static Table GetChosenTable()
     {
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
@@ -429,7 +429,7 @@ class ReservationSystem
         return selectedTable;
     }
 
-    public void TableSelectionFeedback(Table selectedTable)
+    public static void TableSelectionFeedback(Table selectedTable)
     {
         if (selectedTable.IsReservated)
         {
@@ -441,7 +441,7 @@ class ReservationSystem
         }
     }
 
-    public Table ShowSelectedTable(int xc, int yc)
+    public static Table ShowSelectedTable(int xc, int yc)
     {
         Table selectedTable = null;
         int availableTablesCount = 0;
@@ -494,7 +494,7 @@ class ReservationSystem
         return selectedTable;
     }
 
-    public void DisplayReservationDetails()
+    public static void DisplayReservationDetails()
     {
         Reservation R = Reservation;
         Table T = R.SelectedTable;
@@ -525,7 +525,7 @@ class ReservationSystem
         
     }
 
-    public int GenerateReservationNumber()
+    public static int GenerateReservationNumber()
     {
         return Random.Next(1, 10000); // Generates a random number between 1 and 9999 (inclusive).
     }
