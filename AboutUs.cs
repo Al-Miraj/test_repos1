@@ -68,27 +68,31 @@
         // Directions from Blaak to Wijnhaven 107
         Console.WriteLine("From Blaak:");
         Console.WriteLine("1. Start at Blaak Station.");
-        Console.WriteLine("2. Take Tram 21 towards De Esch.");
-        Console.WriteLine("3. Get off at the Willemsplein tram stop.");
-        Console.WriteLine("4. Wijnhaven 107 is within walking distance from the tram stop.");
+        Console.WriteLine("2. Take Metro Line A (Direction: Schiedam Centrum) or Metro B (Direction: Steendijkpolder) or Metro C (Direction: De Akkers).");
+        Console.WriteLine("3. Get off at Beurs metro stop.");
+        Console.WriteLine("4. Wijnhaven 107 is within walking distance from the Metro stop.");
+        Console.WriteLine("5. See directions from Beurs.");
         Console.WriteLine();
 
         // Directions from Beurs to Wijnhaven 107
         Console.WriteLine("From Beurs:");
         Console.WriteLine("1. Start at Beurs Metro Station.");
-        Console.WriteLine("2. Take Metro Line D (Direction: De Akkers) or Line E (Direction: Slinge) depending on the platform.");
-        Console.WriteLine("3. Get off at Leuvehaven Metro Station.");
-        Console.WriteLine("4. Walk southeast on Wijnhaven Street.");
-        Console.WriteLine("5. Wijnhaven 107 will be on your right.");
+        Console.WriteLine("2. Wijnhaven 107 is within walking distance from the tram stop.");
+        Console.WriteLine("3. Walk to the on Mariteum Museum (can't miss it) and turn left.");
+        Console.WriteLine("4. Continue walking and use the stairs when you see them.");
+        Console.WriteLine("5. You should see the building right now.");
+        Console.WriteLine("6. The building has a big logo in red.");
+        Console.WriteLine("7. Make your way to the building, the entrance is right around the corner.");
         Console.WriteLine();
 
         // Directions from Rotterdam Centraal to Wijnhaven 107
         Console.WriteLine("From Rotterdam Centraal:");
         Console.WriteLine("1. Start at Rotterdam Centraal Station.");
         Console.WriteLine("2. Take Metro Line D (Direction: De Akkers) or Line E (Direction: Slinge).");
-        Console.WriteLine("3. Get off at Leuvehaven Metro Station.");
+        Console.WriteLine("3. Get off at Beurs Metro Station.");
         Console.WriteLine("4. Walk southeast on Wijnhaven Street.");
-        Console.WriteLine("5. Wijnhaven 107 will be on your right.");
+        Console.WriteLine("5. Wijnhaven 107 is within walking distance from the Metro stop.");
+        Console.WriteLine("6. See directions from Beurs.");
         Console.WriteLine();
     }
 }
