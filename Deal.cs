@@ -1,5 +1,4 @@
 ﻿
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 [XmlInclude(typeof(PartyDeal))]

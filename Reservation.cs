@@ -29,7 +29,9 @@ public class Reservation
     public int? NumberOfPeople { get; set; }
     public DateOnly? Date { get; set; }
     public string? TimeSlot { get; set; }
+    public string? SecondTimeSlot { get; set; }
     public Table? SelectedTable { get; set; }
+    public Table? SecondSelectedTable { get; set; }
     public List<Deal> DealsApplied = new List<Deal>();
     public double NonDiscountedPrice = 0;
     public double Discount = 0;
