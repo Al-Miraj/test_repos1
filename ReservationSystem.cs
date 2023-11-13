@@ -7,7 +7,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
     public static string TablesJson = "Tables.json"; //
     public static Reservation Reservation;
     public static List<Table> Tables;
-    public static List<Reservation> Reservations = new List<Reservation>(); // List to store reservations
+    public static List<Reservation> Reservations = Utensils.ReadJson<List<Reservation>>("Reservations.json") ?? new List<Reservation>(); // List to store reservations
     public static Random Random = new Random();
 
 
