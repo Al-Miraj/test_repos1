@@ -529,4 +529,8 @@ static class ReservationSystem
     {
         return Random.Next(1, 10000); // Generates a random number between 1 and 9999 (inclusive).
     }
+    public static void UpdateJson()
+    {
+        Utensils.WriteJson("Reservations.json", reservations);
+    }
 }
