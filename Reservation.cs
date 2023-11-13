@@ -24,7 +24,7 @@ using System.Text.Json;
 
 public class Reservation
 {
-    public Account? CustomerAccount { get; set; } = null;
+    public Account? CustomerAccount = Menu.CurrentUser;
     public int? ReservationNumber { get; set; }
     public int? NumberOfPeople { get; set; }
     public DateOnly? Date { get; set; }
@@ -39,17 +39,19 @@ public class Reservation
         Date = date;
         TimeSlot = timeSlot;
         SelectedTable = selectedTable;
+        ReservationSystem.reservations.Add(this);
         if (CustomerAccount != null)
         {
             CustomerAccount.Reservations.Add(this);
         }
     }
 
+
     public Reservation() : this(null, null, null, null, null) { }
 
     public override string ToString()
     {
-        return $"Reservation Number: {ReservationNumber}\nAmount of People: {NumberOfPeople}\nDate: {Date}\nTimeslot: {TimeSlot}\nTable number: {SelectedTable.TableNumber}";
+        return $"Reservation Number: {ReservationNumber}\nAmount of People: {NumberOfPeople}\nDate: {Date}\nTimeslot: {TimeSlot}\nTable number: {SelectedTable!.TableNumber}";
     }
 
     //public void AddDeal(Deal deal)

@@ -1,0 +1,7 @@
+[
+  {
+    "Name": "Party Deal",
+    "Description": "For groups of 10 people or more, you get a 10% discount.",
+    "DiscountFactor": 0.1
+  }
+]

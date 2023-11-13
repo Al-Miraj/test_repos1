@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "L5rDnFyvovVz5bfaL9Z4C1oDsiOXrGS0w4qFxTcrmrEhG5KvdSn/YnUjePJIQ5TvjyooT/zBlkOSZVUFeqDfYg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\manuf\\RESTAURANT_PROJECT_REPOS\\MiniProject1_V1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\manuf\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

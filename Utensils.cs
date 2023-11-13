@@ -9,10 +9,12 @@ public static class Utensils
     {
         try
         {
-            using StreamReader reader = new StreamReader(filePath);
-            string json = reader.ReadToEnd();
-            T? obj = JsonConvert.DeserializeObject<T>(json);
-            return obj;
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                string json = reader.ReadToEnd();
+                T? obj = JsonConvert.DeserializeObject<T>(json);
+                return obj;
+            }
         }
         catch (FileNotFoundException ex)
         {
@@ -36,9 +38,12 @@ public static class Utensils
         try
         {
             string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
-            using StreamWriter writer = new StreamWriter(filePath);
-            writer.Write(json);
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.Write(json);
+            }
         }
+           
         catch (IOException ex)
         {
             Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
@@ -63,5 +68,12 @@ public static class Utensils
             return builder;
         }
 
+    }
+
+    public static void ResetMenu()
+    {
+        Menu.IsUserLoggedIn = false;
+        Menu.CurrentUser = null;
+        Menu.UserDashboard = null;
     }
 }

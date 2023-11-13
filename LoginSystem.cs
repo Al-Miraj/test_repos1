@@ -9,13 +9,13 @@ using System.Text.RegularExpressions;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Data;
+using static System.Net.WebRequestMethods;
+using System.Diagnostics;
 
 static class LoginSystem
 {
-    public static List<Account> Accounts = new List<Account>(); // Utensils.ReadJson<List<Account>>("accounts.json") ?? 
-    public static List<AdminAccount> AdminAccounts = new List<AdminAccount>(); // Utensils.ReadJson<List<AdminAccount>>("admins.json") ?? 
-
-    static LoginSystem() => new AdminAccount(1, "admin@work.com", "Admin-123");
+    public static List<Account> Accounts = Utensils.ReadJson<List<Account>>("Accounts.json") ?? new List<Account>(); //  
+    public static List<AdminAccount> AdminAccounts = Utensils.ReadJson<List<AdminAccount>>("Admins.json") ?? new List<AdminAccount>(); // 
 
     public static void Start()
     {
@@ -50,27 +50,20 @@ static class LoginSystem
                 Console.WriteLine("There aren't any Admins yet.");
                 return;
             }
-            if (AdminAccounts.Any(account => account.Email == email && account.Password == password))
+            if (Accounts.Any(account => account.Email.ToLower() == email.ToLower() && account.Password == password))
             {
                 Console.WriteLine("Logging in...");
                 var account = FindAccount(email, password);
                 if (account != null)
                 {
+                    var admins = Utensils.ReadJson<List<AdminAccount>>("Admins.json");
+                    if (admins!.Any(admin => admin.Email.ToLower().Equals(account.Email.ToLower()) && admin.Password.Equals(account.Password)))
+                    {
+                        Console.WriteLine("Admin found...");
+                        account = (account as AdminAccount)!;
+                    }
                     var dashboard = new Dashboard(account);
-                    account.IsLoggedIn = true;
-                    Console.WriteLine("Login succesful!");
-                    Console.ReadLine();
-                    dashboard.Display();
-                }
-            }
-            else if (Accounts.Any(account => account.Email == email && account.Password == password))
-            {
-                Console.WriteLine("Logging in...");
-                var account = FindAccount(email, password);
-                if (account != null)
-                {
-                    var dashboard = new Dashboard(account);
-                    account.IsLoggedIn = true;
+                    ConnectUser(account, dashboard);
                     Console.WriteLine("Login successful!");
                     Console.ReadLine();
                     dashboard.Display();
@@ -78,7 +71,7 @@ static class LoginSystem
             }
             else
             {
-                Console.WriteLine("Login failed. Try again.");
+                Console.WriteLine("Login failed. You have  " + (3 - attempts) + " attempts left");
                 attempts++;
             }
         } while (attempts < 3);
@@ -91,13 +84,18 @@ static class LoginSystem
         Console.WriteLine();
         try
         {
+            string? name;
+            do
+            {
+                Console.Write("Please enter your name: ");
+                name = Console.ReadLine();
+            } while (name == null);
             var (email, password) = ReadUserInfo(true);
             int id = (Accounts != null) ? GetLatestId() + 1 : 1;
-            var account = new Account(id, email, password);
-            Accounts?.Add(account);
-            /*UpdateJson();*/
-            account.IsLoggedIn = true;
+            var account = new Account(id, name, email, password);
+            UpdateJson();
             var dashboard = new Dashboard(account);
+            ConnectUser(account, dashboard);
             Console.ReadLine();
             dashboard.Display();
         }
@@ -107,20 +105,30 @@ static class LoginSystem
         }
     }
 
-    public static void Logout(Account account)
+    public static void Logout()
     {
         Console.WriteLine("Logging out...");
-        account.IsLoggedIn = false;
-        Environment.Exit(0);
+        Utensils.ResetMenu();
+        Console.WriteLine("You're now logged out");
+        Console.ReadLine();
+        Menu.RunMenu();
     }
 
     public static int GetLatestId() => Accounts != null ? Accounts.Max(account => account.Id) : 0;
     private static Account? FindAccount(string email, string password) => Accounts?.FirstOrDefault(account => account.Email == email && account.Password == password);
+
+    private static void ConnectUser(Account account, Dashboard dashboard)
+    {
+        Menu.IsUserLoggedIn = true; 
+        Menu.CurrentUser = account; 
+        Menu.UserDashboard = dashboard;
+    }
+
     public static (string, string) ReadUserInfo(bool register)
     {
         do
         {
-            Console.WriteLine("Enter your email and password");
+            Console.WriteLine("Enter email and password");
             Console.WriteLine();
             Console.Write("\nEmail: ");
             string? email = Console.ReadLine();
@@ -137,16 +145,19 @@ static class LoginSystem
                     Console.WriteLine("- The password should contain at least one special character (such as !, @, #, $, %, etc.).");
                     Console.WriteLine("- The password should not contain any characters that are not digits, letters, or special characters.");
                 }
-                Console.Write("\nPassword: ");
-                string? password = Console.ReadLine();
-                if (password != null && IsValidPassword(password))
+                do
                 {
-                    return (email, password);
-                }
-                else
-                {
-                    Console.WriteLine("Please enter a valid password.");
-                }
+                    Console.Write("\nPassword: ");
+                    string? password = Console.ReadLine();
+                    if (password != null && IsValidPassword(password))
+                    {
+                        return (email, password);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter a valid password.");
+                    }
+                } while (true);
             }
             else
             {
@@ -192,9 +203,12 @@ static class LoginSystem
 
     public static void UpdateJson()
     {
-        using StreamWriter writer = new("accounts.json");
+        using StreamWriter writer = new("Accounts.json");
         string json = JsonConvert.SerializeObject(Accounts);
         writer.Write(json);
+        using StreamWriter writer2 = new("Admins.json");
+        json = JsonConvert.SerializeObject(AdminAccounts);
+        writer2.Write(json);
     }
 
 

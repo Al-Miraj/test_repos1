@@ -2,7 +2,7 @@
 
 public static class CustomerManagement
 {
-    public static AdminAccount CurrentAdmin { private get; set; }
+    public static AdminAccount CurrentAdmin { get; set; }
 
     public static void Display()
     {
@@ -106,9 +106,15 @@ public static class CustomerManagement
         Console.WriteLine("Add Customer");
         Console.WriteLine();
         Console.WriteLine("Enter customer details: ");
+        string? name;
+        do
+        {
+            Console.Write("Name: ");
+            name = Console.ReadLine();
+        } while (name == null);
         var (email, password) = LoginSystem.ReadUserInfo(true);
         int id = (LoginSystem.Accounts != null) ? LoginSystem.GetLatestId() + 1 : 1;
-        var customer = new Account(id, email, password);
+        var customer = new Account(id, name, email, password);
         /*LoginSystem.UpdateJson();*/
         Console.WriteLine("Customer added!");
         Console.WriteLine(customer.ToString());

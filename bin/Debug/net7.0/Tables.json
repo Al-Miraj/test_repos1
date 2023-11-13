@@ -1,0 +1,152 @@
+[
+  {
+    "TableNumber": 1,
+    "Coordinate": {
+      "Item1": 1,
+      "Item2": 1
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 2,
+    "Coordinate": {
+      "Item1": 2,
+      "Item2": 1
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 3,
+    "Coordinate": {
+      "Item1": 3,
+      "Item2": 1
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 4,
+    "Coordinate": {
+      "Item1": 1,
+      "Item2": 2
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 5,
+    "Coordinate": {
+      "Item1": 2,
+      "Item2": 2
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 6,
+    "Coordinate": {
+      "Item1": 3,
+      "Item2": 2
+    },
+    "Capacity": 2,
+    "IsReservated": false,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 7,
+    "Coordinate": {
+      "Item1": 1,
+      "Item2": 3
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 8,
+    "Coordinate": {
+      "Item1": 2,
+      "Item2": 3
+    },
+    "Capacity": 2,
+    "IsReservated": true,
+    "TablePrice": 7.5
+  },
+  {
+    "TableNumber": 9,
+    "Coordinate": {
+      "Item1": 3,
+      "Item2": 3
+    },
+    "Capacity": 4,
+    "IsReservated": true,
+    "TablePrice": 10.0
+  },
+  {
+    "TableNumber": 10,
+    "Coordinate": {
+      "Item1": 1,
+      "Item2": 4
+    },
+    "Capacity": 4,
+    "IsReservated": true,
+    "TablePrice": 10.0
+  },
+  {
+    "TableNumber": 11,
+    "Coordinate": {
+      "Item1": 2,
+      "Item2": 4
+    },
+    "Capacity": 4,
+    "IsReservated": true,
+    "TablePrice": 10.0
+  },
+  {
+    "TableNumber": 12,
+    "Coordinate": {
+      "Item1": 3,
+      "Item2": 4
+    },
+    "Capacity": 4,
+    "IsReservated": false,
+    "TablePrice": 10.0
+  },
+  {
+    "TableNumber": 13,
+    "Coordinate": {
+      "Item1": 1,
+      "Item2": 5
+    },
+    "Capacity": 4,
+    "IsReservated": true,
+    "TablePrice": 10.0
+  },
+  {
+    "TableNumber": 14,
+    "Coordinate": {
+      "Item1": 2,
+      "Item2": 5
+    },
+    "Capacity": 6,
+    "IsReservated": false,
+    "TablePrice": 15.0
+  },
+  {
+    "TableNumber": 15,
+    "Coordinate": {
+      "Item1": 3,
+      "Item2": 5
+    },
+    "Capacity": 6,
+    "IsReservated": true,
+    "TablePrice": 15.0
+  }
+]

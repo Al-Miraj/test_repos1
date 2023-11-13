@@ -16,7 +16,11 @@
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine($"Welcome {CurrentUser.Email}!");
+            if (CurrentUser == null)
+            {
+                Console.WriteLine("This is where the bug is "); // Big bug : current user gets passed to Dashboard as null
+                break;
+            }
             Console.WriteLine("This is your dashboard.");
 
             // Highlight the currently selected option
@@ -32,21 +36,43 @@
                 }
 
                 // Display text labels for options
-                switch (i)
+                if (!isAdmin)
                 {
-                    case 1:
-                        Console.WriteLine(!isAdmin ? " Order History" : " Reservation Management");
-                        break;
-                    case 2:
-                        Console.WriteLine(!isAdmin ? " Cancel Reservation" : " Customer Management");
-                        break;
-                    case 3:
-                        Console.WriteLine(" Log out");
-                        break;
-                    case 4:
-                        Console.WriteLine(" Exit to main menu");
-                        break;
+                    switch (i)
+                    {
+                        case 1:
+                            Console.WriteLine(" Order History");
+                            break;
+                        case 2:
+                            Console.WriteLine(" Reservation Manager");
+                            break;
+                        case 3:
+                            Console.WriteLine(" Log out");
+                            break;
+                        case 4:
+                            Console.WriteLine(" Exit to main menu");
+                            break;
+                    }
                 }
+                else
+                {
+                    switch (i)
+                    {
+                        case 1:
+                            Console.WriteLine(" Reservation Management");
+                            break;
+                        case 2:
+                            Console.WriteLine(" Customer Management");
+                            break;
+                        case 3:
+                            Console.WriteLine(" Log out");
+                            break;
+                        case 4:
+                            Console.WriteLine(" Exit to main menu");
+                            break;
+                    }
+                }
+                
             }
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
@@ -69,7 +95,6 @@
     void HandleSelection(int option, bool isAdmin)
     {
         Console.Clear();
-
         switch (option)
         {
             case 1:
@@ -80,18 +105,16 @@
                 break;
             case 2:
                 if (!isAdmin)
-                    CancelCustomerReservation();
+                    CustomerReservationManager();
                 else
                     CustomerManager();
                 break;
             case 3:
-                LoginSystem.Logout(CurrentUser);
-                Menu x = new Menu();
-                x.RunMenu();
+                LoginSystem.Logout();
+                Menu.RunMenu();
                 break;
             case 4:
-                Menu y = new Menu();
-                y.RunMenu();
+                Menu.RunMenu();
                 break;
             default:
                 return;
@@ -121,29 +144,10 @@
         }
     }
 
-    private void CancelCustomerReservation()
+    private void CustomerReservationManager()
     {
-        Console.WriteLine("Which reservation would you like to cancel?");
-        var reservations = CurrentUser.GetReservations();
-        foreach (var item in reservations)
-        {
-            Console.WriteLine(item.ToString());
-            Console.WriteLine();
-        }
-        do
-        {
-            Console.Write("Enter Reservation Number: ");
-            int id = int.Parse(Console.ReadLine()!);
-            var reservation_ids = reservations.Select(reservation => reservation.ReservationNumber);
-            if (reservation_ids.Contains(id))
-            {
-                var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
-                ReservationSystem.reservations.Remove(reservation!);
-                Console.WriteLine("Reservation cancelled.");
-                Console.ReadLine();
-                return;
-            }
-            Console.WriteLine("Reservation not found.");
-        } while (true);
+        CustomerReservationManagement.CurrentUser = CurrentUser;
+        CustomerReservationManagement.Display();
     }
+    
 }

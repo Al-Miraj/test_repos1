@@ -34,7 +34,7 @@ public static class ReservationManagement
                         Console.WriteLine(" View Reservations");
                         break;
                     case 2:
-                        Console.WriteLine(" Add Reservation");
+                        Console.WriteLine(" Add Reservation manually");
                         break;
                     case 3:
                         Console.WriteLine(" Update Reservation by number");
@@ -83,13 +83,7 @@ public static class ReservationManagement
                     ViewReservations();
                     break;
                 case 2:
-                    DateOnly date = DateOnly.ParseExact("20-12-2023", "dd-MM-yyyy", null);
-                    Reservation reservation = new(1, 3, date, "Dinner", new Table(1, (1, 1), 2, 7.50, false)
-                   {
-                       TableNumber = 3,
-                       Capacity = 1
-                   });
-                    ReservationSystem.reservations.Add(reservation);
+                    AddReservation();
                     break;
                 case 3:
                     UpdateReservation();
@@ -111,39 +105,42 @@ public static class ReservationManagement
             Console.WriteLine("\nPress any key to return to the main menu.");
             Console.ReadKey();
         }
+    }
 
-        /*while (true)
+    private static void AddReservation()
+    {
+        Console.WriteLine("Add Reservation manually");
+        Console.WriteLine();
+        int reservationNumber = ReservationSystem.GenerateReservationNumber();
+        Console.WriteLine("Reservation Number: " + reservationNumber);
+        Console.Write("Number of people: ");
+        int amount = -1;
+        do
         {
-            Console.WriteLine("Reservation Management");
-            Console.WriteLine("1. View Reservations");
-            Console.WriteLine("2. Add Reservation");
-            Console.WriteLine("3. Update Reservation by number");
-            Console.WriteLine("4. Cancel Reservation by number");
-            Console.WriteLine("5. Search Reservations");
-            Console.WriteLine("6. Back to Admin Dashboard");
-
-            switch (int.TryParse(Console.ReadLine(), out int choice) ? choice : -1) 
+            Console.Write("Amount of people (0-6): ");
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out int i))
             {
-                case 1:
-                    
-                    break;
-                case 2:
-                    
-                    break;
-                case 3:
-                    
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    return;
+                amount = i;            
             }
-        }*/
+            else if (input == null)
+            {
+                Console.WriteLine("Invalid input. It has to be a number.");
+            }
+            else
+            {
+                Console.WriteLine("Amount must be between 0 and 6");
+            }
+        } while (!(0 <= amount && amount <= 6));
 
-
-
+        Console.Write("Date (dd-MM-yyyy): ");
+        string dateStr = Console.ReadLine()!.Trim();
+        DateOnly date = DateOnly.ParseExact(dateStr, "dd-MM-yyyy", null);
+        Console.Write("Timeslot (Lunch, dinner): "); // Add all timeslots
+        string timeslot = Console.ReadLine()!;
+        Table? table = ReservationSystem.GetChosenTable(amount);
+        _ = new Reservation(reservationNumber, amount, date, timeslot, table);
+        LoginSystem.UpdateJson();
     }
 
     private static void ViewReservations()
@@ -179,19 +176,38 @@ public static class ReservationManagement
         var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
         if (reservation != null)
         {
-            ReservationSystem.reservations.Remove(reservation);
             Console.WriteLine("Old data for reservation:");
             Console.WriteLine(reservation.ToString());
-            Console.WriteLine("New data for reservation:");
-            Console.Write("Amount of people: ");
-            int amount = int.Parse(Console.ReadLine()!);
+            Console.WriteLine("New data for reservation (just enter if you don't want to change a property):");
+            int amount = -1;
+            do
+            {
+                Console.Write("Amount of people (0-6): ");
+                string? input = Console.ReadLine();
+                if (int.TryParse(input, out int i))
+                {
+                    amount = i;
+                }
+                else if (input == null)
+                {
+                    Console.WriteLine("Invalid input. It has to be a number.");
+                }
+                else
+                {
+                    Console.WriteLine("Amount must be between 0 and 6");
+                }
+            } while (!(0 <= amount && amount <= 6));
+
+
+
             Console.Write("Date (dd-MM-yyyy): ");
             string dateStr = Console.ReadLine()!.Trim();
             DateOnly date = DateOnly.ParseExact(dateStr, "dd-MM-yyyy", null);
-            Console.Write("Timeslot (Lunch, dinner): ");
+            reservation.Date = date;
+            Console.Write("Timeslot (Lunch, dinner): "); // Add all timeslots
             string timeslot = Console.ReadLine()!;
-            var new_reservation = new Reservation(reservation.ReservationNumber, amount, date, timeslot, reservation.SelectedTable);
-            ReservationSystem.reservations.Add(new_reservation);
+            reservation.TimeSlot = timeslot;
+            LoginSystem.UpdateJson();
             Console.WriteLine("Reservation updated!");
             Console.ReadLine();
         }

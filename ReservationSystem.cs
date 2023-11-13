@@ -1,25 +1,24 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics.Tracing;
 using System.Text.Json;
 
-class ReservationSystem
+public static class ReservationSystem // Made class static so loginsystem and dashboard don't rely on instances
 {
-    public string TablesJson = "Tables.json"; //
-    public Reservation Reservation;
-    public List<Table> Tables;
-    public static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
-    public Random Random = new Random();
+    public static string TablesJson = "Tables.json"; //
+    public static List<Table> Tables = InitializeTables();
+    public static List<Reservation> reservations = Utensils.ReadJson<List<Reservation>>("Reservations.json") ?? new List<Reservation>(); // List to store reservations
+    public static Random Random = new Random();
 
 
-    public ReservationSystem()
+    static ReservationSystem()
     {
         // all the restaurant tables are put in a list upon
         // initializing a ReservationSystem object
-        Tables = InitializeTables(); // todo: change name
+        // todo: change name
         // todo create mechanism that creates a new reservation object when reservating
-        Reservation = new Reservation();
     }
 
-    public List<Table> InitializeTables()
+    public static List<Table> InitializeTables()
     {
         List<Table> tables;
 
@@ -51,14 +50,14 @@ class ReservationSystem
         }
         return tables;
     }
-    public void WriteToFile(List<Table> tables, string TablesFileName) //todo change name
+    public static void WriteToFile(List<Table> tables, string TablesFileName) //todo change name
     {
         StreamWriter writer = new StreamWriter(TablesFileName);
         writer.Write(JsonConvert.SerializeObject(tables, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         writer.Close();
     }
 
-    public List<Table> ReadFromFile(string TablesFileName) //
+    public static List<Table> ReadFromFile(string TablesFileName) //
     {
         StreamReader reader = new StreamReader(TablesFileName);
         string jsonString = reader.ReadToEnd();
@@ -67,52 +66,50 @@ class ReservationSystem
         return tables;
     }
 
-    public void RunSystem()
+    public static void RunSystem()
     {
         Reservate();
     }
 
-    public void Reservate()
+    public static void Reservate()
     {
         Deal partyDeal = Restaurant.Deals[0];
         Console.Write("Enter the number of people in your group: ");
         int numberOfPeople = GetNumberOfPeople();
-        Reservation.NumberOfPeople = numberOfPeople;
+        double discount;
         if (partyDeal.PartyDealIsApplicable(numberOfPeople))  // reden voor deze oplossing benoemen in de test rapport
         {
-            Reservation.Discount = 0.10;
+            discount = 0.10;
             partyDeal.DisplayDealIsAplied();
         }
+        else { discount = 0; }
         //CheckForDeals();
 
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly selectedDate = GetReservationDate();
-        Reservation.Date = selectedDate;
 
         string timeslot = GetTimeslot();
         Console.WriteLine(timeslot);
-        Reservation.TimeSlot = timeslot;
 
-        Table selectedTable = GetChosenTable();
+
+        Table? selectedTable = GetChosenTable(numberOfPeople);
         Console.WriteLine(selectedTable);
         if (selectedTable != null)
         {
-            Reservation.SelectedTable = selectedTable;
-
             int reservationNumber = GenerateReservationNumber();
-            Reservation.ReservationNumber = reservationNumber;
-
-            DisplayReservationDetails();
+            var reservation = new Reservation(reservationNumber, numberOfPeople, selectedDate, timeslot, selectedTable);
+            UpdateJson(); // Reservation added to json
+            DisplayReservationDetails(reservation);
             // todo: reservations must be stored somehow
+            // Reservations are stored in the static list via class Reservation ^^
         }
         else
         {
             Console.WriteLine("You weren't able to finish the reservation.");
-            Reservation = new Reservation();
         }
     }
 
-    public int GetNumberOfPeople()
+    public static int GetNumberOfPeople()
     {
         int numberOfPeople;
         bool IsIncorrectFormat;
@@ -139,7 +136,7 @@ class ReservationSystem
         return numberOfPeople;
     }
 
-    public DateOnly GetReservationDate()
+    public static DateOnly GetReservationDate()
     {
         DateOnly reservationDate;
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
@@ -176,7 +173,7 @@ class ReservationSystem
         return reservationDate;
     }
 
-    public string GetTimeslot()
+    public static string GetTimeslot()
     {
         Console.CursorVisible = false;
         int selectedOption = 0;
@@ -214,7 +211,7 @@ class ReservationSystem
         return timeslot;
     }
 
-    public void DisplayTimeslots(List<string> timeslots, int selectedOption)
+    public static void DisplayTimeslots(List<string> timeslots, int selectedOption)
     {
         Console.Clear();
         Console.WriteLine("Select a time slot:");
@@ -231,7 +228,7 @@ class ReservationSystem
         }
     }
 
-    public void DisplayTablesMap()
+    public static void DisplayTablesMap()
     {
         string door = "Entrance";
         string aisle = "Main Aisle";
@@ -255,12 +252,12 @@ class ReservationSystem
         DisplayTableRange(13, 15); // Tables 13-15
     }
 
-    private void DisplayTableRange(int startTable, int endTable)
+    private static void DisplayTableRange(int startTable, int endTable)
     {
         // Display a range of tables
         for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
         {
-            Table table = Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
+            Table table = Tables.FirstOrDefault(t => t.TableNumber == tableNumber)!;
             if (table != null)
             {
                 if (table.IsReservated)
@@ -282,14 +279,14 @@ class ReservationSystem
     }
 
 
-    private (int, int) DetermineMaxCoordinates(List<Table> tables)
+    private static (int, int) DetermineMaxCoordinates(List<Table> tables)
     {
         int maxX = tables.Max(t => t.Coordinate.Item1);
         int maxY = tables.Max(t => t.Coordinate.Item2);
         return (maxX, maxY);
     }
 
-    public Table GetChosenTable()
+    public static Table? GetChosenTable(int numberOfPeople)
     {
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
@@ -302,8 +299,8 @@ class ReservationSystem
         {
             Console.Clear();
             DisplayTablesMap();
-            selectedTable = ShowSelectedTable(xc, yc);
-            TableSelectionFeedback(selectedTable);
+            selectedTable = ShowSelectedTable(xc, yc, numberOfPeople);
+            TableSelectionFeedback(selectedTable, numberOfPeople);
 
             if (selectedTable != null)
             {
@@ -328,11 +325,11 @@ class ReservationSystem
                 {
                     if (!selectedTable.IsReservated) // the table has not been reservated yet
                     {
-                        if (Reservation.NumberOfPeople <= selectedTable.Capacity) // the table has enough seats
+                        if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
                         {
                             selectedTable.IsReservated = true; // table at that coordinate has now been reservated
                             WriteToFile(Tables, TablesJson);
-                            break;
+                            return selectedTable;
                         }
                     }
                 }
@@ -340,28 +337,28 @@ class ReservationSystem
             else
             {
                 Console.WriteLine("Sorry! We are booked!");
-                break;
+                return null;
             }
 
         }
 
 
-        return selectedTable;
+        
     }
 
-    public void TableSelectionFeedback(Table selectedTable)
+    public static void TableSelectionFeedback(Table selectedTable, int numberOfPeople)
     {
         if (selectedTable.IsReservated)
         {
             Console.WriteLine($"\nTable {selectedTable.TableNumber} has already been reservated. try another!");
         }
-        else if (Reservation.NumberOfPeople > selectedTable.Capacity)
+        else if (numberOfPeople > selectedTable.Capacity)
         {
             Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
         }
     }
 
-    public Table ShowSelectedTable(int xc, int yc)
+    public static Table ShowSelectedTable(int xc, int yc, int numberOfPeople)
     {
         Table selectedTable = null;
         int availableTablesCount = 0;
@@ -379,7 +376,7 @@ class ReservationSystem
                 Console.ForegroundColor = ConsoleColor.Red;
                 availableTablesCount++;
             }
-            else if (Reservation.NumberOfPeople > table.Capacity)
+            else if (numberOfPeople > table.Capacity)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 availableTablesCount++;
@@ -414,10 +411,9 @@ class ReservationSystem
         return selectedTable;
     }
 
-    public void DisplayReservationDetails()
+    public static void DisplayReservationDetails(Reservation R)
     {
-        Reservation R = Reservation;
-        Table T = R.SelectedTable;
+        Table T = R.SelectedTable!;
         string numOfPeople = R.NumberOfPeople > 1 ? $"{R.NumberOfPeople} guests" : $"{R.NumberOfPeople} guest";
 
         Console.Clear();
@@ -426,8 +422,9 @@ class ReservationSystem
         Console.WriteLine($"Your reservation number: {R.ReservationNumber}");
     }
 
-    public int GenerateReservationNumber()
+    public static int GenerateReservationNumber() => Random.Next(1, 10000); // Generates a random number between 1 and 9999 (inclusive).
+    public static void UpdateJson()
     {
-        return Random.Next(1, 10000); // Generates a random number between 1 and 9999 (inclusive).
+        Utensils.WriteJson("Reservations.json", reservations);
     }
 }
