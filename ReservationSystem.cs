@@ -111,10 +111,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
             }
             reservation.SelectedTable = selectedTable;
             reservation.NonDiscountedPrice += selectedTable.TablePrice;
+            DisplayReservationDetails(reservation);
             UpdateJson(); // Reservation added to json
-
-            HandleSecondReservation(reservation);
-
             // todo: reservations must be stored somehow
         }
         else
@@ -122,74 +120,6 @@ public static class ReservationSystem // Made class static so loginsystem and da
             Console.WriteLine("You weren't able to finish the reservation.");
         }
 
-    }
-
-
-    public static void HandleSecondReservation(Reservation reservation)
-    {
-        bool bookAgain = true;
-        while (true)
-        {
-            Console.Clear();
-            DisplayReservationDetails(reservation);
-            Console.WriteLine("\nWould you like to book the same table again today?");
-            if (bookAgain)
-            {
-                Console.WriteLine(" > Yes");
-                Console.WriteLine("   No");
-            }
-            else
-            {
-                Console.WriteLine("   Yes");
-                Console.WriteLine(" > No");
-            }
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-            if (keyInfo.Key == ConsoleKey.UpArrow && !bookAgain)
-            {
-                bookAgain = true;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && bookAgain)
-            {
-                bookAgain = false;
-            }
-            else if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                if (bookAgain)
-                {
-                    if (BookAgain(reservation)) { break; }
-                }
-                else
-                {
-                    Console.WriteLine("Reservation has been made.");
-                    break;
-                }
-            }
-            else { continue; }
-        }
-    }
-
-    public static bool BookAgain(Reservation reservation)
-    {
-        Console.Clear();
-        Console.WriteLine("Booking again...\n");
-
-        string secondtimeslot = GetTimeslot();
-        reservation.SecondTimeSlot = secondtimeslot;
-
-        Table secondselectedTable = GetChosenTable(reservation.NumberOfPeople);
-        if (secondselectedTable != null)
-        {
-            reservation.SecondSelectedTable = secondselectedTable;
-            reservation.NonDiscountedPrice += secondselectedTable.TablePrice;
-            Console.Clear();
-            DisplayReservationDetails(reservation);
-            return true;
-        }
-        else
-        {
-            Console.WriteLine("You weren't able to finish the reservation.");
-        }
-        return false;
     }
 
 
@@ -497,16 +427,11 @@ public static class ReservationSystem // Made class static so loginsystem and da
     public static void DisplayReservationDetails(Reservation R)
     {
         Table T = R.SelectedTable;
-        Table T2 = R.SecondSelectedTable;
         string numOfPeople = R.NumberOfPeople > 1 ? $"{R.NumberOfPeople} guests" : $"{R.NumberOfPeople} guest";
 
         Console.Clear();
         Console.WriteLine("R E S E R V A T I O N   D E T A I L S\n");
         Console.WriteLine($"You reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
-        if (T2 != null)
-        {
-            Console.WriteLine($"You reservated Table {T2.TableNumber} for {numOfPeople} on {R.Date} during {R.SecondTimeSlot}.");
-        }
         Console.WriteLine($"Your reservation number: {R.ReservationNumber}");
         Console.WriteLine($"Deals applied:");
         if (R.DealsApplied.Count == 0)
