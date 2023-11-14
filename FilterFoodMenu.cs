@@ -1,6 +1,6 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 
-public static class SortFoodMenu
+public static class FilterFoodMenu
 {
     private static int selectedOption = 1;
     private static int selectedTimeSlotOption = 1;
@@ -124,13 +124,13 @@ public static class SortFoodMenu
             switch (i)
             {
                 case 1:
-                    Console.WriteLine(" Sort by Ingredients");
+                    Console.WriteLine(" Filter by Ingredients");
                     break;
                 case 2:
-                    Console.WriteLine(" Sort by Price");
+                    Console.WriteLine(" Filter by Price");
                     break;
                 case 3:
-                    Console.WriteLine(" Sort by Category");
+                    Console.WriteLine(" Filter by Category");
                     break;
                 case 4:
                     Console.WriteLine(" Exit and Save");
@@ -152,14 +152,14 @@ public static class SortFoodMenu
                 string ingredientRaw = Console.ReadLine().ToLower();
                 ingredients.AddRange(ingredientRaw.Split(", "));
 
-                menuItems.AddRange(SortIngredients(ingredients, selectedTimeSlotOption.ToString()));
+                menuItems.AddRange(FilterIngredients(ingredients, selectedTimeSlotOption.ToString()));
                 break;
 
             case 2:
                 Console.WriteLine("Enter the maximum price:");
                 if (double.TryParse(Console.ReadLine(), out double maxPrice))
                 {
-                    menuItems.AddRange(SortPrice(selectedTimeSlotOption.ToString(), maxPrice));
+                    menuItems.AddRange(FilterPrice(selectedTimeSlotOption.ToString(), maxPrice));
                 }
                 else
                 {
@@ -168,7 +168,7 @@ public static class SortFoodMenu
                 break;
 
             case 3:
-                menuItems.AddRange(SortCategory(selectedTimeSlotOption == 2 ? true : false));
+                menuItems.AddRange(FilterCategory(selectedTimeSlotOption == 2 ? true : false));
                 break;
             case 4:
                 Environment.Exit(0);
@@ -177,7 +177,7 @@ public static class SortFoodMenu
         return menuItems;
     }
 
-    public static List<MenuItem> SortCategory(bool isDinner)
+    public static List<MenuItem> FilterCategory(bool isDinner)
     {
         List<MenuItem> unsortedMenu = isDinner ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
         List<MenuItem> selectedCategories = new List<MenuItem>();
@@ -218,7 +218,7 @@ public static class SortFoodMenu
         return selectedCategories;
     }
 
-    public static List<MenuItem> SortPrice(string menuType, double price)
+    public static List<MenuItem> FilterPrice(string menuType, double price)
     {
         List<MenuItem> finalMenu = new List<MenuItem>();
         Console.WriteLine(menuType);
@@ -231,13 +231,13 @@ public static class SortFoodMenu
         return (sortedMenu);
     }
 
-    public static List<MenuItem> SortIngredients(List<string> ingredients, string menuType)
+    public static List<MenuItem> FilterIngredients(List<string> ingredients, string menuType)
     {
         List<MenuItem> unsortedItems = menuType == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
-        List<MenuItem> temp = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient.ToLower()))).ToList();
-        //List<MenuItem> temp2 = temp.Where(x => x.potentialAllergens.Select(y => y.ToLower()).Any(allergy => ingredients.Contains(allergy.ToLower()))).ToList();
-        List<MenuItem> sortedMenu = temp.OrderBy(x => x.Price).ToList();
-        return temp;
+        List<MenuItem> filterIngredients = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient.ToLower()))).ToList();
+        List<MenuItem> filterAllergens = unsortedItems.Where(x => x.potentialAllergens.Select(i => i.ToLower()).Any(ing => ingredients.Contains(ing.ToLower()))).ToList();
+        List<MenuItem> sortedMenu = (filterIngredients.Union(filterAllergens)).OrderBy(x => x.Price).ToList();
+        return sortedMenu;
     }
 
     private static void DisplayTimeSlotMenuOptions()

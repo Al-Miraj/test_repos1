@@ -167,8 +167,8 @@ public static class FoodMenu
                 PrintInfo(GetDinnerMenu(), "Dinner");
                 break;
             case 3:
-                string timeSlot = SortFoodMenu.cursoroptionTimeSlot();
-                PrintInfo(SortFoodMenu.cursoroptionMenu(), timeSlot);
+                string timeSlot = FilterFoodMenu.cursoroptionTimeSlot();
+                PrintInfo(FilterFoodMenu.cursoroptionMenu(), timeSlot);
                 //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
                 break;
             case 4:
@@ -189,7 +189,7 @@ public static class FoodMenu
 
         if (ifDinner(time) && allItems != null)
         {
-            var dinnerMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
+            var dinnerMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner").OrderBy(x => x.Price);
             timeslotMenu.AddRange(dinnerMenuItems);
             x = "Dinner Menu";
 
@@ -198,12 +198,13 @@ public static class FoodMenu
         {
             if (allItems != null)
             {
-                var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
+                var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch").OrderBy(x => x.Price);
                 timeslotMenu.AddRange(lunchMenuItems);
                 x = "Lunch Menu";
             }
         }
 
+        //timeslotMenu.OrderBy(x => x.Price);
         return (x, timeslotMenu);
     }
 
@@ -237,7 +238,7 @@ public static class FoodMenu
         List<MenuItem> tempMenu = new List<MenuItem>();
 
 
-        var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
+        var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch").OrderBy(x => x.Price);
         tempMenu.AddRange(lunchMenuItems);
 
         return tempMenu;
@@ -248,7 +249,7 @@ public static class FoodMenu
         var allItems = LoadFoodMenuData();
         List<MenuItem> tempMenu = new List<MenuItem>();
 
-        var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
+        var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner").OrderBy(x => x.Price);
         tempMenu.AddRange(lunchMenuItems);
 
         return tempMenu;

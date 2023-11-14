@@ -125,8 +125,7 @@ public static class DrinksMenu
                 drinksMenu.Clear();
                 break;
             case 7:
-                Environment.Exit(0);
-                break;
+                return;
         }
     }
 
