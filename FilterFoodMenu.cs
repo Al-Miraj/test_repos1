@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 public static class FilterFoodMenu
 {
@@ -234,8 +235,9 @@ public static class FilterFoodMenu
     public static List<MenuItem> FilterIngredients(List<string> ingredients, string menuType)
     {
         List<MenuItem> unsortedItems = menuType == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
-        List<MenuItem> filterIngredients = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient.ToLower())) || x.PotentialAllergens.Any(allergen => ingredients.Contains(allergen.ToLower()))).ToList();
-        List<MenuItem> sortedMenu = (filterIngredients.Union(filterIngredients)).OrderBy(x => x.Price).ToList();
+        List<MenuItem> filteredByIngredients = unsortedItems.Where(x => x.Ingredients.SelectMany(i => i.ToLower().Split(" ")).Any(ingredient => ingredients.Contains(ingredient))).ToList();
+        List<MenuItem> filteredByAllergens = unsortedItems.Where(x => x.PotentialAllergens.Select(i => i.ToLower()).Any(allergen => ingredients.Contains(allergen.ToLower()))).ToList();
+        List<MenuItem> sortedMenu = filteredByIngredients.Union(filteredByAllergens).OrderBy(x => x.Price).ToList();
         return sortedMenu;
     }
 

@@ -23,6 +23,7 @@ public class MenuItem
         Price = price;
         Timeslot = timeslot;
         Category = icon;
+        
         PotentialAllergens = potentialAllergens.ToArray();
         Icon = icon switch  // Easier then regular switch 
         {
