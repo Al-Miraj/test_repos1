@@ -113,7 +113,7 @@
     "Ingredients": [ "Broccoli", "Carrots", "Bell Peppers", "Soy Sauce", "Garlic" ],
     "Timeslot": "Lunch",
     "Price": 8.99,
-    "Potential Allergens": ["Soybeans"],
+    "Potential Allergens": [ "Soybeans" ],
     "Icon": "Vegetarian"
   },
   {
@@ -122,7 +122,7 @@
     "Ingredients": [ "Chicken", "Romaine Lettuce", "Caesar Dressing", "Tortilla" ],
     "Timeslot": "Lunch",
     "Price": 7.99,
-    "Potential Allergens": ["Wheat"],
+    "Potential Allergens": [ "Wheat" ],
     "Icon": "Chicken"
   },
   {

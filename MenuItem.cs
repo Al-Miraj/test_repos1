@@ -7,14 +7,15 @@ public class MenuItem
     public string Name { get; set; }
     public string Description { get; set; }
     public string[] Ingredients { get; set; }
-    public double Price { get; set; }
     public string Timeslot { get; set; }
+    public double Price { get; set; }
     public string Category { get; set; }
-    public List<string> potentialAllergens { get; set; }
+    public string[] PotentialAllergens { get; set; }
     public string? Icon;
     private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
-    public MenuItem(string name, string description, List<string> ingredients, double price, string timeslot, List<string> potentialAllergens, string icon)
+
+    public MenuItem(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon)
     {
         Name = name;
         Description = description;
@@ -22,7 +23,7 @@ public class MenuItem
         Price = price;
         Timeslot = timeslot;
         Category = icon;
-        this.potentialAllergens = potentialAllergens;
+        PotentialAllergens = potentialAllergens.ToArray();
         Icon = icon switch  // Easier then regular switch 
         {
             "Meat" => "🥩",

@@ -234,9 +234,8 @@ public static class FilterFoodMenu
     public static List<MenuItem> FilterIngredients(List<string> ingredients, string menuType)
     {
         List<MenuItem> unsortedItems = menuType == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
-        List<MenuItem> filterIngredients = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient.ToLower()))).ToList();
-        List<MenuItem> filterAllergens = unsortedItems.Where(x => x.potentialAllergens.Select(i => i.ToLower()).Any(ing => ingredients.Contains(ing.ToLower()))).ToList();
-        List<MenuItem> sortedMenu = (filterIngredients.Union(filterAllergens)).OrderBy(x => x.Price).ToList();
+        List<MenuItem> filterIngredients = unsortedItems.Where(x => x.Ingredients.Select(i => i.ToLower()).Any(ingredient => ingredients.Contains(ingredient.ToLower())) || x.PotentialAllergens.Any(allergen => ingredients.Contains(allergen.ToLower()))).ToList();
+        List<MenuItem> sortedMenu = (filterIngredients.Union(filterIngredients)).OrderBy(x => x.Price).ToList();
         return sortedMenu;
     }
 

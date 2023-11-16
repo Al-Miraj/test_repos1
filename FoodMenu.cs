@@ -27,7 +27,7 @@ public static class FoodMenu
     {
         try
         {
-            using StreamReader reader = new StreamReader("items.json");
+            using StreamReader reader = new StreamReader("Items.json");
             string json = reader.ReadToEnd();
             var items = JsonConvert.DeserializeObject<List<MenuItem>>(json);
             return items;
