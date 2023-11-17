@@ -160,7 +160,7 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
                 break;
             case 7:
                 if (IsUserLoggedIn)
-                    UserDashboard!.Display();
+                    UserDashboard!.RunDashboardMenu();
                 else
                     LoginSystem.Start();
                 break;

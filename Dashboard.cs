@@ -7,95 +7,38 @@
         CurrentUser = account;
     }
 
-    int selectedOption = 1;
-
-
-    public void Display()
+    public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine(isAdmin); // todo delete later
-            Console.WriteLine($"Welcome {CurrentUser.Name}!");
-            Console.WriteLine("This is your dashboard.");
 
-            // Highlight the currently selected option
-            for (int i = 1; i <= 4; i++)
-            {
-                if (i == selectedOption)
-                {
-                    Console.Write(">");
-                }
+        Console.WriteLine($"Welcome {CurrentUser.Name}!");
+        Console.WriteLine("This is your dashboard.");
+
+        List<string> dashboardOptions = new List<string>()
+        { isAdmin ? "Reservation Management" : "Order History",
+          isAdmin ? "Customer Management" : "Reservation Manager",
+          "Exit to main menu",
+          "Log out"
+        };
+        int selectedOption = MenuSelector.RunMenuNavigator(dashboardOptions);
+        switch (selectedOption)
+        {
+            case 0:
+                if (isAdmin)
+                { ReservationManager(); }
                 else
-                {
-                    Console.Write(" ");
-                }
-
-                // Display text labels for options
-                switch (i)
-                {
-                    case 1:
-                        Console.WriteLine(!isAdmin ? " Order History" : " Reservation Management");
-                        break;
-                    case 2:
-                        Console.WriteLine(!isAdmin ? " Reservation Manager" : " Customer Management");
-                        break;
-                    case 3:
-                        Console.WriteLine(" Exit to main menu");
-                        break;
-                    case 4:
-                        Console.WriteLine(" Log out");
-                        break;
-                }
-            }
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
-            {
-                selectedOption--;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
-            {
-                selectedOption++;
-            }
-            else if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                HandleSelection(selectedOption, isAdmin);
-            }
-            else
-            {
-                continue;
-            }
-        }
-    }
-
-    void HandleSelection(int option, bool isAdmin)
-    {
-        Console.Clear();
-
-        switch (option)
-        {
+                { OrderHistory(); Console.ReadLine(); }
+                break;
             case 1:
-                if (!isAdmin)
-                {
-                    OrderHistory();
-                    Console.ReadLine();
-                }
+                if (isAdmin)
+                { CustomerReservationManager(); }
                 else
-                    ReservationManager();
+                { CustomerManager(); }
                 break;
             case 2:
-                if (!isAdmin)
-                    CustomerReservationManager();
-                else
-                    CustomerManager();
-                break;
-            case 3:
                 Menu.RunMenu();
                 break;
-            case 4:
+            case 3:
                 LoginSystem.Logout();
                 break;
             default:

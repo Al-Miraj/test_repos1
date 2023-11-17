@@ -20,57 +20,8 @@ static class LoginSystem
         int selectedOption = MenuSelector.RunMenuNavigator(LoginRegisterOptions);
         switch (selectedOption)
         {
-            case 0: Console.Clear(); Register(); break;
-            case 1: Console.Clear(); Login(); break;
-        }
-
-
-
-        Console.CursorVisible = false;
-        bool CreateAccount = true;
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine("Sign In\n");
-            if (CreateAccount)
-            {
-                Console.WriteLine(" > Create new account");
-                Console.WriteLine("   Log into existing account");
-            }
-            else
-            {
-                Console.WriteLine("   Create new account");
-                Console.WriteLine(" > Log into existing account");
-            }
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-            if (keyInfo.Key == ConsoleKey.UpArrow && !CreateAccount)
-            {
-                CreateAccount = true;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && CreateAccount)
-            {
-                CreateAccount = false;
-            }
-            else if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                if (CreateAccount)
-                {
-                    Console.Clear();
-                    Register();
-                    // todo connect user
-                    break;
-                }
-                else
-                {
-                    Console.Clear();
-                    Login();
-                    break;
-                }
-            }
-            else
-            {
-                continue;
-            }
+            case 0: Console.Clear(); Login(); break;
+            case 1: Console.Clear(); Register(); break;
         }
     }
 
@@ -86,16 +37,17 @@ static class LoginSystem
                 Console.WriteLine("There aren't any accounts registered yet. Please consider registering.");
                 return;
             }
-            var (email, password) = ReadUserInfo(false);
-            var account = FindAccount(email, password);
+            (string email, string password) = ReadUserInfo(false);
+            Account account = FindAccount(email, password);
             if (account != null)
             {
                 Console.WriteLine("Logging in...");
                 var dashboard = new Dashboard(account);
                 ConnectUser(account, dashboard);
                 Console.WriteLine("Login successful!");
-                Console.ReadLine();
-                dashboard.Display();
+                Console.WriteLine("\n[Press any key to continue to dashboard.]");
+                Console.ReadKey();
+                dashboard.RunDashboardMenu();
             }
             else
             {
@@ -112,22 +64,41 @@ static class LoginSystem
 
         try
         {
-            string? name;
+            string name;
             do
             {
                 Console.Write("Please enter you name: ");
-                name = Console.ReadLine();
-            } while (name == null);
-            var (email, password) = ReadUserInfo(true);
+                name = Console.ReadLine()!;
+                if (name.Length < 1)
+                {
+                    Console.WriteLine("Invalid input. Your name must at least be 1 character.\n");
+                    continue;
+                }
+                else if (name.Any(char.IsDigit))
+                {
+                    Console.WriteLine("Invalid input. Your name must not contain any digits.\n");
+                    continue;
+                }
+                Console.WriteLine();
+                break;
+            }
+            while (true);
+
+            
+
+            (string email, string password) = ReadUserInfo(true);
+
             int id = (Restaurant.Accounts != null) ? GetLatestId() + 1 : 1;
-            var account = new CustomerAccount(id, name, email, password);
+
+            CustomerAccount account = new CustomerAccount(id, name, email, password);
             Restaurant.Accounts!.Add(account);
             XmlFileHandler.WriteToFile(Restaurant.Accounts, Restaurant.AccountsXmlFileName);
-            var dashboard = new Dashboard(account);
+
+            Dashboard dashboard = new Dashboard(account);
             ConnectUser(account, dashboard);
             Console.WriteLine("\n[Press any key to continue to dashboard.]");
-            Console.ReadLine();
-            dashboard.Display();
+            Console.ReadKey();
+            dashboard.RunDashboardMenu();
         }
         catch (NullReferenceException ex)
         {
@@ -152,21 +123,22 @@ static class LoginSystem
     }
 
     public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.Id) : 0;
+    
     private static Account? FindAccount(string email, string password) => Restaurant.Accounts?.FirstOrDefault(account => account.Email == email && account.Password == password);
+    
     public static (string, string) ReadUserInfo(bool register)
     {
         do
         {
-            Console.WriteLine("Enter email and password");
-            Console.WriteLine();
-            Console.Write("\nEmail: ");
+            Console.WriteLine("Enter email and password\n");
+            Console.Write("Email: ");
             string? email = Console.ReadLine();
 
             if (email != null && IsEmail(email))
             {
                 if (register)
                 {
-                    Console.WriteLine("A password must meet the following requirements:");
+                    Console.WriteLine("\nA password must meet the following requirements:");
                     Console.WriteLine("- The length of the password should be between 7 and 16 characters.");
                     Console.WriteLine("- The password should contain at least one uppercase letter.");
                     Console.WriteLine("- The password should contain at least one lowercase letter.");
@@ -200,12 +172,14 @@ static class LoginSystem
     {
         if (password != null)
         {
-            bool result = password.Length >= 7 && password.Length <= 16
-            && Regex.IsMatch(password, "[A-Z]")
-            && Regex.IsMatch(password, "[a-z]")
-            && Regex.IsMatch(password, @"\d")
-            && Regex.IsMatch(password, @"[!-/:-@\[-_{-~]")
-            && !Regex.IsMatch(password, @"[^\dA-Za-z!-/:-@\[-_{-~]");
+            bool result = 
+                password.Length >= 7 
+                && password.Length <= 16
+                && Regex.IsMatch(password, "[A-Z]")
+                && Regex.IsMatch(password, "[a-z]")
+                && Regex.IsMatch(password, @"\d")
+                && Regex.IsMatch(password, @"[!-/:-@\[-_{-~]")
+                && !Regex.IsMatch(password, @"[^\dA-Za-z!-/:-@\[-_{-~]");
             return result;
         }
         else
