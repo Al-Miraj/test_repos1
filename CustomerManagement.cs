@@ -103,13 +103,20 @@ public static class CustomerManagement
 
     private static void AddCustomer()
     {
+        // call LoginSystem.Register()
         Console.WriteLine("Add Customer");
         Console.WriteLine();
         Console.WriteLine("Enter customer details: ");
+        string? name;
+        do
+        {
+            Console.Write("Name: ");
+            name = Console.ReadLine();
+        } while (name == null);
         var (email, password) = LoginSystem.ReadUserInfo(true);
-        int id = (LoginSystem.Accounts != null) ? LoginSystem.GetLatestId() + 1 : 1;
-        var customer = new Account(id, email, password);
-        /*LoginSystem.UpdateJson();*/
+        int id = (Restaurant.Accounts != null) ? LoginSystem.GetLatestId() + 1 : 1;
+        var customer = new CustomerAccount(id, name, email, password);
+        LoginSystem.UpdateJson();
         Console.WriteLine("Customer added!");
         Console.WriteLine(customer.ToString());
         Console.ReadLine();

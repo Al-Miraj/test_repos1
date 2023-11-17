@@ -1,6 +1,21 @@
-﻿public class AdminAccount : Account
+﻿using Newtonsoft.Json;
+
+public sealed class AdminAccount : Account
 {
-    public AdminAccount(int id, string email, string password) : base(id, email, password) { }
+    public AdminAccount(int id, string name, string email, string password) : base(id, name, email, password)
+    {
+        //if (LoginSystem.AdminAccounts != null)
+        //{
+        //    LoginSystem.AdminAccounts.Add(this);
+        //    Utensils.WriteJson("Admins.json", LoginSystem.AdminAccounts);
+        //}
+        //else
+        //{
+        //    LoginSystem.AdminAccounts = new List<AdminAccount>();
+        //}
+    }
+
+    public AdminAccount() : base() { }
 
     public override List<Reservation> GetReservations()
     {
@@ -9,8 +24,9 @@
 
     public List<Account>? GetAccounts()
     {
-        return LoginSystem.Accounts;
+        return Restaurant.Accounts;
     }
-
-
 }
+
+
+ 

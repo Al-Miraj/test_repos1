@@ -9,14 +9,15 @@
 
     int selectedOption = 1;
 
+
     public void Display()
     {
         bool isAdmin = CurrentUser is AdminAccount;
         while (true)
         {
             Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine($"Welcome {CurrentUser.Email}!");
+            Console.WriteLine(isAdmin); // todo delete later
+            Console.WriteLine($"Welcome {CurrentUser.Name}!");
             Console.WriteLine("This is your dashboard.");
 
             // Highlight the currently selected option
@@ -41,10 +42,10 @@
                         Console.WriteLine(!isAdmin ? " Reservation Manager" : " Customer Management");
                         break;
                     case 3:
-                        Console.WriteLine(" Log out");
+                        Console.WriteLine(" Exit to main menu");
                         break;
                     case 4:
-                        Console.WriteLine(" Exit to main menu");
+                        Console.WriteLine(" Log out");
                         break;
                 }
             }
@@ -63,6 +64,10 @@
             {
                 HandleSelection(selectedOption, isAdmin);
             }
+            else
+            {
+                continue;
+            }
         }
     }
 
@@ -74,22 +79,24 @@
         {
             case 1:
                 if (!isAdmin)
+                {
                     OrderHistory();
+                    Console.ReadLine();
+                }
                 else
                     ReservationManager();
                 break;
             case 2:
                 if (!isAdmin)
-                    CancelCustomerReservation();
+                    CustomerReservationManager();
                 else
                     CustomerManager();
                 break;
             case 3:
-                LoginSystem.Logout(CurrentUser);
                 Menu.RunMenu();
                 break;
             case 4:
-                Menu.RunMenu();
+                LoginSystem.Logout();
                 break;
             default:
                 return;
@@ -99,8 +106,8 @@
 
     private void ReservationManager()
     {
-        ReservationManagement.CurrentAdmin = (CurrentUser as AdminAccount)!;
-        ReservationManagement.Display();
+        AdminReservationManagement.CurrentAdmin = (CurrentUser as AdminAccount)!;
+        AdminReservationManagement.Display();
     }
 
     private void CustomerManager()
@@ -112,14 +119,20 @@
     private void OrderHistory()
     {
         Console.WriteLine("Your past reservations:");
-        foreach (var reservation in CurrentUser.GetReservations())
+        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works
+        if (reservations.Count == 0)
+        {
+            Console.WriteLine("You have not reservated at this restaurant yet.");
+            return;
+        }
+        foreach (Reservation reservation in reservations)
         {
             Console.WriteLine(reservation.ToString());
             Console.WriteLine();
         }
     }
 
-    private void CancelCustomerReservation()
+    private void CustomerReservationManager()
     {
         CustomerReservationManagement.CurrentUser = CurrentUser;
         CustomerReservationManagement.Display();

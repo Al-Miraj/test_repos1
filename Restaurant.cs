@@ -2,25 +2,52 @@
 
 public static class Restaurant
 {
-    public static int MaxTableCapacity;
-    public static List<Deal> Deals;
-    public static string DealsJsonFileName;
+    public static string DealsXmlFileName = "Deals.xml";
+    public static string TablesJsonFileName = "Tables.json";
+    public static string ReservationsXmlFileName = "Reservations.xml";
+    public static string AccountsXmlFileName = "Accounts.xml";
+    public static List<Account> Accounts = InitializeAccounts();
+    public static List<AdminAccount> AdminAccounts = GetAdminAccounts();
+    public static List<Deal> Deals = InitializeDeals();
+    public static List<Table> Tables = InitializeTables();
+    public static List<Reservation> Reservations = InitializeReservations();
 
-    static Restaurant()
+
+    static public List<Account> InitializeAccounts()
     {
-        MaxTableCapacity = 10;
-        DealsJsonFileName = "Deals.xml";
-        Deals = InitializeDeals();
-
+        List<Account> accounts;
+        if (File.Exists(AccountsXmlFileName))
+        {
+            accounts = XmlFileHandler.ReadFromFile<Account>(AccountsXmlFileName);
+        }
+        else
+        {
+            AdminAccount admin = new AdminAccount(1, "Admin", "admin@work.com", "Admin-123");
+            accounts = new List<Account>() { admin };
+            XmlFileHandler.WriteToFile(accounts, AccountsXmlFileName);
+        }
+        return accounts;
     }
 
+    public static List<AdminAccount> GetAdminAccounts()
+    {
+        List<AdminAccount> adminAccounts = new List<AdminAccount>();
+        foreach (Account account in Accounts)
+        {
+            if (account is AdminAccount admin)
+            {
+                adminAccounts.Add(admin);
+            }
+        }
+        return adminAccounts;
+    }
 
     static public List<Deal> InitializeDeals()
     {
         List<Deal> deals;
-        if (File.Exists(DealsJsonFileName))
+        if (File.Exists(DealsXmlFileName))
         {
-            deals = XmlFileHandler.ReadFromFile<Deal>(DealsJsonFileName);
+            deals = XmlFileHandler.ReadFromFile<Deal>(DealsXmlFileName);
         }
         else
         {
@@ -32,9 +59,64 @@ public static class Restaurant
             {
                 new PartyDeal(dealName, dealDescription, dealDiscountFactor, minAmountGuests)
             };
-            XmlFileHandler.WriteToFile(deals, DealsJsonFileName);
+            XmlFileHandler.WriteToFile(deals, DealsXmlFileName);
         }
         return deals;
+    }
+
+    static public List<Table> InitializeTables()
+    {
+        List<Table> tables;
+
+        if (File.Exists(TablesJsonFileName))
+        {
+            tables = JsonFileHandler.ReadFromFile<Table>(TablesJsonFileName);
+        }
+        else
+        {
+            tables = new List<Table>()
+            {
+                new Table(1, (1, 1), 2, 7.50, false),
+                new Table(2, (2, 1), 2, 7.50, false),
+                new Table(3, (3, 1), 2, 7.50, false),
+                new Table(4, (1, 2), 2, 7.50, false),
+                new Table(5, (2, 2), 2, 7.50, false),
+                new Table(6, (3, 2), 2, 7.50, false),
+                new Table(7, (1, 3), 2, 7.50, false),
+                new Table(8, (2, 3), 2, 7.50, false),
+                new Table(9, (3, 3), 4, 10.0, false),
+                new Table(10, (1, 4), 4, 10.0, false),
+                new Table(11, (2, 4), 4, 10.0, false),
+                new Table(12, (3, 4), 4, 10.0, false),
+                new Table(13, (1, 5), 4, 10.0, false),
+                new Table(14, (2, 5), 6, 15.0, false),
+                new Table(15, (3, 5), 6, 15.0, false),
+            };
+            JsonFileHandler.WriteToFile(tables, TablesJsonFileName);
+        }
+        return tables;
+    }
+
+    static public List<Reservation> InitializeReservations()
+    {
+        List<Reservation> reservations = new List<Reservation>();
+
+        if (File.Exists(ReservationsXmlFileName))
+        {
+            reservations.AddRange(XmlFileHandler.ReadFromFile<Reservation>(ReservationsXmlFileName));
+        }
+        else
+        {
+            foreach (Account account in Accounts)
+            {
+                if (account is CustomerAccount customerAccount)
+                {
+                    reservations.AddRange(customerAccount.Reservations);
+                }
+            }
+            XmlFileHandler.WriteToFile(reservations, ReservationsXmlFileName);
+        }
+        return reservations;
     }
 
     public static Deal? GetDealByName(string dealName)
@@ -47,7 +129,7 @@ public static class Restaurant
             }
         }
         return null;
-    }
+    } // todo maybe have a deal handler or put this in Deal.cs
 
     public static void DisplayDeals()
     {
@@ -74,5 +156,5 @@ public static class Restaurant
                 Console.WriteLine("===========================================\n");
             }
         }
-    }
+    } // todo maybe have a deal handler or put this in Deal.cs
 }

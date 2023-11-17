@@ -113,6 +113,7 @@
             {
                 var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
                 ReservationSystem.Reservations.Remove(reservation!);
+                // todo update file
                 Console.WriteLine("Reservation cancelled.");
                 Console.ReadLine();
                 return;
@@ -153,19 +154,29 @@
                     else
                         Console.WriteLine("Amount must be between 0 and 6");
                 }
+                else if (input == "")
+                    break;
                 else
                     break;
             } while (true);
 
 
-
             Console.Write("Date (dd-MM-yyyy): ");
             string dateStr = Console.ReadLine()!.Trim();
-            DateOnly date = DateOnly.ParseExact(dateStr, "dd-MM-yyyy", null);
-            reservation.Date = date;
+            if (dateStr == null)
+            {
+            }
+            else
+            {
+                DateOnly date = DateOnly.ParseExact(dateStr, "dd-MM-yyyy", null);
+                reservation.Date = date;
+            }
             Console.Write("Timeslot (Lunch, dinner): "); // Add all timeslots
             string timeslot = Console.ReadLine()!;
-            reservation.TimeSlot = timeslot;
+            if (timeslot != null)
+            {
+                reservation.TimeSlot = timeslot;
+            }
             LoginSystem.UpdateJson();
             Console.WriteLine("Reservation updated!");
             Console.ReadLine();

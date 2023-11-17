@@ -25,4 +25,6 @@ public class Table
         this.TablePrice = tablePrice;
         this.IsReservated = IsReservated;
     }
+
+    public Table() { }
 }

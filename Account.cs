@@ -1,30 +1,42 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
-public class Account
+[XmlInclude(typeof(AdminAccount))]
+[XmlInclude(typeof(CustomerAccount))]
+[XmlInclude(typeof(Reservation))]
+
+
+public abstract class Account
 {
-    public int Id { get; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public List<Reservation> Reservations = new List<Reservation>();
-    public bool IsLoggedIn;
+    // todo make these fields into properties (fix readonly issue)
+    public int Id;
+    public string Email;
+    public string Name;
+    public string Password;
 
-    public Account(int id, string email, string password)
+    protected Account(int id, string name, string email, string password)
     {
+        //string firstLetter = name[0].ToString();
         Id = id;
+        //Name = string.Concat(firstLetter.ToUpper(), name.AsSpan(1));
+        Name = name;
         Email = email;
         Password = password;
-        if (LoginSystem.Accounts != null)
-        {
-            LoginSystem.Accounts.Add(this);
-        }
-        else
-        {
-            LoginSystem.Accounts = new List<Account>();
-        }
+        //if (LoginSystem.Accounts != null)
+        //{
+        //    LoginSystem.Accounts.Add(this);
+        //}
+        //else
+        //{
+        //    LoginSystem.Accounts = new List<Account> { this };
+        //}
     }
 
-    public virtual List<Reservation> GetReservations() => Reservations;
+    public Account() { }
+
+    public abstract List<Reservation> GetReservations();
 
     public override string ToString()
     {

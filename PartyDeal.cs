@@ -1,5 +1,6 @@
 ﻿public sealed class PartyDeal : Deal
 {
+
     public int MinAmountGuests { get; set; }
     public PartyDeal(string name, string description, double discountFactor, int minAmountGuests)
         : base(name, description, discountFactor)

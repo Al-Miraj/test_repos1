@@ -7,28 +7,37 @@ public static class Utensils
 
     public static T? ReadJson<T>(string filePath)
     {
-        try
-        {
-            using StreamReader reader = new StreamReader(filePath);
-            string json = reader.ReadToEnd();
-            T? obj = JsonConvert.DeserializeObject<T>(json);
-            return obj;
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"File not found: {ex.Message}");
-            return default;
-        }
-        catch (JsonReaderException ex)
-        {
-            Console.WriteLine($"Invalid JSON format: {ex.Message}");
-            return default;
-        }
-        catch (JsonSerializationException ex)
-        {
-            Console.WriteLine($"Deserialization failed: {ex.Message}");
-            return default;
-        }
+        Console.WriteLine("IN READJSON");
+        Console.ReadLine();
+        using StreamReader reader = new StreamReader(filePath);
+        string json = reader.ReadToEnd();
+        T? obj = JsonConvert.DeserializeObject<T>(json);
+        Console.WriteLine(obj);
+        Console.WriteLine("XXXXXXXXXXXXXX");
+        Console.ReadLine();
+        return obj;
+        //try
+        //{
+        //    using StreamReader reader = new StreamReader(filePath);
+        //    string json = reader.ReadToEnd();
+        //    T? obj = JsonConvert.DeserializeObject<T>(json);
+        //    return obj;
+        //}
+        //catch (FileNotFoundException ex)
+        //{
+        //    Console.WriteLine($"File not found: {ex.Message}");
+        //    return default;
+        //}
+        //catch (JsonReaderException ex)
+        //{
+        //    Console.WriteLine($"Invalid JSON format: {ex.Message}");
+        //    return default;
+        //}
+        //catch (JsonSerializationException ex)
+        //{
+        //    Console.WriteLine($"Deserialization failed: {ex.Message}");
+        //    return default;
+        //}
     }
 
     public static void WriteJson<T>(string filePath, T obj)

@@ -159,7 +159,10 @@ public static class Menu // Made class static so LoginSystem and Dashboard files
                 Restaurant.DisplayDeals();
                 break;
             case 7:
-                LoginSystem.Start();
+                if (IsUserLoggedIn)
+                    UserDashboard!.Display();
+                else
+                    LoginSystem.Start();
                 break;
             case 8:
                 Console.WriteLine("Goodbye! Thank you for visiting.");

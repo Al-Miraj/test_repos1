@@ -6,7 +6,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
 {
     public static string TablesJson = "Tables.json"; //
     public static List<Table> Tables = InitializeTables();
-    public static List<Reservation> Reservations = Utensils.ReadJson<List<Reservation>>("ReservationsData.json") ?? new List<Reservation>(); // List to store reservations
+    public static List<Reservation> Reservations { get; set; } = Utensils.ReadJson<List<Reservation>>("ReservationsData.json") ?? new List<Reservation>(); // List to store reservations
     public static Random Random = new Random();
 
 
@@ -68,13 +68,13 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
     public static void RunSystem()
     {
-        Reservate();
+        Reservate(false);
     }
 
-    public static void Reservate()
+    public static void Reservate(bool isAdmin)
     {
         Console.Write("Enter the number of people in your group: ");
-        int numberOfPeople = GetNumberOfPeople();
+        int numberOfPeople = GetNumberOfPeople(isAdmin);
         Deal deal = Restaurant.GetDealByName("Party Deal");
         bool addPartyDeal;
         PartyDeal partyDeal;
@@ -111,6 +111,13 @@ public static class ReservationSystem // Made class static so loginsystem and da
             }
             reservation.SelectedTable = selectedTable;
             reservation.NonDiscountedPrice += selectedTable.TablePrice;
+            if (Menu.IsUserLoggedIn)
+            {
+                //Menu.CurrentUser.Reservations.Add(reservation);
+                //reservation.CustomerAccount = Menu.CurrentUser;
+            }
+            Reservations.Add(reservation);
+
             DisplayReservationDetails(reservation);
             UpdateJson(); // Reservation added to json
             // todo: reservations must be stored somehow
@@ -123,7 +130,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
     }
 
 
-    public static int GetNumberOfPeople()
+    public static int GetNumberOfPeople(bool isAdmin)
     {
         int numberOfPeople;
         bool IsIncorrectFormat;
@@ -135,16 +142,17 @@ public static class ReservationSystem // Made class static so loginsystem and da
             string number = Console.ReadLine().Trim();
             IsIncorrectFormat = !int.TryParse(number, out numberOfPeople); //true if the format is incorrect
             IsSmallerThan0 = numberOfPeople <= 0;
-            //IsBiggerThan6 = numberOfPeople > 6;
+            IsBiggerThan6 = numberOfPeople > 6;
             if (IsIncorrectFormat)
                 Console.WriteLine("Invalid input. Please enter a valid number of people like: 7, 1, 12, etc");
             else if (IsSmallerThan0)
                 Console.WriteLine("Invalid input. Please enter a number greater than 0.");
-            //else if (IsBiggerThan6)
-            //    Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
-
+            else if (IsBiggerThan6 && !isAdmin)
+                Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
+            else if (IsBiggerThan6 && isAdmin)
+                break;
         }
-        while (IsIncorrectFormat || IsSmallerThan0 /*|| IsBiggerThan6*/);
+        while (IsIncorrectFormat || IsSmallerThan0 || IsBiggerThan6);
 
         return numberOfPeople;
     }
@@ -292,12 +300,12 @@ public static class ReservationSystem // Made class static so loginsystem and da
     }
 
 
-    private static (int, int) DetermineMaxCoordinates(List<Table> tables)
-    {
-        int maxX = tables.Max(t => t.Coordinate.Item1);
-        int maxY = tables.Max(t => t.Coordinate.Item2);
-        return (maxX, maxY);
-    }
+    //private static (int, int) DetermineMaxCoordinates(List<Table> tables)
+    //{
+    //    int maxX = tables.Max(t => t.Coordinate.Item1);
+    //    int maxY = tables.Max(t => t.Coordinate.Item2);
+    //    return (maxX, maxY);
+    //}
 
     public static Table GetChosenTable(int numberOfPeople)
     {

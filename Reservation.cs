@@ -20,16 +20,22 @@
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+[XmlInclude(typeof(Account))]
+[XmlInclude(typeof(Table))]
+[XmlInclude(typeof(Deal))]
 
 
 public class Reservation
 {
-    public Account? CustomerAccount { get; set; } = null;
-    public int? ReservationNumber { get; set; }
-    public int NumberOfPeople { get; set; }
-    public DateOnly? Date { get; set; }
-    public string? TimeSlot { get; set; }
-    public Table? SelectedTable { get; set; }
+    public int? CustomerAccount = 1;
+    public int? ReservationNumber;
+    public int NumberOfPeople;
+    public DateOnly? Date;
+    public string? TimeSlot;
+    public Table? SelectedTable;
     public List<Deal> DealsApplied = new List<Deal>();
     public double NonDiscountedPrice = 0;
     public double Discount = 0;
@@ -41,11 +47,22 @@ public class Reservation
         Date = date;
         TimeSlot = timeSlot;
         SelectedTable = selectedTable;
-        if (CustomerAccount != null)
-        {
-            CustomerAccount.Reservations.Add(this);
-        }
     }
+
+    public Reservation()
+    {
+        CustomerAccount = 0;
+        ReservationNumber = 0;
+        NumberOfPeople = 0;
+        Date = new DateOnly();
+        TimeSlot = "";
+        SelectedTable = new Table();
+        DealsApplied = new List<Deal>();
+        NonDiscountedPrice = 0;
+        Discount = 0;
+    }
+
+
 
     public override string ToString()
     {
