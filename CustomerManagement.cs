@@ -6,97 +6,48 @@ public static class CustomerManagement
 
     public static void Display()
     {
-        int selectedOption = 1;
+        List<string> options = new List<string>()
+        {
+            "Customer Overview",
+            "View Customer Details",
+            "Add Customer",
+            "Update Customer",
+            "Delete Customer",
+            "Back to Admin Dashboard"
+        };
         while (true)
         {
             Console.Clear();
             Console.WriteLine("Customer Account Management");
-            Console.WriteLine();
-
-            // Highlight the currently selected option
-            for (int i = 1; i <= 6; i++)
+            int selectedOption = MenuSelector.RunMenuNavigator(options);
+            switch (selectedOption)
             {
-                if (i == selectedOption)
-                {
-                    Console.Write(">");
-                }
-                else
-                {
-                    Console.Write(" ");
-                }
-
-                // Display text labels for options
-                switch (i)
-                {
-                    case 1:
-                        Console.WriteLine(" Customer Overview");
-                        break;
-                    case 2:
-                        Console.WriteLine(" View Customer Details");
-                        break;
-                    case 3:
-                        Console.WriteLine(" Add Customer");
-                        break;
-                    case 4:
-                        Console.WriteLine(" Update Customer");
-                        break;
-                    case 5:
-                        Console.WriteLine(" Delete Customer");
-                        break;
-                    case 6:
-                        Console.WriteLine(" Back to Admin Dashboard");
-                        break;
-                }
-            }
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
-            {
-                selectedOption--;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 6)
-            {
-                selectedOption++;
-            }
-            else if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                if (selectedOption == 6)
-                {
+                case 0:
+                    CustomerOverview();
+                    break;
+                case 1:
+                    ViewCustomer();
+                    break;
+                case 2:
+                    AddCustomer();
+                    break;
+                case 3:
+                    UpdateCustomer();
+                    break;
+                case 4:
+                    DeleteCustomer();
+                    break;
+                case 5:
                     return;
-                }
-                HandleSelection(selectedOption);
+                default:
+                    Console.WriteLine("Invalid choice. Please select a valid option.");
+                    Console.ReadLine();
+                    break;
             }
-        }
-    }
 
-    static void HandleSelection(int option)
-    {
-        Console.Clear();
-
-        switch (option)
-        {
-            case 1:
-                CustomerOverview();
-                break;
-            case 2:
-                ViewCustomer();
-                break;
-            case 3:
-                AddCustomer();
-                break;
-            case 4:
-                UpdateCustomer();
-                break;
-            case 5:
-                DeleteCustomer();
-                break;
-            case 6:
-                return;
-            default:
-                Console.WriteLine("Invalid choice. Please select a valid option.");
-                Console.ReadLine();
-                break;
+            Restaurant.UpdateRestaurantFiles();
+            Console.WriteLine("\n[Press any key to return to the Customer Account Management menu.]");
+            Console.ReadKey();
         }
     }
 
@@ -125,9 +76,17 @@ public static class CustomerManagement
     private static void ViewCustomer()
     {
         Console.WriteLine("See Customer Overview for list of customers");
-        Console.WriteLine("Enter customer id: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        var customer = CurrentAdmin.GetAccounts()?.FirstOrDefault(c => c.Id == id);
+        Console.WriteLine("Enter customer ID: ");
+        int id;
+        while (true)
+        {
+            string input = Console.ReadLine()!;
+            if (!input.All(char.IsDigit))
+            { Console.WriteLine("Customer IDs must only contain digits."); continue; }
+            id = Convert.ToInt32(input);
+            break;
+        }
+        CustomerAccount customer = Restaurant.CustomerAccounts.FirstOrDefault(c => c.Id == id);
         if (customer == null)
         {
             Console.WriteLine("Customer not found");
@@ -138,18 +97,17 @@ public static class CustomerManagement
         Console.ReadLine();
     }
 
-
     private static void CustomerOverview()
     {
-        var customers = CurrentAdmin.GetAccounts();
+        List<CustomerAccount> customers = Restaurant.CustomerAccounts;
         Console.WriteLine("Customer Overview");
         Console.WriteLine();
-        if (customers == null)
+        if (customers.Count == 0)
         {
             Console.WriteLine("There are no customers yet");
             return;
         }
-        foreach (var customer in customers)
+        foreach (CustomerAccount customer in customers)
         {
             Console.WriteLine(customer.ToString());
             Console.WriteLine();

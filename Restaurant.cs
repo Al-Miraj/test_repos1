@@ -8,12 +8,13 @@ public static class Restaurant
     public static string AccountsXmlFileName = "Accounts.xml";
     public static List<Account> Accounts = InitializeAccounts();
     public static List<AdminAccount> AdminAccounts = GetAdminAccounts();
+    public static List<CustomerAccount> CustomerAccounts = GetCustomerAccounts();
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
 
 
-    static public List<Account> InitializeAccounts()
+    private static List<Account> InitializeAccounts()
     {
         List<Account> accounts;
         if (File.Exists(AccountsXmlFileName))
@@ -22,6 +23,7 @@ public static class Restaurant
         }
         else
         {
+            // there is always 1 default admin account
             AdminAccount admin = new AdminAccount(1, "Admin", "admin@work.com", "Admin-123");
             accounts = new List<Account>() { admin };
             XmlFileHandler.WriteToFile(accounts, AccountsXmlFileName);
@@ -42,7 +44,20 @@ public static class Restaurant
         return adminAccounts;
     }
 
-    static public List<Deal> InitializeDeals()
+    public static List<CustomerAccount> GetCustomerAccounts()
+    {
+        List<CustomerAccount> customerAccounts = new List<CustomerAccount>();
+        foreach (Account account in Accounts)
+        {
+            if (account is CustomerAccount customer)
+            {
+                customerAccounts.Add(customer);
+            }
+        }
+        return customerAccounts;
+    }
+
+    private static List<Deal> InitializeDeals()
     {
         List<Deal> deals;
         if (File.Exists(DealsXmlFileName))
@@ -51,10 +66,11 @@ public static class Restaurant
         }
         else
         {
+            // Party Deal is always running
             string dealName = "Party Deal";
-            string dealDescription = "For groups of 6 people or more, you get a 10% discount."; //todo: discount on what tho? // change 6 to 10
+            string dealDescription = "For groups of 6 people or more, you get a 10% discount."; //todo: discount on what tho?
             double dealDiscountFactor = 0.10; // 10% discount
-            int minAmountGuests = 6; //todo change 6 back to 10
+            int minAmountGuests = 6;
             deals = new List<Deal>()
             {
                 new PartyDeal(dealName, dealDescription, dealDiscountFactor, minAmountGuests)
@@ -64,7 +80,7 @@ public static class Restaurant
         return deals;
     }
 
-    static public List<Table> InitializeTables()
+    private static List<Table> InitializeTables()
     {
         List<Table> tables;
 
@@ -97,7 +113,7 @@ public static class Restaurant
         return tables;
     }
 
-    static public List<Reservation> InitializeReservations()
+    private static List<Reservation> InitializeReservations()
     {
         List<Reservation> reservations = new List<Reservation>();
 
@@ -107,17 +123,26 @@ public static class Restaurant
         }
         else
         {
-            foreach (Account account in Accounts)
-            {
-                if (account is CustomerAccount customerAccount)
-                {
-                    reservations.AddRange(customerAccount.Reservations);
-                }
-            }
             XmlFileHandler.WriteToFile(reservations, ReservationsXmlFileName);
+        }
+        foreach(Reservation reservation in reservations)
+        {
+            Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.Id);
+            if ( account is CustomerAccount cAccount)
+            {
+                cAccount.Reservations.Add(reservation);
+            }
         }
         return reservations;
     }
+
+    public static void UpdateRestaurantFiles()
+    {
+        XmlFileHandler.WriteToFile(Accounts, AccountsXmlFileName);
+        XmlFileHandler.WriteToFile(Deals, DealsXmlFileName);
+        JsonFileHandler.WriteToFile(Tables, TablesJsonFileName);
+        XmlFileHandler.WriteToFile(Reservations, ReservationsXmlFileName);
+    }  // todo: check the references for potential excessive updating
 
     public static Deal? GetDealByName(string dealName)
     {
@@ -157,4 +182,5 @@ public static class Restaurant
             }
         }
     } // todo maybe have a deal handler or put this in Deal.cs
+
 }

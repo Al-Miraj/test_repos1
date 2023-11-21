@@ -26,52 +26,57 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 [XmlInclude(typeof(Account))]
 [XmlInclude(typeof(Table))]
 [XmlInclude(typeof(Deal))]
+[XmlInclude(typeof(DateOnly))]
 
 
 public class Reservation
 {
-    public int? CustomerAccount = 1;
-    public int? ReservationNumber;
+    public int CustomerID;
+    public int ReservationNumber;
     public int NumberOfPeople;
-    public DateOnly? Date;
-    public string? TimeSlot;
-    public Table? SelectedTable;
-    public List<Deal> DealsApplied = new List<Deal>();
-    public double NonDiscountedPrice = 0;
-    public double Discount = 0;
-
-    public Reservation(int? reservationNumber, int numberOfPeople, DateOnly? date, string? timeSlot, Table? selectedTable)
+    [XmlIgnore]
+    public DateOnly Date;
+    [XmlElement("Date")]
+    public string DateString // used only by xml (de)serializer.
     {
+        get { return Date.ToString(); }
+        set { Date = DateOnly.Parse(value); }
+    }
+    public string TimeSlot;
+    public Table SelectedTable;
+    public List<Deal> DealsApplied = new List<Deal>(); //
+    public double NonDiscountedPrice;
+    public double DiscountFactor = 0; // 
+
+    public Reservation(int customerID, int reservationNumber, int numberOfPeople, DateOnly date, string timeSlot, Table selectedTable, double nonDiscountedPrice)
+    {
+        CustomerID = customerID;
         ReservationNumber = reservationNumber;
         NumberOfPeople = numberOfPeople;
         Date = date;
         TimeSlot = timeSlot;
         SelectedTable = selectedTable;
+        NonDiscountedPrice = nonDiscountedPrice;
     }
 
-    public Reservation()
-    {
-        CustomerAccount = 0;
-        ReservationNumber = 0;
-        NumberOfPeople = 0;
-        Date = new DateOnly();
-        TimeSlot = "";
-        SelectedTable = new Table();
-        DealsApplied = new List<Deal>();
-        NonDiscountedPrice = 0;
-        Discount = 0;
-    }
+    public Reservation() { }
 
 
 
     public override string ToString()
     {
-        return $"Reservation Number: {ReservationNumber}\nAmount of People: {NumberOfPeople}\nDate: {Date}\nTimeslot: {TimeSlot}\nTable number: {SelectedTable.TableNumber}";
+        return 
+            $"Customer ID: {CustomerID}" +
+            $"\nReservation Number: {ReservationNumber}" +
+            $"\nAmount of People: {NumberOfPeople}" +
+            $"\nDate: {Date}\nTimeslot: {TimeSlot}" +
+            $"\nTable number: {SelectedTable.TableNumber}" +
+            $"\nPrice: {GetTotalPrice()}";
     }
 
     public double GetTotalPrice()
     {
-        return NonDiscountedPrice * (1 - Discount);
+        return NonDiscountedPrice * (1 - DiscountFactor);
     }
 
     //public void AddDeal(Deal deal)

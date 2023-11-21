@@ -17,13 +17,13 @@ public class Table
     [JsonPropertyName("TablePrice")]
     public double TablePrice;
 
-    public Table(int TableNumber, (int, int) Coordinate, int Capacity, double tablePrice, bool IsReservated)
+    public Table(int tableNumber, (int, int) coordinate, int capacity, double tablePrice, bool isReservated)
     {
-        this.TableNumber = TableNumber;
-        this.Coordinate = Coordinate;
-        this.Capacity = Capacity;
-        this.TablePrice = tablePrice;
-        this.IsReservated = IsReservated;
+        TableNumber = tableNumber;
+        Coordinate = coordinate;
+        Capacity = capacity;
+        TablePrice = tablePrice;
+        IsReservated = isReservated;
     }
 
     public Table() { }

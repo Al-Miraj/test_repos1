@@ -112,7 +112,7 @@
             if (reservation_ids.Contains(id))
             {
                 var reservation = reservations.FirstOrDefault(reservation => reservation.ReservationNumber == id);
-                ReservationSystem.Reservations.Remove(reservation!);
+                Restaurant.Reservations.Remove(reservation!);
                 // todo update file
                 Console.WriteLine("Reservation cancelled.");
                 Console.ReadLine();

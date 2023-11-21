@@ -19,7 +19,7 @@ public sealed class AdminAccount : Account
 
     public override List<Reservation> GetReservations()
     {
-        return ReservationSystem.Reservations;
+        return Restaurant.Reservations;
     }
 
     public List<Account>? GetAccounts()

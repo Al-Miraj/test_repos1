@@ -45,7 +45,7 @@ static class LoginSystem
                 var dashboard = new Dashboard(account);
                 ConnectUser(account, dashboard);
                 Console.WriteLine("Login successful!");
-                Console.WriteLine("\n[Press any key to continue to dashboard.]");
+                Console.WriteLine("\n[Press any key to continue to your dashboard.]");
                 Console.ReadKey();
                 dashboard.RunDashboardMenu();
             }
@@ -91,8 +91,8 @@ static class LoginSystem
             int id = (Restaurant.Accounts != null) ? GetLatestId() + 1 : 1;
 
             CustomerAccount account = new CustomerAccount(id, name, email, password);
-            Restaurant.Accounts!.Add(account);
-            XmlFileHandler.WriteToFile(Restaurant.Accounts, Restaurant.AccountsXmlFileName);
+            Restaurant.Accounts.Add(account);
+            Restaurant.UpdateRestaurantFiles();
 
             Dashboard dashboard = new Dashboard(account);
             ConnectUser(account, dashboard);
@@ -112,19 +112,19 @@ static class LoginSystem
         ResetMenu();
         Console.WriteLine("You're now logged out");
         Console.ReadLine();
-        Menu.RunMenu();
+        OptionMenu.RunMenu();
     }
 
     private static void ResetMenu()
     {
-        Menu.IsUserLoggedIn = false;
-        Menu.CurrentUser = null;
-        Menu.UserDashboard = null;
+        OptionMenu.IsUserLoggedIn = false;
+        OptionMenu.CurrentUser = null;
+        OptionMenu.UserDashboard = null;
     }
 
     public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.Id) : 0;
     
-    private static Account? FindAccount(string email, string password) => Restaurant.Accounts?.FirstOrDefault(account => account.Email == email && account.Password == password);
+    private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email == email && account.Password == password);
     
     public static (string, string) ReadUserInfo(bool register)
     {
@@ -214,9 +214,9 @@ static class LoginSystem
 
     private static void ConnectUser(Account account, Dashboard dashboard)
     {
-        Menu.IsUserLoggedIn = true;
-        Menu.CurrentUser = account;
-        Menu.UserDashboard = dashboard;
+        OptionMenu.IsUserLoggedIn = true;
+        OptionMenu.CurrentUser = account;
+        OptionMenu.UserDashboard = dashboard;
     }
 
 }

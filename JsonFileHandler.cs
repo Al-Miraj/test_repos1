@@ -45,7 +45,7 @@ public static class JsonFileHandler
 
 public static class JsonFileHandler
 {
-    public static void WriteToFile<T>(List<T> deals, string dealsFileName)
+    public static void WriteToFile<T>(List<T> deals, string dealsFileName) // todo revisit names
     {
         StreamWriter writer = new StreamWriter(dealsFileName);
         writer.Write(JsonConvert.SerializeObject(deals, new JsonSerializerSettings { Formatting = Formatting.Indented }));

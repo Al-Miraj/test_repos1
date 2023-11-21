@@ -10,12 +10,12 @@
     public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
-
+        Console.Clear();
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
 
         List<string> dashboardOptions = new List<string>()
-        { isAdmin ? "Reservation Management" : "Order History",
+        { isAdmin ? "Reservation Management" : "Order History", // todo: ipv order history misschien view profile details ofzo?
           isAdmin ? "Customer Management" : "Reservation Manager",
           "Exit to main menu",
           "Log out"
@@ -27,30 +27,34 @@
                 if (isAdmin)
                 { ReservationManager(); }
                 else
-                { OrderHistory(); Console.ReadLine(); }
+                { Console.Clear(); OrderHistory(); }
                 break;
             case 1:
                 if (isAdmin)
-                { CustomerReservationManager(); }
-                else
                 { CustomerManager(); }
+                else
+                { ReservationManager(); }
                 break;
             case 2:
-                Menu.RunMenu();
+                OptionMenu.RunMenu(); // loop warning
                 break;
             case 3:
-                LoginSystem.Logout();
+                LoginSystem.Logout();  // loop warning
                 break;
             default:
                 return;
         }
+
+        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
+        Console.ReadKey();
+        RunDashboardMenu();
     }
 
 
     private void ReservationManager()
     {
-        AdminReservationManagement.CurrentAdmin = (CurrentUser as AdminAccount)!;
-        AdminReservationManagement.Display();
+        ReservationManagement.CurrentUser = CurrentUser;
+        ReservationManagement.Display();
     }
 
     private void CustomerManager()
@@ -73,11 +77,5 @@
             Console.WriteLine(reservation.ToString());
             Console.WriteLine();
         }
-    }
-
-    private void CustomerReservationManager()
-    {
-        CustomerReservationManagement.CurrentUser = CurrentUser;
-        CustomerReservationManagement.Display();
     }
 }
