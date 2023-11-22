@@ -177,7 +177,6 @@
             {
                 reservation.TimeSlot = timeslot;
             }
-            LoginSystem.UpdateJson();
             Console.WriteLine("Reservation updated!");
             Console.ReadLine();
         }

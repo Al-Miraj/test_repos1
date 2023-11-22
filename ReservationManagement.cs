@@ -109,55 +109,52 @@ public static class ReservationManagement
         if (ReservationsIsEmpty(ReservationsOfUser)) { return; }
         int reservationNumber = GetReservationNumber();
         Reservation? reservation = ReservationsOfUser.FirstOrDefault(reservation => reservation.ReservationNumber == reservationNumber);
-        if (reservation != null)
+        if (reservation == null)
         {
-            List<string> updateOptions = new List<string>()
+            Console.WriteLine($"No reservation with the reservation number \"{reservationNumber}\" was found.");
+            return;
+        }
+        List<string> updateOptions = new List<string>()
             {
                 "Amount of people",
                 "Date",
                 "Timeslot",
                 "Done"
             };
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine($"Current data for reservation {reservationNumber}:");
-                Console.WriteLine(reservation.ToString());
-                Console.WriteLine("\nUpdate:");
-                int selectedOption = MenuSelector.RunMenuNavigator(updateOptions);
-                switch (selectedOption)
-                {
-                    case 0:
-                        Console.Clear();
-                        Console.WriteLine("Enter the new amount of people that are coming:");
-                        reservation.NumberOfPeople = ReservationSystem.GetNumberOfPeople(IsAdmin);
-                        break;
-                    case 1:
-                        Console.Clear();
-                        Console.WriteLine("Enter the new reservation date (dd-MM-yyyy):");
-                        reservation.Date = ReservationSystem.GetReservationDate();
-                        break;
-                    case 2:
-                        Console.Clear();
-                        reservation.TimeSlot = ReservationSystem.GetTimeslot();
-                        break;
-                    case 3:
-                        Console.WriteLine("Reservation updated!");
-                        return;
-                    default:
-                        break;
-                }
-                Console.Clear();
-                Console.WriteLine("Updated reservation:\n");
-                Console.WriteLine(reservation.ToString() + "\n");
-                Console.WriteLine("\n[Press any key to continue updating this reservation.]");
-                Console.ReadKey();
-            }
-        }
-        else
+        while (true)
         {
-            Console.WriteLine($"No reservation with the reservation number \"{reservationNumber}\" was found.");
-            return;
+            Console.Clear();
+            Console.WriteLine($"Current data for reservation {reservationNumber}:");
+            Console.WriteLine(reservation.ToString());
+            Console.WriteLine("\nUpdate:");
+            int selectedOption = MenuSelector.RunMenuNavigator(updateOptions);
+            switch (selectedOption)
+            {
+                case 0:
+                    Console.Clear();
+                    Console.WriteLine("Enter the new amount of people that are coming:");
+                    reservation.NumberOfPeople = ReservationSystem.GetNumberOfPeople(IsAdmin);
+                    break;
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("Enter the new reservation date (dd-MM-yyyy):");
+                    reservation.Date = ReservationSystem.GetReservationDate();
+                    break;
+                case 2:
+                    Console.Clear();
+                    reservation.TimeSlot = ReservationSystem.GetTimeslot();
+                    break;
+                case 3:
+                    Console.WriteLine("Reservation updated!");
+                    return;
+                default:
+                    break;
+            }
+            Console.Clear();
+            Console.WriteLine("Updated reservation:\n");
+            Console.WriteLine(reservation.ToString() + "\n");
+            Console.WriteLine("\n[Press any key to continue updating this reservation.]");
+            Console.ReadKey();
         }
     }
 

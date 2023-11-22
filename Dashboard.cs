@@ -39,10 +39,10 @@
                 OptionMenu.RunMenu(); // loop warning
                 break;
             case 3:
-                LoginSystem.Logout();  // loop warning
-                break;
-            default:
+                LoginSystem.Logout();
                 return;
+            default:
+                break;
         }
 
         Console.WriteLine("\n[Press any key to return to the your dashboard.]");
@@ -65,7 +65,7 @@
 
     private void OrderHistory()
     {
-        Console.WriteLine("Your past reservations:");
+        Console.WriteLine("Your past reservations:\n");
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works
         if (reservations.Count == 0)
         {

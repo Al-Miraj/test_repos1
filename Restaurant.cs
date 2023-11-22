@@ -7,8 +7,8 @@ public static class Restaurant
     public static string ReservationsXmlFileName = "Reservations.xml";
     public static string AccountsXmlFileName = "Accounts.xml";
     public static List<Account> Accounts = InitializeAccounts();
-    public static List<AdminAccount> AdminAccounts = GetAdminAccounts();
-    public static List<CustomerAccount> CustomerAccounts = GetCustomerAccounts();
+    public static List<AdminAccount> AdminAccounts { get { return GetAdminAccounts(); } }
+    public static List<CustomerAccount> CustomerAccounts { get { return GetCustomerAccounts(); } }
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
@@ -127,7 +127,7 @@ public static class Restaurant
         }
         foreach(Reservation reservation in reservations)
         {
-            Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.Id);
+            Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.ID);
             if ( account is CustomerAccount cAccount)
             {
                 cAccount.Reservations.Add(reservation);

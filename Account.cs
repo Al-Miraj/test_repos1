@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 public abstract class Account
 {
     // todo make these fields into properties (fix readonly issue)
-    public int Id;
+    public int ID;
     public string Email;
     public string Name;
     public string Password;
@@ -19,7 +19,7 @@ public abstract class Account
     protected Account(int id, string name, string email, string password)
     {
         //string firstLetter = name[0].ToString();
-        Id = id;
+        ID = id;
         //Name = string.Concat(firstLetter.ToUpper(), name.AsSpan(1));
         Name = name;
         Email = email;
@@ -40,6 +40,6 @@ public abstract class Account
 
     public override string ToString()
     {
-        return $"ID: {Id}\nEmail: {Email}\n Password: {Utensils.HashPassword(Password)}";   //Password hashed for privacy of customers
+        return $"ID: {ID}\nEmail: {Email}\nPassword: {Utensils.HashPassword(Password)}";   //Password hashed for privacy of customers
     }
 }

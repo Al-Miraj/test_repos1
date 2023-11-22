@@ -77,7 +77,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         {
             if (OptionMenu.CurrentUser is CustomerAccount cAccount)
             {
-                return cAccount.Id;
+                return cAccount.ID;
             }
         }
         return 0; // todo: revisit
