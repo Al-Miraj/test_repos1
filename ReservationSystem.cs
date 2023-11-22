@@ -101,7 +101,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
             else if (IsSmallerThan0)
                 Console.WriteLine("Invalid input. Please enter a number greater than 0.");
             else if (IsBiggerThan6 && !isAdmin)
-                Console.WriteLine("Invalid input. Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
+                Console.WriteLine("Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
             else if (IsBiggerThan6 && isAdmin)
                 break;
         }
