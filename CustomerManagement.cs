@@ -23,18 +23,23 @@ public static class CustomerManagement
             switch (selectedOption)
             {
                 case 0:
+                    Console.Clear();
                     CustomerOverview();
                     break;
                 case 1:
+                    Console.Clear();
                     ViewCustomer();
                     break;
                 case 2:
+                    Console.Clear();
                     AddCustomer();
                     break;
                 case 3:
+                    Console.Clear();
                     UpdateCustomer();
                     break;
                 case 4:
+                    Console.Clear();
                     DeleteCustomer();
                     break;
                 case 5:
@@ -54,47 +59,25 @@ public static class CustomerManagement
 
     private static void AddCustomer()
     {
-        // call LoginSystem.Register()
-        Console.WriteLine("Add Customer");
-        Console.WriteLine();
+        Console.WriteLine("Add Customer\n");
         Console.WriteLine("Enter customer details: ");
-        string? name;
-        do
-        {
-            Console.Write("Name: ");
-            name = Console.ReadLine();
-        } while (name == null);
-        var (email, password) = LoginSystem.ReadUserInfo(true);
-        int id = (Restaurant.Accounts != null) ? LoginSystem.GetLatestId() + 1 : 1;
-        var customer = new CustomerAccount(id, name, email, password);
-        LoginSystem.UpdateJson();
+        CustomerAccount customer = LoginSystem.CreateCustomerAccount();
         Console.WriteLine("Customer added!");
         Console.WriteLine(customer.ToString());
-        Console.ReadLine();
     }
 
     private static void ViewCustomer()
     {
         Console.WriteLine("See Customer Overview for list of customers");
-        Console.WriteLine("Enter customer ID: ");
-        int id;
-        while (true)
-        {
-            string input = Console.ReadLine()!;
-            if (!input.All(char.IsDigit))
-            { Console.WriteLine("Customer IDs must only contain digits."); continue; }
-            id = Convert.ToInt32(input);
-            break;
-        }
-        CustomerAccount customer = Restaurant.CustomerAccounts.FirstOrDefault(c => c.Id == id);
+        int id = GetCustomerId();
+        CustomerAccount customer = Restaurant.CustomerAccounts.FirstOrDefault(c => c.ID == id);
         if (customer == null)
         {
             Console.WriteLine("Customer not found");
             return;
         }
-        Console.WriteLine("Customer Info:");
+        Console.WriteLine("\nCustomer Info:\n");
         Console.WriteLine(customer.ToString());
-        Console.ReadLine();
     }
 
     private static void CustomerOverview()
@@ -112,44 +95,95 @@ public static class CustomerManagement
             Console.WriteLine(customer.ToString());
             Console.WriteLine();
         }
-        Console.ReadLine();
     }
 
     private static void UpdateCustomer()
     {
-        Console.WriteLine("Enter customer id: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        var customer = CurrentAdmin.GetAccounts()?.FirstOrDefault(c => c.Id == id);
+        Console.WriteLine("Update Customer details\n");
+        if (Restaurant.CustomerAccounts.Count == 0) { Console.WriteLine("There are not customer accounts yet."); return; }
+        int id = GetCustomerId();
+        CustomerAccount? customer = Restaurant.CustomerAccounts.FirstOrDefault(c => c.ID == id);
         if (customer == null)
         {
             Console.WriteLine("Customer not found");
             return;
         }
-        string custStr = customer.ToString();
-        Console.WriteLine(custStr);
-        (string email, string password) = LoginSystem.ReadUserInfo(false);
-        customer.Email = email;
-        customer.Password = password;
-        LoginSystem.UpdateJson();
-        Console.WriteLine("Customer updated!");
-        Console.WriteLine("Before\n" + custStr + "After\n" + customer.ToString());
-        Console.ReadLine();
+
+        List<string> updateOptions = new List<string>() { "Update name", "Update email", "Update password", "Done"};
+        string ogCustomerDetails = customer.ToString();
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine($"\nCurrent customer ({id}) details:\n");
+            Console.WriteLine(customer.ToString());
+            Console.WriteLine("\nUpdate:");
+            int selectedOption = MenuSelector.RunMenuNavigator(updateOptions);
+            switch (selectedOption)
+            {
+                case 0:
+                    Console.Clear();
+                    Console.WriteLine("Update your name");
+                    customer.Name = LoginSystem.GetAccountName();
+                    break;
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("Update your email");
+                    customer.Email = LoginSystem.GetAccountEmail();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Console.WriteLine("Update your password");
+                    customer.Password = LoginSystem.GetAccountPassword(true);
+                    break;
+                case 3:
+                    Console.WriteLine("Customer updated!");
+                    Console.WriteLine("Before\n" + ogCustomerDetails + "\nAfter\n" + customer.ToString());
+                    return;
+                default:
+                    break;
+            }
+        }
     }
 
     private static void DeleteCustomer()
     {
         Console.WriteLine("See Customer Overview for list of customers");
-        Console.WriteLine("Enter customer id: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        var customer = CurrentAdmin.GetAccounts()?.FirstOrDefault(c => c.Id == id);
+        int id = GetCustomerId();
+        CustomerAccount? customer = Restaurant.CustomerAccounts.FirstOrDefault(c => c.ID == id);
         if (customer == null)
         {
-            Console.WriteLine("Customer not found");
+            Console.WriteLine($"Customer account with ID \"{id}\" was not found");
             return;
         }
-        CurrentAdmin.GetAccounts()?.Remove(customer);
-        LoginSystem.UpdateJson();
-        Console.WriteLine("Customer deleted!");
-        Console.ReadLine();
+        Console.WriteLine(customer.ToString() + "\n");
+        Console.WriteLine("Are you sure you want to delete this customer account?");
+        int selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Yes", "No" });
+        if (selectedOption == 0)
+        {
+            bool removed = Restaurant.Accounts.Remove(customer);  // todo: reduce this body to just this line if removing always goes succesfull.
+            if (removed)
+            { Console.WriteLine("Customer account deleted succesfully!"); }
+            else
+            { Console.WriteLine("Something went wrong. Customer account was not deleted. Contact us for more information."); }//todo: figure out why it may not go well
+        }
+        else
+        { Console.WriteLine("This customer account will not be deleted."); }
+    }
+
+    private static int GetCustomerId()
+    {
+        Console.WriteLine("Enter customer ID: ");
+        int id;
+        while (true)
+        {
+            string input = Console.ReadLine()!;
+            if (input == "")
+            { Console.WriteLine("Customer IDs must have at least 1 digit"); continue; } // todo: update later if IDs must be bigger numbers
+            else if (!input.All(char.IsDigit))
+            { Console.WriteLine("Customer IDs must only contain digits."); continue; }
+            id = Convert.ToInt32(input);
+            break;
+        }
+        return id;
     }
 }

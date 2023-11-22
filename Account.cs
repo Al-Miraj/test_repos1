@@ -40,6 +40,6 @@ public abstract class Account
 
     public override string ToString()
     {
-        return $"ID: {ID}\nEmail: {Email}\nPassword: {Utensils.HashPassword(Password)}";   //Password hashed for privacy of customers
+        return $"ID: {ID}\nName: {Name}\nEmail: {Email}\nPassword: {Utensils.HashPassword(Password)}";   //Password hashed for privacy of customers
     }
 }

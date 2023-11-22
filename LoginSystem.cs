@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Data;
+using System.Xml.Linq;
 
 
 static class LoginSystem
@@ -27,83 +28,63 @@ static class LoginSystem
 
     public static void Login()
     {
-        int attempts = 0;
+        int attempts = 3;
+
+        Console.WriteLine("Log in screen\n");
         do
         {
-            Console.Clear();
-            Console.WriteLine("Log in screen\n");
-            if (Restaurant.Accounts == null)
-            {
-                Console.WriteLine("There aren't any accounts registered yet. Please consider registering.");
-                return;
-            }
-            (string email, string password) = ReadUserInfo(false);
+            string email = GetAccountEmail();
+            string password = GetAccountPassword(false);
             Account account = FindAccount(email, password);
             if (account != null)
             {
                 Console.WriteLine("Logging in...");
-                var dashboard = new Dashboard(account);
-                ConnectUser(account, dashboard);
                 Console.WriteLine("Login successful!");
-                Console.WriteLine("\n[Press any key to continue to your dashboard.]");
+                Dashboard dashboard = new Dashboard(account);
+                ConnectUser(account, dashboard);
+                Console.WriteLine("\n[Press any key to continue to the dashboard.]");
                 Console.ReadKey();
                 dashboard.RunDashboardMenu();
+                return;
             }
             else
             {
-                Console.WriteLine($"Login failed. You have {2 - attempts} left"); // todo give reason why login failed
-                attempts++;
+                attempts--;
+                Console.WriteLine($"Login failed. You have {attempts} left\n"); // todo give reason why login failed
             }
-        } while (attempts < 3);
+        } while (attempts > 0);
         Console.WriteLine("Too many failed attempts. Please try again later.");
     }
 
     public static void Register()
     {
         Console.WriteLine("Create account\n");
+        CustomerAccount account = CreateCustomerAccount();
+        Console.WriteLine("Logging in...");
+        Console.WriteLine("Login successful!");
+        Dashboard dashboard = new Dashboard(account);
+        ConnectUser(account, dashboard);
+        Console.WriteLine("\n[Press any key to continue to the dashboard.]");
+        Console.ReadKey();
+        dashboard.RunDashboardMenu();
+    }
 
-        try
-        {
-            string name;
-            do
-            {
-                Console.Write("Please enter you name: ");
-                name = Console.ReadLine()!;
-                if (name.Length < 1)
-                {
-                    Console.WriteLine("Invalid input. Your name must at least be 1 character.\n");
-                    continue;
-                }
-                else if (name.Any(char.IsDigit))
-                {
-                    Console.WriteLine("Invalid input. Your name must not contain any digits.\n");
-                    continue;
-                }
-                Console.WriteLine();
-                break;
-            }
-            while (true);
+    public static CustomerAccount CreateCustomerAccount()
+    {
+        string name = GetAccountName();
+        string email = GetAccountEmail();
+        string password = GetAccountPassword(true);
 
-            
+        // Accounts zou nooit null moeten zijn (anders gaat er echt wat fout)
+        // en er is altijd een default admin met id 1 aanwezig
+        int id = (Restaurant.Accounts.Count > 1) ? GetLatestId() + 1 : 2;
 
-            (string email, string password) = ReadUserInfo(true);
-
-            int id = (Restaurant.Accounts != null) ? GetLatestId() + 1 : 1;
-
-            CustomerAccount account = new CustomerAccount(id, name, email, password);
-            Restaurant.Accounts.Add(account);
-            Restaurant.UpdateRestaurantFiles();
-
-            Dashboard dashboard = new Dashboard(account);
-            ConnectUser(account, dashboard);
-            Console.WriteLine("\n[Press any key to continue to dashboard.]");
-            Console.ReadKey();
-            dashboard.RunDashboardMenu();
-        }
-        catch (NullReferenceException ex)
-        {
-            Console.WriteLine($"An error occured: {ex.Message}");
-        }
+        Console.WriteLine("Creating account...");
+        CustomerAccount account = new CustomerAccount(id, name, email, password);
+        Restaurant.Accounts.Add(account);
+        Restaurant.UpdateRestaurantFiles();
+        Console.WriteLine("Account creation successful!");
+        return account;
     }
 
     public static void Logout()
@@ -111,8 +92,6 @@ static class LoginSystem
         Console.WriteLine("Logging out...");
         ResetMenu();
         Console.WriteLine("You're now logged out");
-        Console.ReadLine();
-        OptionMenu.RunMenu();
     }
 
     private static void ResetMenu()
@@ -122,73 +101,99 @@ static class LoginSystem
         OptionMenu.UserDashboard = null;
     }
 
-    public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.Id) : 0;
+    public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.ID) : 0;
     
     private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email == email && account.Password == password);
-    
-    public static (string, string) ReadUserInfo(bool register)
-    {
-        do
-        {
-            Console.WriteLine("Enter email and password\n");
-            Console.Write("Email: ");
-            string? email = Console.ReadLine();
 
-            if (email != null && IsEmail(email))
+    public static string GetAccountName()
+    {
+        string name;
+        Console.WriteLine("Please enter your name: ");
+        while (true)
+        {
+            name = Console.ReadLine()!;
+            if (name.Length == 0)
             {
-                if (register)
-                {
-                    Console.WriteLine("\nA password must meet the following requirements:");
-                    Console.WriteLine("- The length of the password should be between 7 and 16 characters.");
-                    Console.WriteLine("- The password should contain at least one uppercase letter.");
-                    Console.WriteLine("- The password should contain at least one lowercase letter.");
-                    Console.WriteLine("- The password should contain at least one digit.");
-                    Console.WriteLine("- The password should contain at least one special character (such as !, @, #, $, %, etc.).");
-                    Console.WriteLine("- The password should not contain any characters that are not digits, letters, or special characters.");
-                }
-                string? password;
-                do
-                {
-                    Console.Write("\nPassword: ");
-                    password = Console.ReadLine();
-                    bool isValidPassword = IsValidPassword(password);
-                    if (!isValidPassword)
-                    {
-                        Console.WriteLine("Please enter a valid password.");
-                        continue;
-                    }
-                    break;
-                } while (true);
-                return (email, password)!;
+                Console.WriteLine("Invalid input. Your name must at least be 1 character.\n");
+                continue;
+            }
+            else if (name.Any(char.IsDigit))
+            {
+                Console.WriteLine("Invalid input. Your name must not contain any digits.\n");
+                continue;
+            }
+            else if (char.IsLower(name[0]))
+            {
+                Console.WriteLine("Invalid input. Your name must start with a capital letter.\n");
+                continue;
+            }
+            break;
+        }
+        return name;
+    }
+
+    public static string GetAccountEmail()
+    {
+        string email;
+        Console.WriteLine("Please enter your email: ");
+        while (true)
+        {
+            email = Console.ReadLine()!;
+            if (IsValidEmail(email))
+            {
+                break;
             }
             else
             {
                 Console.WriteLine("Please enter a valid email. (i.e. john@email.com");
             }
-        } while (true);
+        }
+        return email;
     }
 
-    public static bool IsValidPassword(string? password)
+    public static string GetAccountPassword(bool registering)
     {
-        if (password != null)
+        string password;
+        if (registering) { DisplayPasswordRequirements(); }
+        Console.WriteLine("Please enter the password: ");
+        while (true)
         {
-            bool result = 
-                password.Length >= 7 
+            password = Console.ReadLine()!;
+            if (!IsValidPassword(password))
+            {
+                Console.WriteLine("Please enter a valid password.");
+                continue;
+            }
+            break;
+        }
+        return password;
+    }
+
+    public static void DisplayPasswordRequirements()
+    {
+        Console.WriteLine("\nA password must meet the following requirements:");
+        Console.WriteLine("- The length of the password should be between 7 and 16 characters.");
+        Console.WriteLine("- The password should contain at least one uppercase letter.");
+        Console.WriteLine("- The password should contain at least one lowercase letter.");
+        Console.WriteLine("- The password should contain at least one digit.");
+        Console.WriteLine("- The password should contain at least one special character (such as !, @, #, $, %, etc.).");
+        Console.WriteLine("- The password should not contain any characters that are not digits, letters, or special characters.\n");
+    }
+
+    public static bool IsValidPassword(string password)
+    {
+        bool result =
+                password.Length >= 7
                 && password.Length <= 16
                 && Regex.IsMatch(password, "[A-Z]")
                 && Regex.IsMatch(password, "[a-z]")
                 && Regex.IsMatch(password, @"\d")
                 && Regex.IsMatch(password, @"[!-/:-@\[-_{-~]")
                 && !Regex.IsMatch(password, @"[^\dA-Za-z!-/:-@\[-_{-~]");
-            return result;
-        }
-        else
-        {
-            return false;
-        }
+        return result;
     }
 
-    public static bool IsEmail(string? text)
+    public static bool IsValidEmail(string? text)
     {
         if (text =="")
         {
@@ -203,13 +208,6 @@ static class LoginSystem
         {
             return false;
         }
-    }
-
-    public static void UpdateJson()  // todo check what references this method
-    {
-        using StreamWriter writer = new("accounts.json");
-        string json = JsonConvert.SerializeObject(Restaurant.Accounts);
-        writer.Write(json);
     }
 
     private static void ConnectUser(Account account, Dashboard dashboard)
