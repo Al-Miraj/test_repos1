@@ -38,7 +38,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     break;
                 case 3:
                     Console.WriteLine("Menu - Check out our delicious dishes.");
-                    FoodMenu.Display();
+                    FoodMenu.Display(); 
                     break;
                 case 4:
                     DrinksMenu.Display();
