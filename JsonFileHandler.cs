@@ -45,19 +45,19 @@ public static class JsonFileHandler
 
 public static class JsonFileHandler
 {
-    public static void WriteToFile<T>(List<T> deals, string dealsFileName) // todo revisit names
+    public static void WriteToFile<T>(List<T> data, string fileName) // todo revisit names
     {
-        StreamWriter writer = new StreamWriter(dealsFileName);
-        writer.Write(JsonConvert.SerializeObject(deals, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+        StreamWriter writer = new StreamWriter(fileName);
+        writer.Write(JsonConvert.SerializeObject(data, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         writer.Close();
     }
 
-    public static List<T> ReadFromFile<T>(string DealsFileName)
+    public static List<T> ReadFromFile<T>(string fileName)
     {
-        StreamReader reader = new StreamReader(DealsFileName);
+        StreamReader reader = new StreamReader(fileName);
         string jsonString = reader.ReadToEnd();
         reader.Close();
-        List<T> deals = JsonConvert.DeserializeObject<List<T>>(jsonString)!;
-        return deals;
+        List<T> contents = JsonConvert.DeserializeObject<List<T>>(jsonString)!;
+        return contents;
     }
 }

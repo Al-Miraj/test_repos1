@@ -32,12 +32,10 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     About.RestaurantInformation();
                     break;
                 case 2:
-                    Console.WriteLine("Contact Us - Get in touch with us.");
                     Contact.ContactInformation();
                     AboutUs.travel();
                     break;
                 case 3:
-                    Console.WriteLine("Menu - Check out our delicious dishes.");
                     FoodMenu.Display(); 
                     break;
                 case 4:
