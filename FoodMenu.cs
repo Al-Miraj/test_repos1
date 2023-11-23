@@ -90,9 +90,6 @@ public static class FoodMenu
         }
         Console.WriteLine("==================================================================================================================");
 
-
-
-
         if (keyContinue)
         {
             Console.WriteLine("Press any key to continue");
@@ -132,25 +129,6 @@ public static class FoodMenu
         }
     }
 
-    /*switch (i)
-    {
-        case 1:
-            MenuItems = GetLunchMenu();
-            break;
-        case 2:
-            MenuItems = GetDinnerMenu();
-            break;
-        case 3:
-            MenuItems = SortFoodMenu.SortMenu();
-            //SortFoodMenu.SortMenu().ForEach(x => Console.WriteLine(x));
-            break;
-        case 4:
-            return;
-
-        default:
-            Console.WriteLine("Invalid choice. Please enter 1, 2, 3 or 4.");
-            break;
-    }*/
 
 
     private static void HandleSelection()
