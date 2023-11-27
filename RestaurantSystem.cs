@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Text.Json;
+using System.Xml;
 
 class ReservationSystem
 {
@@ -9,7 +10,7 @@ class ReservationSystem
     public static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
     public Random Random = new Random();
 
-
+    
     public ReservationSystem()
     {
         // all the restaurant tables are put in a list upon
@@ -231,55 +232,74 @@ class ReservationSystem
         }
     }
 
-    public void DisplayTablesMap()
+    public void DisplayVisualMap()
     {
-        string door = "Entrance";
-        string aisle = "Main Aisle";
+        // This function now requires information about which table is selected
+        // You will need to track the current selected table index or coordinates
 
-        // First row of tables (2 seats)
-        DisplayTableRange(1, 4); // Tables 1-4
+        Console.Clear();
+        Console.WriteLine("Restaurant Layout:\n");
+        Console.WriteLine("Entrance");
+        Console.WriteLine("------------------------------------------------");
 
-        Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
-
-        // Second row of tables (4 seats)
-        DisplayTableRange(5, 8); // Tables 5-8
-
-        Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
-
-        // Third row of tables (2 seats)
-        DisplayTableRange(9, 12); // Tables 9-12
-
-        Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
-
-        // Fourth row of tables (6 seats)
-        DisplayTableRange(13, 15); // Tables 13-15
+        // Assuming your tables are organized in a grid, you could iterate over the grid
+        // Let's say you have a 3x5 grid (rows x columns)
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 5; col++)
+            {
+                int tableIndex = row * 5 + col; // Calculate index based on row and column
+                if (tableIndex < Tables.Count)
+                {
+                    if (tableIndex == selectedTableIndex)
+                    {
+                        HighlightTable(Tables[tableIndex]); // Highlight the currently selected table
+                    }
+                    else
+                    {
+                        DisplayTable(Tables[tableIndex]); // Normal display for other tables
+                    }
+                }
+            }
+            Console.WriteLine(); // New line at the end of each row
+        }
+        Console.WriteLine("------------------------------------------------");
+        Console.WriteLine("Bar Area");
     }
 
-    private void DisplayTableRange(int startTable, int endTable)
+    private void DisplayTableRange(int start, int end)
     {
-        // Display a range of tables
-        for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
+        for (int i = start; i <= end; i++)
         {
-            Table table = Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
+            Table table = Tables.FirstOrDefault(t => t.TableNumber == i);
             if (table != null)
             {
-                if (table.IsReservated)
-                    Console.ForegroundColor = ConsoleColor.Red;
-                else
-                    Console.ForegroundColor = ConsoleColor.Green;
-
-                // Display a single table with the appropriate number of seats
-                if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]  ");
-                else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]  ", table.TableNumber);
-                else // 6-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]-[ {table.TableNumber} ]  ");
+                DisplayTable(table); // Call the method that displays a single table
             }
-            Console.ResetColor();
         }
-        Console.WriteLine("\n");
     }
+
+    private void DisplayTable(Table table)
+    {
+        // Set the color based on table availability and capacity
+        if (Reservation.NumberOfPeople > table.Capacity)
+        {
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+        else
+        {
+            Console.ForegroundColor = table.IsReservated ? ConsoleColor.Red : ConsoleColor.Green;
+        }
+
+        string status = table.IsReservated ? "[Reserved]" : "[Available]";
+        // Include the price of the table in the display output
+        string priceInfo = $"Price: ${table.TablePrice:F2}";
+        Console.Write($"Table {table.TableNumber} {status} - {priceInfo} ");
+
+        Console.ResetColor();
+    }
+
+
 
 
     private (int, int) DetermineMaxCoordinates(List<Table> tables)
@@ -288,65 +308,58 @@ class ReservationSystem
         int maxY = tables.Max(t => t.Coordinate.Item2);
         return (maxX, maxY);
     }
+    private int selectedTableIndex = 0;
 
     public Table GetChosenTable()
     {
-        Console.CursorVisible = false;
-        ConsoleKeyInfo keyInfo;
+        // This method now allows arrow key navigation through the map
+        ConsoleKey keyPressed;
+        int maxRow = 2; // Assuming 3 rows of tables
+        int maxCol = 4; // Assuming 5 columns of tables
 
-        int xc = 1;
-        int yc = 1;
-        Table selectedTable;
-
-        while (true)
+        do
         {
-            Console.Clear();
-            DisplayTablesMap();
-            selectedTable = ShowSelectedTable(xc, yc);
-            TableSelectionFeedback(selectedTable);
+            DisplayVisualMap(); // Refresh the display to show the current selection
 
-            if (selectedTable != null)
+            keyPressed = Console.ReadKey(true).Key;
+
+            // Calculate current row and column
+            int currentRow = selectedTableIndex / 5;
+            int currentCol = selectedTableIndex % 5;
+
+            // Navigate through the tables
+            if (keyPressed == ConsoleKey.RightArrow && currentCol < maxCol)
             {
-                keyInfo = Console.ReadKey();
-                if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
-                {
-                    yc--;
-                }
-                else if (keyInfo.Key == ConsoleKey.DownArrow && yc < 5)
-                {
-                    yc++;
-                }
-                else if (keyInfo.Key == ConsoleKey.LeftArrow && xc > 1)
-                {
-                    xc--;
-                }
-                else if (keyInfo.Key == ConsoleKey.RightArrow && xc < 3)
-                {
-                    xc++;
-                }
-                else if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    if (!selectedTable.IsReservated) // the table has not been reservated yet
-                    {
-                        if (Reservation.NumberOfPeople <= selectedTable.Capacity) // the table has enough seats
-                        {
-                            selectedTable.IsReservated = true; // table at that coordinate has now been reservated
-                            WriteToFile(Tables, TablesJson);
-                            break;
-                        }
-                    }
-                }
+                selectedTableIndex++;
             }
-            else
+            else if (keyPressed == ConsoleKey.LeftArrow && currentCol > 0)
             {
-                Console.WriteLine("Sorry! We are booked!");
-                break;
+                selectedTableIndex--;
             }
+            else if (keyPressed == ConsoleKey.DownArrow && currentRow < maxRow)
+            {
+                selectedTableIndex += 5; // Move down one row
+            }
+            else if (keyPressed == ConsoleKey.UpArrow && currentRow > 0)
+            {
+                selectedTableIndex -= 5; // Move up one row
+            }
+            // Select the table
+            else if (keyPressed == ConsoleKey.Enter)
+            {
+                return Tables[selectedTableIndex];
+            }
+        } while (keyPressed != ConsoleKey.Escape); // Escape key to exit
 
-        }
-
-
-        return selectedTable;
+        return null; // Return null if no table is selected
+    }
+    private void HighlightTable(Table table)
+    {
+        // Implementation of highlighting logic for the selected table
+        // For example, you can change the background color or add a special marker
+        Console.BackgroundColor = ConsoleColor.Yellow;
+        DisplayTable(table);  // Corrected to use the method that takes a Table object
+        Console.ResetColor();
     }
 
     public void TableSelectionFeedback(Table selectedTable)
