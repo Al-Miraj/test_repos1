@@ -158,46 +158,36 @@ public static class ReservationManagement
         }
     }
 
-    private static void CancelReservation()  // todo: how to improve method like these where you have a lot of if statements?
+    private static void CancelReservation()
     {
         Console.WriteLine("Cancel Reservation\n");
         if (ReservationsIsEmpty(ReservationsOfUser)) { return; }
         int reservationNumber = GetReservationNumber();
 
         Reservation? reservation = ReservationsOfUser.FirstOrDefault(reservation => reservation.ReservationNumber == reservationNumber);
-        if (reservation != null)
-        {
-            Console.WriteLine();
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            if (reservation.Date < today)
-            {
-                Console.WriteLine("It is not possible to cancel a reservation that has already passed.");
-                return;
-            }
-            Console.WriteLine(reservation.ToString() + "\n");
-            Console.WriteLine("Are you sure you want to cancel this reservation?");
-            int selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Yes", "No" });
-            if (selectedOption == 0)
-            {
-                bool removed = Restaurant.Reservations.Remove(reservation);  // todo: reduce this body to just this line if removing always goes succesfull.
-                if (removed)
-                {
-                    Console.WriteLine("Reservation cancelled succesfully!");
-                }
-                else
-                {
-                    Console.WriteLine("Something went wrong. Reservation was not cancelled. Contact us for more information."); //todo: figure out why it may not go well
-                }
-            }
-            else
-            {
-                Console.WriteLine("This reservation will not be cancelled.");
-            }
-        }
-        else
+        if (reservation == null)
         {
             Console.WriteLine($"No reservation with the reservation number \"{reservationNumber}\" was found.");
+            return;
         }
+        Console.WriteLine();
+        DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+        if (reservation.Date < today)
+        {
+            Console.WriteLine("It is not possible to cancel a reservation that has already passed.");
+            return;
+        }
+        Console.WriteLine(reservation.ToString() + "\n");
+        Console.WriteLine("Are you sure you want to cancel this reservation?");
+        int selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Yes", "No" });
+        if (selectedOption == 0)
+        {
+            bool removed = Restaurant.Reservations.Remove(reservation);
+            if (!removed)
+            { throw new Exception($"Reservation \"{reservationNumber}\" wasn't removed succesfully"); }
+        }
+        else
+        { Console.WriteLine("This reservation will not be cancelled."); }
     }
 
     private static void SearchReservationByNumber()
