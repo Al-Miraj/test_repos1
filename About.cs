@@ -11,7 +11,7 @@
         Console.WriteLine("Welcome to Le Délice Français - A Taste of Paris");
         Console.WriteLine("------------------------------------------------");
 
-        Console.WriteLine("Le Délice Français is a charming restaurant nestled in the heart of Paris, France.");
+        Console.WriteLine("Le Délice Français is a charming restaurant nestled in the heart of Rotterdam, The Netherlands.");
         Console.WriteLine("Our journey began over a century ago, when our founder, Gaston Leclerc,");
         Console.WriteLine("fulfilled his dream of creating an exquisite dining experience for lovers of French cuisine.");
 

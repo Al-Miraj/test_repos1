@@ -1,249 +1,374 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
+using System.Diagnostics.Tracing;
+using System.Text.Json;
 
-class ReservationSystem
+public static class ReservationSystem // Made class static so loginsystem and dashboard don't rely on instances
 {
-    static int selectedTableIndex = 0;
-    static List<Table> tables = new List<Table>();
-    static List<Reservation> reservations = new List<Reservation>(); // List to store reservations
-    static int numberOfPeople = 0; // Store the number of people specified by the user
-    static DateTime selectedDate; // Store the selected date
+    public static Random Random = new Random();
 
-    static Random random = new Random();
-    static int reservationNumber = 0;
-
-    public void SystemRun()
+    public static void RunSystem()
     {
-        // Ask the user for the number of people
+        Reservate(false);
+    }
+
+    public static void Reservate(bool isAdmin)
+    {
+        int reservatorID = GetCustomerID();
+
         Console.Write("Enter the number of people in your group: ");
-        while (!int.TryParse(Console.ReadLine(), out numberOfPeople) || numberOfPeople < 0)
+        int numberOfPeople = GetNumberOfPeople(isAdmin);
+
+        // checks if party deal is applicable and turns addPartyDeal to true if it is.
+        bool addPartyDeal = false;
+        PartyDeal partyDeal = (Restaurant.GetDealByName("Party Deal") as PartyDeal)!;
+        if (partyDeal != null)
         {
-            Console.WriteLine("Invalid input. Please enter a valid number of people.");
+            bool isApplicable = partyDeal.DealIsApplicable(numberOfPeople);
+            if (isApplicable)
+            {
+                partyDeal.DisplayDealIsAplied();
+                addPartyDeal = true;
+                Console.WriteLine("\n [Press any key to continue]");
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
+        
 
-        //Path.Combine("data", "filename.json")
-
-        // Ask the user for a date in the "dd-mm-yyyy" format
         Console.Write("Enter a date (dd-mm-yyyy): ");
-        while (!DateTime.TryParseExact(Console.ReadLine(), "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out selectedDate))
+        DateOnly date = GetReservationDate();
+        Console.Clear();
+
+        Console.WriteLine("Choose your timeslot:");
+        string timeslot = GetTimeslot();
+
+        Table table = GetChosenTable(numberOfPeople);
+        if (table != null)
         {
-            Console.WriteLine("Invalid date format. Please enter a date in the dd-mm-yyyy format.");
-        }
-
-        Console.WriteLine("Select a time slot:");
-        Console.WriteLine("1. Lunch: 12:00-14:00");
-        Console.WriteLine("2. Afternoon: 14:00-16:00");
-        Console.WriteLine("3. Evening: 16:00-18:00");
-        Console.WriteLine("4. Dinner: 18:00-20:00");
-        Console.WriteLine("5. Late Dinner: 20:00-22:00");
-
-        int selectedTimeSlotIndex;
-        do
-        {
-            Console.Write("Enter the number corresponding to your desired time slot: ");
-        } while (!int.TryParse(Console.ReadLine(), out selectedTimeSlotIndex) || selectedTimeSlotIndex < 1 || selectedTimeSlotIndex > 5);
-
-        string selectedTimeSlot;
-        switch (selectedTimeSlotIndex)
-        {
-            case 1:
-                selectedTimeSlot = "Lunch: 12:00-14:00";
-                break;
-            case 2:
-                selectedTimeSlot = "Afternoon: 14:00-16:00";
-                break;
-            case 3:
-                selectedTimeSlot = "Evening: 16:00-18:00";
-                break;
-            case 4:
-                selectedTimeSlot = "Dinner: 18:00-20:00";
-                break;
-            case 5:
-                selectedTimeSlot = "Late Dinner: 20:00-22:00";
-                break;
-            default:
-                selectedTimeSlot = "Unknown";
-                break;
-        }
-
-        InitializeTables();
-
-        ConsoleKeyInfo keyInfo;
-        do
-        {
-            Console.WriteLine("  ______    _____    _____  ");
-            Console.WriteLine(" /      \\  /     \\  /     \\  ");
-            Console.WriteLine("|   ___  |   ___  |   ___  | ");
-            Console.WriteLine("|  |   |    |   |    |   | | ");
-            Console.WriteLine("|  |[1]|    |[2]|    |[3]| | ");
-            Console.WriteLine("|  |___|    |___|    |___| | ");
-            Console.WriteLine("|                          | ");
-            Console.WriteLine("|   ___      ___      ___  | ");
-            Console.WriteLine("|  |   |    |   |    |   | | ");
-            Console.WriteLine("|  |[4]|    |[5]|    |[6]| | ");
-            Console.WriteLine("|  |___|    |___|    |___| | ");
-            Console.WriteLine("|                          | ");
-            Console.WriteLine("|   ___      ___      ___  | ");
-            Console.WriteLine("|  |   |    |   |    |   | | ");
-            Console.WriteLine("|  |[7]|    |[8]|    |[9]| | ");
-            Console.WriteLine("|  |___|    |___|    |___| | ");
-            Console.WriteLine("|                          | ");
-            Console.WriteLine("|________|________|________| ");
-
-            Console.WriteLine("Select a table (use arrow keys, press Enter to confirm):");
-
-            int rowCount = 4; // Number of rows
-            int columnCount = 3; // Number of columns
-
-            for (int row = 0; row < rowCount; row++)
+            int reservationNumber = GenerateReservationNumber();
+            Reservation reservation = new Reservation(reservatorID, reservationNumber, numberOfPeople, date, timeslot, table, table.TablePrice);
+            if (addPartyDeal)
             {
-                for (int col = 0; col < columnCount; col++)
-                {
-                    int index = row * columnCount + col;
-                    if (index < tables.Count)
-                    {
-                        Table table = tables[index];
-                        ConsoleColor backgroundColor = (index == selectedTableIndex) ? ConsoleColor.Blue : ConsoleColor.Black;
-
-                        Console.BackgroundColor = backgroundColor;
-
-                        Console.Write($"[{tables[index].TableNumber}] - Capacity: {tables[index].Capacity}   ");
-                    }
-                    else
-                    {
-                        Console.ResetColor();
-                    }
-                }
-                Console.WriteLine(); // Move to the next row
+                reservation.DealsApplied.Add(partyDeal);
+                reservation.DiscountFactor = partyDeal.DiscountFactor;
             }
-            keyInfo = Console.ReadKey();
-
-            if (keyInfo.Key == ConsoleKey.UpArrow)
+            if (OptionMenu.CurrentUser is CustomerAccount cAccount)
             {
-                selectedTableIndex = Math.Max(0, selectedTableIndex - 3);
+                cAccount.Reservations.Add(reservation);
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow)
-            {
-                selectedTableIndex = Math.Min(tables.Count - 1, selectedTableIndex + 3);
-            }
-            else if (keyInfo.Key == ConsoleKey.LeftArrow)
-            {
-                selectedTableIndex = Math.Max(0, selectedTableIndex - 1);
-            }
-            else if (keyInfo.Key == ConsoleKey.RightArrow)
-            {
-                selectedTableIndex = Math.Min(tables.Count - 1, selectedTableIndex + 1);
-            }
-        } while (keyInfo.Key != ConsoleKey.Enter);
-
-        // User has confirmed the selection
-        Table selectedTable = tables[selectedTableIndex];
-
-        if (selectedTable.Capacity < numberOfPeople)
-        {
-            Console.WriteLine($"Table {selectedTable.TableNumber} does not have enough capacity for your group of {numberOfPeople} people.");
+            Restaurant.Reservations.Add(reservation);
+            DisplayReservationDetails(reservation);
         }
         else
         {
-            // Create a reservation object
-            Reservation newReservation = new Reservation
-            {
-                ReservationNumber = GenerateReservationNumber(),
-                NumberOfPeople = numberOfPeople,
-                Date = selectedDate.ToString("dd-MMM-yyyy"),
-                TimeSlot = selectedTimeSlot,
-                SelectedTable = selectedTable,
-            };
-
-            // Add the reservation to the list
-            reservations.Add(newReservation);
-
-            // Save the reservation data to the JSON file
-            SaveReservationDataToJson(reservations);
-
-            Console.WriteLine($"You reserved Table {selectedTable.TableNumber} with a capacity of {selectedTable.Capacity} seats for your group of {numberOfPeople} people on {selectedDate:dd-MM-yyyy} for the timeslot: {selectedTimeSlot}.");
-            Console.WriteLine($"Your reservation number: {newReservation.ReservationNumber}");
-        }
-    }
-
-    static int GenerateReservationNumber()
-    {
-        return random.Next(1, 10000); // Generates a random number between 1 and 9999 (inclusive).
-    }
-
-    static void InitializeTables()
-    {
-        // Always initialize the tables list with default values
-        tables = new List<Table>();
-        for (int i = 1; i <= 9; i++)
-        {
-            tables.Add(new Table { TableNumber = i, Capacity = 4 });
+            Console.WriteLine("You weren't able to finish the reservation.");
+            return;
         }
 
-        // Check if the JSON file exists and load the table data if it does
-        if (File.Exists("ReservationsData.json"))
+        Restaurant.UpdateRestaurantFiles();
+    }
+
+
+    public static int GetCustomerID()  // in ReservationSystem or somewhere else?
+    {
+        // if a customer is logged in and reservating, the reservation is made under their ID
+        // if a non logged in customer or admin is reservating, the reservation is made under the CustomerId 0
+        if (OptionMenu.IsUserLoggedIn)
         {
-            string json = File.ReadAllText("ReservationsData.json");
-            reservations = JsonSerializer.Deserialize<List<Reservation>>(json);
-
-            // Create a list to store the table numbers that are taken
-            List<int> takenTables = new List<int>();
-
-            // Populate the takenTables list with table numbers from reservations
-            foreach (Reservation reservation in reservations)
+            if (OptionMenu.CurrentUser is CustomerAccount cAccount)
             {
-                takenTables.Add(reservation.SelectedTable.TableNumber);
+                return cAccount.ID;
+            }
+        }
+        return 0; // todo: revisit
+    }
+
+    public static int GetNumberOfPeople(bool isAdmin)
+    {
+        int numberOfPeople;
+        bool IsIncorrectFormat;
+        bool IsSmallerThan0;
+        bool IsBiggerThan6;
+
+        do
+        {
+            string number = Console.ReadLine().Trim();
+            IsIncorrectFormat = !int.TryParse(number, out numberOfPeople); //true if the format is incorrect
+            IsSmallerThan0 = numberOfPeople <= 0;
+            IsBiggerThan6 = numberOfPeople > 6;
+            if (IsIncorrectFormat)
+                Console.WriteLine("Invalid input. Please enter a valid number of people like: 1, 4, 6, etc");
+            else if (IsSmallerThan0)
+                Console.WriteLine("Invalid input. Please enter a number greater than 0.");
+            else if (IsBiggerThan6 && !isAdmin)
+                Console.WriteLine("Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
+            else if (IsBiggerThan6 && isAdmin)
+                break;
+        }
+        while (IsIncorrectFormat || IsSmallerThan0 || IsBiggerThan6);
+        return numberOfPeople;
+    }
+
+    public static DateOnly GetReservationDate()
+    {
+        DateOnly reservationDate;
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+        DateOnly yearFromNow = today.AddYears(1);
+        bool formatIsIncorrect;
+        bool dateHasPassed;
+        bool dateIsMoreThanYearFromNow;
+
+        do
+        {
+            string date = Console.ReadLine().Trim();
+
+            // formatIsIncorrect is true if the format is incorrect
+            formatIsIncorrect = !DateOnly.TryParseExact(date, "d-M-yyyy", out reservationDate);
+            dateHasPassed = reservationDate < today;
+            dateIsMoreThanYearFromNow = reservationDate > yearFromNow;
+            if (formatIsIncorrect)
+            {
+                Console.WriteLine($"Invalid date format '{date}'. Please enter a date in the dd-mm-yyyy format.");
+            }
+            else if (dateHasPassed)
+            {
+                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not already passed.");
+            }
+            else if (dateIsMoreThanYearFromNow)
+            {
+                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not more than a year from today.");
             }
 
-            // Create a list of available tables based on the original tables list
-            List<Table> availableTables = new List<Table>();
+        }
+        while (formatIsIncorrect || dateHasPassed);
 
-            foreach (Table table in tables)
+        return reservationDate;
+    }
+
+    public static string GetTimeslot()
+    {
+        List<string> timeslots = new List<string>()
+        {   "Lunch (12:00-14:00)",
+            "The Afternoon (14:00-16:00)",
+            "The Evening (16:00-18:00)",
+            "Dinner (18:00-20:00)",
+            "Late Dinner (20:00-22:00)"
+        };
+        
+        int selectedOption = MenuSelector.RunMenuNavigator(timeslots );
+        return timeslots[selectedOption];
+    }
+
+    public static void DisplayTablesMap()
+    {
+        string door = "Entrance";
+        string aisle = "Main Aisle";
+
+        // First row of tables (2 seats)
+        DisplayTableRange(1, 4); // Tables 1-4
+
+        Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
+
+        // Second row of tables (4 seats)
+        DisplayTableRange(5, 8); // Tables 5-8
+
+        Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
+
+        // Third row of tables (2 seats)
+        DisplayTableRange(9, 12); // Tables 9-12
+
+        Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
+
+        // Fourth row of tables (6 seats)
+        DisplayTableRange(13, 15); // Tables 13-15
+    }
+
+    private static void DisplayTableRange(int startTable, int endTable)
+    {
+        // Display a range of tables
+        for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
+        {
+            Table table = Restaurant.Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
+            if (table != null)
             {
-                if (!takenTables.Contains(table.TableNumber))
+                if (table.IsReservated)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                else
+                    Console.ForegroundColor = ConsoleColor.Green;
+
+                // Display a single table with the appropriate number of seats
+                if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
+                    Console.Write($"  [ {table.TableNumber} ]  ");
+                else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
+                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]  ", table.TableNumber);
+                else // 6-seat tables
+                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]-[ {table.TableNumber} ]  ");
+            }
+            Console.ResetColor();
+        }
+        Console.WriteLine("\n");
+    }
+
+
+    //private static (int, int) DetermineMaxCoordinates(List<Table> tables)
+    //{
+    //    int maxX = tables.Max(t => t.Coordinate.Item1);
+    //    int maxY = tables.Max(t => t.Coordinate.Item2);
+    //    return (maxX, maxY);
+    //}
+
+    public static Table GetChosenTable(int numberOfPeople)
+    {
+        Console.CursorVisible = false;
+        ConsoleKeyInfo keyInfo;
+
+        int xc = 1;
+        int yc = 1;
+        Table selectedTable;
+
+        while (true)
+        {
+            Console.Clear();
+            DisplayTablesMap();
+            selectedTable = ShowSelectedTable(xc, yc, numberOfPeople);
+
+            if (selectedTable != null)
+            {
+                TableSelectionFeedback(selectedTable, numberOfPeople);
+                keyInfo = Console.ReadKey();
+                if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
                 {
-                    availableTables.Add(table);
+                    yc--;
+                }
+                else if (keyInfo.Key == ConsoleKey.DownArrow && yc < 5)
+                {
+                    yc++;
+                }
+                else if (keyInfo.Key == ConsoleKey.LeftArrow && xc > 1)
+                {
+                    xc--;
+                }
+                else if (keyInfo.Key == ConsoleKey.RightArrow && xc < 3)
+                {
+                    xc++;
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    if (!selectedTable.IsReservated) // the table has not been reservated yet
+                    {
+                        if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
+                        {
+                            selectedTable.IsReservated = true; // table at that coordinate has now been reservated
+                            JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this
+                            break;
+                        }
+                    }
                 }
             }
+            else
+            {
+                Console.WriteLine("Sorry! We are booked!");
+                break;
+            }
 
-            // Update the tables list with availableTables
-            tables = availableTables;
         }
-        // No else block needed because tables are already initialized above
+
+
+        return selectedTable;
     }
 
-    static void SaveReservationDataToJson(List<Reservation> reservations)
+    public static void TableSelectionFeedback(Table selectedTable, int numberOfPeople)
     {
-        try
+        if (selectedTable.IsReservated)
         {
-            // Serialize the reservations list to JSON
-            string json = JsonSerializer.Serialize(reservations, new JsonSerializerOptions { WriteIndented = true });
-
-            // Save the JSON data to the file "ReservationsData.json"
-            File.WriteAllText("ReservationsData.json", json);
-
-            Console.WriteLine("Reservation data has been successfully saved.");
+            Console.WriteLine($"\nTable {selectedTable.TableNumber} has already been reservated. try another!");
         }
-        catch (Exception ex)
+        else if (numberOfPeople > selectedTable.Capacity)
         {
-            Console.WriteLine($"An error occurred while saving the reservation data: {ex.Message}");
+            Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
         }
     }
 
-
-
-    class Table
+    public static Table ShowSelectedTable(int xc, int yc, int numberOfPeople)
     {
-        public int TableNumber { get; set; }
-        public int Capacity { get; set; }
+        Table selectedTable = null;
+        int availableTablesCount = 0;
 
+        // colors tables that are already booked red
+        // tables with too little seats gray
+        // puts [] around the selected table
+        foreach (Table table in Restaurant.Tables)
+        {
+            string ws = table.TableNumber < 10 ? " " : ""; // ws = whitespace to format the table options
+            string wst = table.TablePrice < 10 ? " " : ""; // wst = whitespace table to format the table options
+
+            if (table.IsReservated)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                availableTablesCount++;
+            }
+            else if (numberOfPeople > table.Capacity)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                availableTablesCount++;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green; // Green for available
+            }
+
+            string tablePrice = table.TablePrice.ToString("F2");
+            if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
+            {
+                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}]  {wst}");
+                selectedTable = table;
+            }
+            else
+            {
+                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}   {wst}");
+            }
+            Console.ResetColor();
+
+            if (table.Coordinate.Item1 % 3 == 0)
+            {
+                Console.WriteLine(); //creates new row after every 3 tables
+            }
+        }
+
+        if (availableTablesCount >= Restaurant.Tables.Count) // None of the tables are available for this reservation
+        {
+            return null;
+        }
+        return selectedTable;
     }
 
-    class Reservation
+    public static void DisplayReservationDetails(Reservation R)
     {
-        public int ReservationNumber { get; set; }
-        public int NumberOfPeople { get; set; }
-        public string Date { get; set; }
-        public string TimeSlot { get; set; }
-        public Table SelectedTable { get; set; }
+        Table T = R.SelectedTable;
+        string numOfPeople = R.NumberOfPeople > 1 ? $"{R.NumberOfPeople} guests" : $"{R.NumberOfPeople} guest";
+
+        Console.Clear();
+        Console.WriteLine("R E S E R V A T I O N   D E T A I L S\n");
+        Console.WriteLine($"You ({R.CustomerID}) reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
+        Console.WriteLine($"Your reservation number: {R.ReservationNumber}");
+        Console.WriteLine($"Deals applied:");
+        if (R.DealsApplied.Count == 0)
+        {
+            Console.WriteLine("  > No deals were applied to this reservation.");
+        }
+        else
+        {
+            foreach (Deal deal in R.DealsApplied)
+            {
+                Console.WriteLine($"  > {deal.Name} ({deal.DiscountFactor * 100}% discount)");
+            }
+        }
+        Console.WriteLine($"Total Price: {R.GetTotalPrice()}");
+        
+    }
+
+    public static int GenerateReservationNumber()
+    {
+        return Random.Next(10000, 100000); // Generates a random number between 10 000 and 99 999 (inclusive).
     }
 }
