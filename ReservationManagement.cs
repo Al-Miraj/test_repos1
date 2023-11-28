@@ -132,8 +132,7 @@ public static class ReservationManagement
             {
                 case 0:
                     Console.Clear();
-                    Console.WriteLine("Enter the new amount of people that are coming:");
-                    reservation.NumberOfPeople = ReservationSystem.GetNumberOfPeople(IsAdmin);
+                    UpdateAmountOfPeople(reservation);
                     break;
                 case 1:
                     Console.Clear();
@@ -155,6 +154,22 @@ public static class ReservationManagement
             Console.WriteLine(reservation.ToString() + "\n");
             Console.WriteLine("\n[Press any key to continue updating this reservation.]");
             Console.ReadKey();
+        }
+    }
+
+
+    public static void UpdateAmountOfPeople(Reservation reservation)
+    {
+        while (true)
+        {
+            Console.WriteLine("Enter the new amount of people that are coming:");
+            int numberOfPeople = ReservationSystem.GetNumberOfPeople(IsAdmin);
+            if (numberOfPeople > reservation.SelectedTable.Capacity)
+            {
+                Console.WriteLine("The table you reservated does not have enough seats.\n");
+                continue;
+            }
+            break;
         }
     }
 
