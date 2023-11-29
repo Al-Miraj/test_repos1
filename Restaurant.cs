@@ -6,12 +6,14 @@ public static class Restaurant
     public static string TablesJsonFileName = "Tables.json";
     public static string ReservationsXmlFileName = "Reservations.xml";
     public static string AccountsXmlFileName = "Accounts.xml";
+    public static string FeedbackXmlFileName = "Feedback.xml";
     public static List<Account> Accounts = InitializeAccounts();
     public static List<AdminAccount> AdminAccounts { get { return GetAdminAccounts(); } }
     public static List<CustomerAccount> CustomerAccounts { get { return GetCustomerAccounts(); } }
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
+    public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers
 
 
     private static List<Account> InitializeAccounts()
@@ -134,6 +136,21 @@ public static class Restaurant
             }
         }
         return reservations;
+    }
+
+    private static List<Feedback> InitializeFeedback()
+    {
+        List<Feedback> feedback = new List<Feedback>();
+
+        if (File.Exists(FeedbackXmlFileName))
+        {
+            feedback.AddRange(XmlFileHandler.ReadFromFile<Feedback>(FeedbackXmlFileName));
+        }
+        else
+        {
+            XmlFileHandler.WriteToFile(feedback, FeedbackXmlFileName);
+        }
+        return feedback;
     }
 
     public static void UpdateRestaurantFiles()
