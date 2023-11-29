@@ -70,7 +70,7 @@ public class Menu
             Console.Clear();
 
             // Highlight the currently selected option
-            for (int i = 1; i <= 6; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 if (i == selectedOption)
                 {
@@ -99,8 +99,13 @@ public class Menu
                     case 5:
                         Console.WriteLine(" Login");
                         break;
+<<<<<<< Updated upstream
                     case 6:
                         Console.WriteLine(" Exit");
+=======
+                    case 7:
+                        Console.WriteLine(" test");
+>>>>>>> Stashed changes
                         break;
                 }
             }
@@ -111,7 +116,7 @@ public class Menu
             {
                 selectedOption--;
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 6)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 7)
             {
                 selectedOption++;
             }
@@ -149,9 +154,14 @@ public class Menu
             case 5:
                 Console.WriteLine("Login - Enter your credentials to log in.");
                 break;
+<<<<<<< Updated upstream
             case 6:
                 Console.WriteLine("Goodbye! Thank you for visiting.");
                 Environment.Exit(0);
+=======
+            case 7:
+                FoodMenuTest.testTimeBasedFunctionalities();
+>>>>>>> Stashed changes
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please select a valid option.");

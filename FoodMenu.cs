@@ -81,7 +81,33 @@ public static class FoodMenu
     static List<MenuItem> GetDefaultMenu()
     {
 
+<<<<<<< Updated upstream
         var allItems = FoodMenu.LoadFoodMenuData();
+=======
+        switch (selectedOption)
+        {
+            case 1:
+                PrintInfo(GetLunchMenu(), "Lunch");
+                break;
+            case 2:
+                PrintInfo(GetDinnerMenu(), "Dinner");
+                break;
+            case 3:
+                string timeSlot = FilterFoodMenu.cursoroptionTimeSlot();
+                PrintInfo(FilterFoodMenu.cursoroptionMenu(), timeSlot);
+                //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
+                break;
+            case 4:
+                Environment.Exit(0);
+                break;
+        }
+    }
+
+    public static (string timeslot, List<MenuItem> timeslotMenu) GetDefaultMenu()
+    {
+        string x = "";
+        var allItems = LoadFoodMenuData();
+>>>>>>> Stashed changes
         List<MenuItem> timeslotMenu = new List<MenuItem>();
 
         var dt = SetTime();
