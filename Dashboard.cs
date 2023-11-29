@@ -1,4 +1,4 @@
-﻿public class Dashboard
+public class Dashboard
 {
     public Account CurrentUser { get; set; }
 
@@ -15,8 +15,9 @@
         Console.WriteLine("This is your dashboard.");
 
         List<string> dashboardOptions = new List<string>()
-        { isAdmin ? "Reservation Management" : "Order History", // todo: ipv order history misschien view profile details ofzo?
+        { isAdmin ? "Reservation Management" : "Order History", // todo: ipv order history misschien view profile details ofzo?   : ja, in reservation management heb je al order history (view reservations)
           isAdmin ? "Customer Management" : "Reservation Manager",
+          isAdmin ? "Read Feedback" : "Send Feedback",
           "Exit to main menu",
           "Log out"
         };
@@ -36,9 +37,15 @@
                 { ReservationManager(); }
                 break;
             case 2:
-                OptionMenu.RunMenu(); // loop warning
+                if (isAdmin)
+                { Console.Clear(); /*ReadFeedback();*/ }
+                else
+                { Console.Clear(); SendFeedback(); }
                 break;
             case 3:
+                OptionMenu.RunMenu(); // loop warning
+                break;
+            case 4:
                 LoginSystem.Logout();
                 return;
             default:
@@ -48,6 +55,28 @@
         Console.WriteLine("\n[Press any key to return to the your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
+    }
+
+    private void SendFeedback()
+    {
+        Console.WriteLine("How would you rate our service?");
+        int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5});
+        Console.WriteLine($"You rated our service {rating} out of 5.");
+        if (rating < 3)
+        {
+            Console.WriteLine("We are sorry to hear that.");
+        }
+        Console.WriteLine("What could we have done better to improve your experience? Or what went good?");
+        string message = Console.ReadLine()!;
+        Console.WriteLine("Thank you for the feedback!");
+        Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message);
+        // todo: write to xml file
+    }
+
+    private void ReadFeedback()
+    {
+        List<Feedback> feedback = XmlFileHandler.ReadFromFile<Feedback>("Feedback.xml");
+        
     }
 
 
@@ -66,7 +95,7 @@
     private void OrderHistory()
     {
         Console.WriteLine("Your past reservations:\n");
-        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works
+        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works: WORKS
         if (reservations.Count == 0)
         {
             Console.WriteLine("You have not reservated at this restaurant yet.");
