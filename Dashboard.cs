@@ -1,4 +1,6 @@
-public class Dashboard
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+public class Dashboard : Reservation
 {
     public Account CurrentUser { get; set; }
     private static int selectedOption = 1;
@@ -41,7 +43,7 @@ public class Dashboard
                 if (isAdmin)
                 { Console.Clear(); /*ReadFeedback();*/ }
                 else
-                { Console.Clear(); SendFeedback(); }
+                { Console.Clear(); OrderHistory(true); }
                 break;
             case 3:
                 OptionMenu.RunMenu(); // loop warning
@@ -58,7 +60,7 @@ public class Dashboard
         RunDashboardMenu();
     }
 
-    private void SendFeedback()
+    private void SendFeedback(Reservation reservation)
     {
         Console.WriteLine("How would you rate our service?");
         int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5 });
@@ -70,7 +72,7 @@ public class Dashboard
         Console.WriteLine("What could we have done better to improve your experience? Or what went good?");
         string message = Console.ReadLine()!;
         Console.WriteLine("Thank you for the feedback!");
-        Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message);
+        Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message, reservation);
         // todo: write to xml file
     }
 
@@ -92,7 +94,7 @@ public class Dashboard
         CustomerManagement.Display();
     }
 
-    private void OrderHistory()
+    private void OrderHistory(bool withFeedback = false)
     {
         Console.WriteLine("Your past reservations:\n");
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works: WORKS
@@ -102,14 +104,18 @@ public class Dashboard
             return;
         }
 
-        DisplayMenuOptions(reservations);
-        Display();
-        
+        if (withFeedback)
+        {
+            DisplayMenuOptions(reservations);
+            Display(reservations);
+        }
+
+        return;
     }
 
     private void DisplayMenuOptions(List<Reservation> reservations)
     {
-        for (int i = 1; i <= reservations.Count; i++)
+        for (int i = 1; i < reservations.Count; i++)
         {
             if (i == selectedOption)
             {
@@ -120,24 +126,20 @@ public class Dashboard
                 Console.Write(" ");
             }
 
-            switch (i)
-            {
-                case 1:
-                    Console.WriteLine(" Lunch");
-                    break;
-                case 2:
-                    Console.WriteLine(" Dinner");
-                    break;
-                case 3:
-                    Console.WriteLine(" Sort menu by category");
-                    break;
-                case 4:
-                    Console.WriteLine(" Exit");
-                    break;
-            }
+            // Display each reservation as a menu option
+            Console.WriteLine($"{i}: {GetReservationInfo(reservations[i - 1])}");
         }
     }
-    public void Display()
+
+    private string GetReservationInfo(Reservation reservation)
+    {
+        return
+            $"\nReservation Number: {reservation.ReservationNumber}" +
+            $"\nDate: {reservation.Date}\nTimeslot: {reservation.TimeSlot}" +
+            $"\nPrice: {reservation.GetTotalPrice()}".ToString();
+    }
+
+    public void Display(List<Reservation> reservations)
     {
         Console.CursorVisible = false;
 
@@ -151,35 +153,34 @@ public class Dashboard
             {
                 selectedOption--;
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < reservations.Count)
             {
                 selectedOption++;
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                bool exitMenu = HandleSelection();
+                bool exitMenu = HandleSelection(reservations);
                 if (exitMenu) { break; }
             }
         }
     }
 
-    private bool HandleSelection()
+    private bool HandleSelection(List<Reservation> reservations)
     {
         Console.Clear();
         bool exitMenu = false;
 
         switch (selectedOption)
         {
-            case 1:
+            case int n when n >= 1 && n <= reservations.Count:
+                // Handle selection voor specifieke reservatie
+                Console.WriteLine($"Selected Reservation: {GetReservationInfo(reservations[selectedOption - 1])}");
+                Console.WriteLine("Press Enter to write a review or '4' to exit.");
+                var keyInfo = Console.ReadKey();
+                if (keyInfo.Key == ConsoleKey.Enter)
+                    SendFeedback(reservations[selectedOption - 1]);
+            break;
 
-                break;
-            case 2:
-
-                break;
-            case 3:
-                if (timeSlot == "") { break; }
-                //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
-                break;
             case 4:
                 exitMenu = true;
                 break;
