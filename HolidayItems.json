@@ -5,7 +5,7 @@
     "Ingredients": [ "Turkey", "Holiday Spice Blend", "Cranberry Sauce", "Potatoes", "Carrots", "Brussels Sprouts" ],
     "Timeslot": "Dinner",
     "Price": 19.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Holiday": "Christmas"
   },
@@ -15,7 +15,7 @@
     "Ingredients": [ "Ham", "Cranberry Glaze", "Carrots", "Potatoes" ],
     "Timeslot": "Dinner",
     "Price": 16.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Holiday": "Christmas"
   },
@@ -25,7 +25,7 @@
     "Ingredients": [ "Butternut Squash", "Vegetable Broth", "Holiday Spice Blend", "Sour Cream" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 8.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Holiday": "Christmas"
   },
@@ -35,7 +35,7 @@
     "Ingredients": [ "Mushrooms", "Chestnuts", "Vegetable Broth", "Herbs" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 9.99,
-    "Potential Allergens": [ "Nuts" ],
+    "PotentialAllergens": [ "Nuts" ],
     "Icon": "Vegetarian",
     "Holiday": "Christmas"
   },
@@ -45,7 +45,7 @@
     "Ingredients": [ "Prime Rib", "Herbs", "Au Jus", "Root Vegetables" ],
     "Timeslot": "Dinner",
     "Price": 24.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Holiday": "Christmas"
   },
@@ -55,7 +55,7 @@
     "Ingredients": [ "Salad Greens", "Dried Cranberries", "Pecans", "Feta Cheese", "Cranberry Vinaigrette" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 11.99,
-    "Potential Allergens": [ "Dairy", "Nuts" ],
+    "PotentialAllergens": [ "Dairy", "Nuts" ],
     "Icon": "Vegetarian",
     "Holiday": "Christmas"
   },
@@ -65,7 +65,7 @@
     "Ingredients": [ "Flour", "Sugar", "Gingerbread Spice", "Cream Cheese", "Cinnamon" ],
     "Timeslot": "Dessert",
     "Price": 7.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Dessert",
     "Holiday": "Christmas"
   },
@@ -75,7 +75,7 @@
     "Ingredients": [ "Squash", "Chestnuts", "Cranberries", "Herbs" ],
     "Timeslot": "Dinner",
     "Price": 14.99,
-    "Potential Allergens": [ "Nuts" ],
+    "PotentialAllergens": [ "Nuts" ],
     "Icon": "Vegetarian",
     "Holiday": "Christmas"
   },
@@ -85,7 +85,7 @@
     "Ingredients": [ "Rack of Lamb", "Herb Crust Mix", "Mint Jelly" ],
     "Timeslot": "Dinner",
     "Price": 22.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Holiday": "Christmas"
   },
@@ -95,7 +95,7 @@
     "Ingredients": [ "Mixed Vegetables", "Mushroom Duxelles", "Puff Pastry" ],
     "Timeslot": "Dinner",
     "Price": 18.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Vegetarian",
     "Holiday": "Christmas"
   },
@@ -105,7 +105,7 @@
     "Ingredients": [ "Chicken Breast", "Cranberries", "Pecans", "Herbs", "Gravy" ],
     "Timeslot": "Dinner",
     "Price": 17.99,
-    "Potential Allergens": [ "Nuts" ],
+    "PotentialAllergens": [ "Nuts" ],
     "Icon": "Meat",
     "Holiday": "Christmas"
   },
@@ -115,7 +115,7 @@
     "Ingredients": [ "Potatoes", "Roasted Garlic", "Butter", "Herbs" ],
     "Timeslot": "Side Dish",
     "Price": 6.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Holiday": "Christmas"
   },
@@ -125,17 +125,17 @@
     "Ingredients": [ "Eggs", "Bacon", "Sausage Links", "Bread", "Fresh Fruit" ],
     "Timeslot": "Brunch",
     "Price": 18.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
   {
     "Name": "Festive Breakfast Hash",
-    "Description": "A comforting breakfast hash with diced potatoes, sautéed onions, bell peppers, and your choice of ham or vegetarian.",
+    "Description": "A comforting breakfast hash with diced potatoes, sautï¿½ed onions, bell peppers, and your choice of ham or vegetarian.",
     "Ingredients": [ "Potatoes", "Onions", "Bell Peppers", "Ham or Vegetarian Alternative" ],
     "Timeslot": "Breakfast",
     "Price": 14.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
@@ -145,7 +145,7 @@
     "Ingredients": [ "Mushrooms", "Ground Meat", "Spinach", "Artichokes", "Breadsticks" ],
     "Timeslot": "Appetizer",
     "Price": 24.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Appetizer",
     "Holiday": "New Year"
   },
@@ -155,7 +155,7 @@
     "Ingredients": [ "Pancake Mix", "Whipped Cream", "Mixed Berries", "Maple Syrup" ],
     "Timeslot": "Brunch",
     "Price": 12.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
@@ -165,7 +165,7 @@
     "Ingredients": [ "Bagels", "Cream Cheese", "Smoked Salmon", "Capers", "Red Onions" ],
     "Timeslot": "Brunch",
     "Price": 16.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
@@ -175,7 +175,7 @@
     "Ingredients": [ "Artisanal Bread", "Avocado", "Cherry Tomatoes", "Feta Cheese", "Balsamic Glaze" ],
     "Timeslot": "Brunch",
     "Price": 14.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
@@ -185,7 +185,7 @@
     "Ingredients": [ "Croissant", "Turkey", "Cranberry Sauce", "Brie Cheese" ],
     "Timeslot": "Brunch",
     "Price": 15.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
@@ -195,7 +195,7 @@
     "Ingredients": [ "Waffle Batter", "Whipped Cream", "Mixed Berries", "Maple Syrup" ],
     "Timeslot": "Brunch",
     "Price": 13.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Breakfast",
     "Holiday": "New Year"
   },
@@ -205,7 +205,7 @@
     "Ingredients": [ "Pumpkin", "Spices", "Cream" ],
     "Timeslot": "Dinner",
     "Price": 12.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Holiday": "Halloween"
   },
@@ -215,7 +215,7 @@
     "Ingredients": [ "Beef Chunks", "Seasonal Vegetables", "Seasonings" ],
     "Timeslot": "Dinner",
     "Price": 15.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Holiday": "Halloween"
   },
@@ -225,7 +225,7 @@
     "Ingredients": [ "Macaroni", "Cheese", "Ghost-shaped Cheese Slices" ],
     "Timeslot": "Dinner",
     "Price": 11.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Vegetarian",
     "Holiday": "Halloween"
   },
@@ -245,7 +245,7 @@
     "Ingredients": [ "Red Velvet Cake Mix", "Cream Cheese Frosting" ],
     "Timeslot": "Dessert",
     "Price": 14.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Halloween"
   },
@@ -255,7 +255,7 @@
     "Ingredients": [ "Meatballs", "Puff Pastry", "Marinara Sauce" ],
     "Timeslot": "Appetizer",
     "Price": 17.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Appetizer",
     "Holiday": "Halloween"
   },
@@ -265,7 +265,7 @@
     "Ingredients": [ "Bell Peppers", "Assorted Vegetables", "Dip" ],
     "Timeslot": "Appetizer",
     "Price": 19.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Vegetarian",
     "Holiday": "Halloween"
   },
@@ -275,7 +275,7 @@
     "Ingredients": [ "Chocolate Cookie Dough", "Licorice", "Candy Eyes" ],
     "Timeslot": "Dessert",
     "Price": 12.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Dessert",
     "Holiday": "Halloween"
   },
@@ -285,7 +285,7 @@
     "Ingredients": [ "Fresh Herring", "Onions", "Pickles" ],
     "Timeslot": "Appetizer",
     "Price": 14.99,
-    "Potential Allergens": [ "Fish" ],
+    "PotentialAllergens": [ "Fish" ],
     "Icon": "Appetizer",
     "Holiday": "Koningsdag"
   },
@@ -295,7 +295,7 @@
     "Ingredients": [ "Stroopwafels", "Vanilla Ice Cream" ],
     "Timeslot": "Dessert",
     "Price": 8.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Koningsdag"
   },
@@ -305,7 +305,7 @@
     "Ingredients": [ "Beef Ragout", "Breadcrumbs", "Mustard" ],
     "Timeslot": "Appetizer",
     "Price": 12.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Appetizer",
     "Holiday": "Koningsdag"
   },
@@ -315,7 +315,7 @@
     "Ingredients": [ "Poffertjes Batter", "Powdered Sugar", "Butter" ],
     "Timeslot": "Dessert",
     "Price": 10.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Koningsdag"
   },
@@ -335,7 +335,7 @@
     "Ingredients": [ "Puff Pastry", "Apples", "Cinnamon Sugar" ],
     "Timeslot": "Dessert",
     "Price": 9.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Dessert",
     "Holiday": "Koningsdag"
   },
@@ -345,7 +345,7 @@
     "Ingredients": [ "Assorted Dutch Cheeses", "Crackers", "Grapes", "Honey" ],
     "Timeslot": "Appetizer",
     "Price": 18.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Appetizer",
     "Holiday": "Koningsdag"
   },
@@ -355,7 +355,7 @@
     "Ingredients": [ "Puff Pastry", "Sweet Cream", "Orange Icing" ],
     "Timeslot": "Dessert",
     "Price": 11.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Koningsdag"
   },
@@ -365,7 +365,7 @@
     "Ingredients": [ "Flour", "Butter", "Speculaas Spices" ],
     "Timeslot": "Dessert",
     "Price": 10.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Sinterklaas"
   },
@@ -375,7 +375,7 @@
     "Ingredients": [ "Chocolate" ],
     "Timeslot": "Dessert",
     "Price": 12.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Sinterklaas"
   },
@@ -385,7 +385,7 @@
     "Ingredients": [ "Kruidnoten", "Chocolate", "Caramel" ],
     "Timeslot": "Snack",
     "Price": 9.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Snack",
     "Holiday": "Sinterklaas"
   },
@@ -395,7 +395,7 @@
     "Ingredients": [ "Puff Pastry", "Almond Paste" ],
     "Timeslot": "Dessert",
     "Price": 14.99,
-    "Potential Allergens": [ "Gluten", "Nuts" ],
+    "PotentialAllergens": [ "Gluten", "Nuts" ],
     "Icon": "Dessert",
     "Holiday": "Sinterklaas"
   },
@@ -405,7 +405,7 @@
     "Ingredients": [ "Flour", "Butter", "Almond Paste", "Almonds" ],
     "Timeslot": "Dessert",
     "Price": 13.99,
-    "Potential Allergens": [ "Gluten", "Nuts" ],
+    "PotentialAllergens": [ "Gluten", "Nuts" ],
     "Icon": "Dessert",
     "Holiday": "Sinterklaas"
   },
@@ -415,7 +415,7 @@
     "Ingredients": [ "Flour", "Sugar", "Butter", "Fruits", "Spices" ],
     "Timeslot": "Dessert",
     "Price": 11.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Dessert",
     "Holiday": "Sinterklaas"
   },
@@ -425,7 +425,7 @@
     "Ingredients": [ "Puff Pastry", "Almond Paste", "Butter" ],
     "Timeslot": "Dessert",
     "Price": 15.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Holiday": "Sinterklaas"
   },
@@ -435,7 +435,7 @@
     "Ingredients": [ "Flour", "Sugar", "Butter", "Icing", "Sprinkles" ],
     "Timeslot": "Snack",
     "Price": 8.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Snack",
     "Holiday": "Sinterklaas"
   },
@@ -445,7 +445,7 @@
     "Ingredients": [ "Soesdeeg", "Slagroom", "Chocolade" ],
     "Timeslot": "Dessert",
     "Price": 10.99,
-    "Potential Allergens": [ "Gluten", "Zuivel" ],
+    "PotentialAllergens": [ "Gluten", "Zuivel" ],
     "Icon": "Dessert",
     "Holiday": "Carnaval"
   },
@@ -455,17 +455,17 @@
     "Ingredients": [ "Aardappelen", "Stoofvlees", "Kruiden" ],
     "Timeslot": "Main Course",
     "Price": 12.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Meat",
     "Holiday": "Carnaval"
   },
   {
     "Name": "Carnavalssoep",
-    "Description": "Een hartige groentesoep boordevol smaakvolle ingrediënten, perfect om op te warmen tijdens Carnaval.",
+    "Description": "Een hartige groentesoep boordevol smaakvolle ingrediï¿½nten, perfect om op te warmen tijdens Carnaval.",
     "Ingredients": [ "Groenten", "Bouillon", "Kruiden" ],
     "Timeslot": "Soup",
     "Price": 9.99,
-    "Potential Allergens": [ "Geen" ],
+    "PotentialAllergens": [ "Geen" ],
     "Icon": "Soup",
     "Holiday": "Carnaval"
   },
@@ -475,7 +475,7 @@
     "Ingredients": [ "Haring", "Toastjes", "Uitjes" ],
     "Timeslot": "Appetizer",
     "Price": 14.99,
-    "Potential Allergens": [ "Vis" ],
+    "PotentialAllergens": [ "Vis" ],
     "Icon": "Appetizer",
     "Holiday": "Carnaval"
   },
@@ -485,7 +485,7 @@
     "Ingredients": [ "Pannenkoekenbeslag", "Poedersuiker" ],
     "Timeslot": "Dessert",
     "Price": 8.99,
-    "Potential Allergens": [ "Gluten", "Zuivel" ],
+    "PotentialAllergens": [ "Gluten", "Zuivel" ],
     "Icon": "Dessert",
     "Holiday": "Carnaval"
   },
@@ -495,7 +495,7 @@
     "Ingredients": [ "Suiker", "Gemodificeerd Zetmeel" ],
     "Timeslot": "Snack",
     "Price": 6.99,
-    "Potential Allergens": [ "Geen" ],
+    "PotentialAllergens": [ "Geen" ],
     "Icon": "Snack",
     "Holiday": "Carnaval"
   },
@@ -505,7 +505,7 @@
     "Ingredients": [ "Aardappelen", "Boerenkool" ],
     "Timeslot": "Main Course",
     "Price": 11.99,
-    "Potential Allergens": [ "Geen" ],
+    "PotentialAllergens": [ "Geen" ],
     "Icon": "Vegetarisch",
     "Holiday": "Carnaval"
   },
@@ -515,7 +515,7 @@
     "Ingredients": [ "Ragout", "Paneermeel" ],
     "Timeslot": "Appetizer",
     "Price": 13.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Appetizer",
     "Holiday": "Carnaval"
   }
