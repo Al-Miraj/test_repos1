@@ -13,7 +13,7 @@ public static class Restaurant
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
-    public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers
+    /*public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers*/
 
 
     private static List<Account> InitializeAccounts()
