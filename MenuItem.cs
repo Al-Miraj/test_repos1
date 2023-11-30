@@ -11,6 +11,7 @@ public class MenuItem
     public string Timeslot { get; set; }
     public string Category { get; set; }
     public string? Icon;
+    public string Holiday;
     private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
     public MenuItem(string name, string description, List<string> ingredients, double price, string timeslot, string icon)
@@ -29,6 +30,25 @@ public class MenuItem
             "Vegetarian" => "🥦",
             _ => "",
         };
+    }
+
+    public MenuItem(string name, string description, List<string> ingredients, double price, string timeslot, string icon, string holiday)
+    {
+        Name = name;
+        Description = description;
+        Ingredients = ingredients.ToArray();
+        Price = price;
+        Timeslot = timeslot;
+        Category = icon;
+        Icon = icon switch  // Easier then regular switch 
+        {
+            "Meat" => "🥩",
+            "Chicken" => "🍗",
+            "Fish" => "🐟",
+            "Vegetarian" => "🥦",
+            _ => "",
+        };
+        Holiday = holiday;
     }
 
     public string AllergensInfo // Property of the allergens
