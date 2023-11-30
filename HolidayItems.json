@@ -131,7 +131,7 @@
   },
   {
     "Name": "Festive Breakfast Hash",
-    "Description": "A comforting breakfast hash with diced potatoes, sautéed onions, bell peppers, and your choice of ham or vegetarian.",
+    "Description": "A comforting breakfast hash with diced potatoes, sautï¿½ed onions, bell peppers, and your choice of ham or vegetarian.",
     "Ingredients": [ "Potatoes", "Onions", "Bell Peppers", "Ham or Vegetarian Alternative" ],
     "Timeslot": "Breakfast",
     "Price": 14.99,
@@ -461,7 +461,7 @@
   },
   {
     "Name": "Carnavalssoep",
-    "Description": "Een hartige groentesoep boordevol smaakvolle ingrediënten, perfect om op te warmen tijdens Carnaval.",
+    "Description": "Een hartige groentesoep boordevol smaakvolle ingrediï¿½nten, perfect om op te warmen tijdens Carnaval.",
     "Ingredients": [ "Groenten", "Bouillon", "Kruiden" ],
     "Timeslot": "Soup",
     "Price": 9.99,

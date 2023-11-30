@@ -5,10 +5,9 @@ public static class HolidayMenu
     private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
     {
         // International holidays
-        { new DateTime(DateTime.Now.Year, 1, 1), "New Year's Day" },
+        { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
         { new DateTime(DateTime.Now.Year, 12, 25), "Christmas" },
         { new DateTime(DateTime.Now.Year, 10, 31), "Halloween" },
-
         // Nederlandse feestdagen
         { new DateTime(DateTime.Now.Year, 4, 27), "Koningsdag" },
         //{ new DateTime(DateTime.Now.Year, 5, 5), "Bevrijdingsdag" },
@@ -19,8 +18,8 @@ public static class HolidayMenu
 
     private static List<DateTime> keys = new List<DateTime>();
 
-    private static List<MenuItem> rawMenu = new List<MenuItem>();
-    private static List<MenuItem> finishedHolidayMenu = new List<MenuItem>();
+    private static List<HolidayMenuItem> rawMenu = LoadFoodMenuData();
+    private static List<HolidayMenuItem> finishedHolidayMenu = new List<HolidayMenuItem>();
 
     private static void addKeys() => keys.AddRange(holidays.Keys);
 
@@ -28,7 +27,8 @@ public static class HolidayMenu
     public static void getHoliday()
     {
         addKeys();
-        DateTime today = DateTime.Now.Date;
+        //DateTime today = DateTime.Now.Date;
+        DateTime today = new DateTime(2023, 12, 25);
         bool foundHoliday = false;
 
         foreach (DateTime key in holidays.Keys)
@@ -38,7 +38,8 @@ public static class HolidayMenu
                 foundHoliday = true;
                 Console.WriteLine($"today is {holidays[key]}");
                 holidayNavigator(holidays[key]);
-                return; 
+                PrintInfo();
+                return;
             }
         }
 
@@ -90,18 +91,49 @@ public static class HolidayMenu
 
     public static void getHolidayMenu(string holiday)
     {
-        List<MenuItem> holidayMenu = new List<MenuItem>();
+        List<HolidayMenuItem> holidayMenu = new List<HolidayMenuItem>();
+        Console.WriteLine($"{rawMenu.Count} menu");
         holidayMenu = rawMenu.FindAll(x => x.Holiday == holiday);
+        Console.WriteLine($"{holidayMenu.Count} menu");
         finishedHolidayMenu.AddRange(holidayMenu);
     }
 
-    public static List<MenuItem>? LoadFoodMenuData()
+    public static void PrintInfo(bool keyContinue = true)
+    {
+        string currentHoliday = "";
+
+        foreach (var dish in finishedHolidayMenu)
+        {
+            Console.WriteLine($"Name: {dish.Name}");
+            Console.WriteLine($"Description: {dish.Description}");
+            Console.WriteLine($"Ingredients: {string.Join(", ", dish.Ingredients)}");
+            Console.WriteLine($"Timeslot: {dish.Timeslot}");
+            Console.WriteLine($"Price: {dish.Price}");
+            Console.WriteLine($"Potential Allergens: {string.Join(", ", dish.PotentialAllergens)}");
+            Console.WriteLine($"Icon: {dish.Icon}");
+            Console.WriteLine($"Holiday: {dish.Holiday}");
+            Console.WriteLine();
+            if (currentHoliday != dish.Holiday)
+            {
+                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine();
+                currentHoliday = dish.Holiday;
+            }
+        }
+        if (keyContinue)
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+        }
+    }
+
+    public static List<HolidayMenuItem>? LoadFoodMenuData()
     {
         try
         {
             using StreamReader reader = new StreamReader("HolidayItems.json");
             string json = reader.ReadToEnd();
-            var items = JsonConvert.DeserializeObject<List<MenuItem>>(json);
+            var items = JsonConvert.DeserializeObject<List<HolidayMenuItem>>(json);
             return items;
         }
         catch (JsonReaderException)

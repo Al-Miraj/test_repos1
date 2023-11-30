@@ -1,8 +1,4 @@
-﻿using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Security;
-
-public class MenuItem
+﻿public class HolidayMenuItem
 {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -10,10 +6,12 @@ public class MenuItem
     public double Price { get; set; }
     public string Timeslot { get; set; }
     public string Category { get; set; }
+    public string[] PotentialAllergens { get; set; }
     public string? Icon;
+    public string Holiday;
     private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
-    public MenuItem(string name, string description, List<string> ingredients, double price, string timeslot, string icon)
+    public HolidayMenuItem(string name, string description, List<string> ingredients, string timeslot, double price,List<string> potentialAllergens, string icon, string holiday)
     {
         Name = name;
         Description = description;
@@ -21,6 +19,8 @@ public class MenuItem
         Price = price;
         Timeslot = timeslot;
         Category = icon;
+        PotentialAllergens = potentialAllergens.ToArray();
+        Holiday = holiday;
         Icon = icon switch  // Easier then regular switch 
         {
             "Meat" => "🥩",
@@ -29,23 +29,5 @@ public class MenuItem
             "Vegetarian" => "🥦",
             _ => "",
         };
-    }
-
-    public string AllergensInfo // Property of the allergens
-    {
-        get
-        {
-            // Iterating over the lowercased Allergens array to find match and 
-            var lowerAllergens = Array.ConvertAll(Allergens, s => s.ToLower());
-            var allergensInfo = Ingredients.Where(ingredient => lowerAllergens.Contains(ingredient.ToLower()));
-            if (!allergensInfo.Any())
-            {
-                return "No known allergens.";
-            }
-            else
-            {
-                return $"Allergens: {string.Join(", ", allergensInfo)}";
-            }
-        }
     }
 }
