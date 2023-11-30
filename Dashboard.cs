@@ -1,6 +1,7 @@
 public class Dashboard
 {
     public Account CurrentUser { get; set; }
+    private static int selectedOption = 1;
 
     public Dashboard(Account account)
     {
@@ -60,7 +61,7 @@ public class Dashboard
     private void SendFeedback()
     {
         Console.WriteLine("How would you rate our service?");
-        int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5});
+        int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5 });
         Console.WriteLine($"You rated our service {rating} out of 5.");
         if (rating < 3)
         {
@@ -76,7 +77,6 @@ public class Dashboard
     private void ReadFeedback()
     {
         List<Feedback> feedback = XmlFileHandler.ReadFromFile<Feedback>("Feedback.xml");
-        
     }
 
 
@@ -101,10 +101,89 @@ public class Dashboard
             Console.WriteLine("You have not reservated at this restaurant yet.");
             return;
         }
-        foreach (Reservation reservation in reservations)
+
+        DisplayMenuOptions(reservations);
+        Display();
+        
+    }
+
+    private void DisplayMenuOptions(List<Reservation> reservations)
+    {
+        for (int i = 1; i <= reservations.Count; i++)
         {
-            Console.WriteLine(reservation.ToString());
-            Console.WriteLine();
+            if (i == selectedOption)
+            {
+                Console.Write(">");
+            }
+            else
+            {
+                Console.Write(" ");
+            }
+
+            switch (i)
+            {
+                case 1:
+                    Console.WriteLine(" Lunch");
+                    break;
+                case 2:
+                    Console.WriteLine(" Dinner");
+                    break;
+                case 3:
+                    Console.WriteLine(" Sort menu by category");
+                    break;
+                case 4:
+                    Console.WriteLine(" Exit");
+                    break;
+            }
         }
+    }
+    public void Display()
+    {
+        Console.CursorVisible = false;
+
+        while (true)
+        {
+            Console.Clear();
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
+            {
+                selectedOption--;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
+            {
+                selectedOption++;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                bool exitMenu = HandleSelection();
+                if (exitMenu) { break; }
+            }
+        }
+    }
+
+    private bool HandleSelection()
+    {
+        Console.Clear();
+        bool exitMenu = false;
+
+        switch (selectedOption)
+        {
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+                if (timeSlot == "") { break; }
+                //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
+                break;
+            case 4:
+                exitMenu = true;
+                break;
+        }
+        return exitMenu;
     }
 }

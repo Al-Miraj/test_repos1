@@ -13,7 +13,7 @@ public static class Restaurant
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
-    public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers
+    /*public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers*/
 
 
     private static List<Account> InitializeAccounts()
@@ -127,10 +127,10 @@ public static class Restaurant
         {
             XmlFileHandler.WriteToFile(reservations, ReservationsXmlFileName);
         }
-        foreach(Reservation reservation in reservations)
+        foreach (Reservation reservation in reservations)
         {
             Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.ID);
-            if ( account is CustomerAccount cAccount)
+            if (account is CustomerAccount cAccount)
             {
                 cAccount.Reservations.Add(reservation);
             }
@@ -184,10 +184,10 @@ public static class Restaurant
         Console.WriteLine("-------------------------------\n");
         Console.WriteLine("Deals that we are currently offering!\n");
 
-        if (Deals.Count <= 0) 
-        { 
-            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!"); 
-            return;  
+        if (Deals.Count <= 0)
+        {
+            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!");
+            return;
         }
         else
         {
