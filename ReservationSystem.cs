@@ -159,31 +159,31 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return timeslots[selectedOption];
     }
 
-    public static void DisplayTablesMap()
+    public static void DisplayTablesMap(int numberOfPeople)
     {
         string door = "Entrance";
         string aisle = "Main Aisle";
 
         // First row of tables (2 seats)
-        DisplayTableRange(1, 4); // Tables 1-4
+        DisplayTableRange(numberOfPeople, 1, 4); // Tables 1-4
 
-        Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
+        //Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
 
         // Second row of tables (4 seats)
-        DisplayTableRange(5, 8); // Tables 5-8
+        DisplayTableRange(numberOfPeople, 5, 8); // Tables 5-8
 
-        Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
+        //Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
 
         // Third row of tables (2 seats)
-        DisplayTableRange(9, 12); // Tables 9-12
+        DisplayTableRange(numberOfPeople, 9, 12); // Tables 9-12
 
-        Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
+        //Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
 
         // Fourth row of tables (6 seats)
-        DisplayTableRange(13, 15); // Tables 13-15
+        DisplayTableRange(numberOfPeople, 13, 15); // Tables 13-15
     }
 
-    private static void DisplayTableRange(int startTable, int endTable)
+    private static void DisplayTableRange(int numberOfPeople, int startTable, int endTable)
     {
         // Display a range of tables
         for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
@@ -193,6 +193,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
             {
                 if (table.IsReservated)
                     Console.ForegroundColor = ConsoleColor.Red;
+                else if (table.Capacity < numberOfPeople)
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                 else
                     Console.ForegroundColor = ConsoleColor.Green;
 
@@ -229,7 +231,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         while (true)
         {
             Console.Clear();
-            DisplayTablesMap();
+            DisplayTablesMap(numberOfPeople);
             selectedTable = ShowSelectedTable(xc, yc, numberOfPeople);
 
             if (selectedTable != null)
@@ -320,12 +322,12 @@ public static class ReservationSystem // Made class static so loginsystem and da
             string tablePrice = table.TablePrice.ToString("F2");
             if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
             {
-                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}]  {wst}");
+                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity} Seats   ${tablePrice}]  {wst}");
                 selectedTable = table;
             }
             else
             {
-                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}   {wst}");
+                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity} Seats   ${tablePrice}   {wst}");
             }
             Console.ResetColor();
 
