@@ -52,7 +52,7 @@ public static class HolidayMenu
     public static void holidayNavigator(string holiday)
     {
         //switch case voor elke holiday om later tijdens het debuggen problemen makkelijker op te lossen
-        //dit kan later zonder switch case door direct de holiday mee te geven
+        //dit kan later zonder switch case door direct de holiday mee te geven aab getHolidayMenu
         switch (holiday)
         {
             case "New Year":
@@ -113,11 +113,11 @@ public static class HolidayMenu
             Console.WriteLine($"Icon: {dish.Icon}");
             Console.WriteLine($"Holiday: {dish.Holiday}");
             Console.WriteLine();
-            if (currentHoliday != dish.Holiday)
+            if (currentHoliday != dish.Name)
             {
                 Console.WriteLine("------------------------------------------------------------------------------------");
                 Console.WriteLine();
-                currentHoliday = dish.Holiday;
+                currentHoliday = dish.Name;
             }
         }
         if (keyContinue)
