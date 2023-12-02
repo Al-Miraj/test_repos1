@@ -1,85 +1,12 @@
 ﻿using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+namespace Menus;
 
 public static class FilterFoodMenu
 {
     private static int selectedOption = 1;
     private static int selectedTimeSlotOption = 1;
     public static List<MenuItem> menuItems = new List<MenuItem>();
-
-    /*public static int SelectedTimeSlotOption
-    {
-        get { return selectedTimeSlotOption; }
-        set { selectedTimeSlotOption = value; }
-    }*/
-
-    //private static List<string> ingredients = new List<string>();
-    /*public static List<MenuItem> SortMenu()
-    {
-        List<MenuItem> sortedMenu = new List<MenuItem>();
-        List<MenuItem> categories = new List<MenuItem>();
-        //List<MenuItem> rawMenu = new List<MenuItem>();
-
-        while (true)
-        {
-            sortedMenu.Clear();  ingredients.Clear(); 
-            Console.WriteLine("What menu do you want to sort?");
-            Console.WriteLine("1. Lunch, 2. Dinner");
-            string choiceMenu = Console.ReadLine();
-
-            if (choiceMenu == "1" || choiceMenu == "2")
-            {
-                //rawMenu = choiceMenu == "2" ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
-
-                Console.WriteLine("What do you want to sort the menu on?");
-                Console.WriteLine("These are the available options:");
-                Console.WriteLine("1. ingredients, 2. price, 3. category, 4. exit menu and save your changes.");
-                string sortChoice = Console.ReadLine();
-
-                switch (sortChoice)
-                {
-                    case "1":
-                        Console.WriteLine("Enter the ingredients (use comma):");
-                        string ingredientRaw = Console.ReadLine().ToLower();
-                        string[] ingredientsArray = ingredientRaw.Split(", ");
-                        ingredients.AddRange(ingredientsArray);
-                        sortedMenu.AddRange(SortIngredients(ingredients, choiceMenu));
-                        break;
-
-                    case "2":
-                        Console.WriteLine("Enter the maximum price:");
-                        if (double.TryParse(Console.ReadLine(), out double maxPrice))
-                        {
-                            sortedMenu.AddRange(SortPrice(choiceMenu, maxPrice));
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid price input. Please enter a valid price.");
-                        }
-                        break;
-
-                    case "3":
-                        sortedMenu.AddRange(SortCategory(choiceMenu == "2" ? true : false));
-                        break;
-
-                    case "4":
-                        Console.WriteLine("Exiting sorting menu. Returning to the main menu.");
-                        return sortedMenu;
-
-                    default:
-                        Console.WriteLine("Invalid choice. Please enter 1, 2, 3, or 4");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid choice. Please enter 1 or 2");
-            }
-
-            return sortedMenu;
-            
-        }
-    }*/
 
     public static List<MenuItem> cursoroptionMenu()
     {
@@ -169,7 +96,9 @@ public static class FilterFoodMenu
                 break;
 
             case 3:
-                menuItems.AddRange(FilterCategory(selectedTimeSlotOption == 2 ? true : false));
+                Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
+                List<string> categoryList = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                menuItems.AddRange(FilterCategory(selectedTimeSlotOption == 2 ? true : false, categoryList));
                 break;
             case 4:
                 Environment.Exit(0);
@@ -178,7 +107,7 @@ public static class FilterFoodMenu
         return menuItems;
     }
 
-    public static List<MenuItem> FilterCategory(bool isDinner)
+    public static List<MenuItem> FilterCategory(bool isDinner, List<string> Categories)
     {
         List<MenuItem> unsortedMenu = isDinner ? FoodMenu.GetDinnerMenu() : FoodMenu.GetLunchMenu();
         List<MenuItem> selectedCategories = new List<MenuItem>();
@@ -189,10 +118,7 @@ public static class FilterFoodMenu
             Console.WriteLine($"{cat.Key}: {cat.Value}");
         }
 
-        Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
-        string[] categoryArray = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-        foreach (string category in categoryArray)
+        foreach (string category in Categories)
         {
             switch (category)
             {
@@ -215,7 +141,6 @@ public static class FilterFoodMenu
                     break;
             }
         }
-
         return selectedCategories;
     }
 

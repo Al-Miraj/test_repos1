@@ -1,4 +1,6 @@
-﻿public class Drinks
+﻿namespace Menus;
+
+public class Drinks
 {
     public string Name { get; set; }
     public string Description { get; set; }
