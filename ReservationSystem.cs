@@ -159,7 +159,6 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return timeslots[selectedOption];
     }
 
-
     public static List<int> GetReservatedTablesAtDateAndTimeslot(DateOnly date, string timeslot) // todo: improve method + var name
     {
         // find all reservations made at the date and time of the new reservation
@@ -252,10 +251,28 @@ public static class ReservationSystem // Made class static so loginsystem and da
             }
 
             // update the Console Cursor position for the next row
-            yConsolePosition += 5 + 2;  // 5 == height of the table display, 2 == spaces between each row
+            if (numOfTablesInRow == 0)
+            {
+                PrintEntranceDisplay();
+                yConsolePosition += 4;  // 4 == height of the door display.
+            }
+            else
+            {
+                yConsolePosition += 5 + 2;  // 5 == height of the table display, 2 == spaces between each row
+            }
+
             xConsolePosition = 0;
             firstTableInRowIndex += numOfTablesInRow;
         }
+    }
+
+    public static void PrintEntranceDisplay()
+    {
+        Console.WriteLine("\n");
+        Console.WriteLine("\\");
+        Console.WriteLine(" \\");
+        Console.WriteLine("  \\");
+        Console.WriteLine("   \\~");
     }
 
     public static void SetColor(Table table, List<int> reservatedTableNumbers, int numberOfPeople)
