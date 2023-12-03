@@ -42,7 +42,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.WriteLine("Choose your timeslot:");
         string timeslot = GetTimeslot();
 
-        Table table = GetChosenTable(numberOfPeople, date, timeslot);
+        Table? table = GetChosenTable(numberOfPeople, date, timeslot);
         if (table != null)
         {
             int reservationNumber = GenerateReservationNumber();
@@ -159,84 +159,25 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return timeslots[selectedOption];
     }
 
-    public static void DisplayTablesMap(int numberOfPeople)
-    {
-        string door = "Entrance";
-        string aisle = "Main Aisle";
-
-        // First row of tables (2 seats)
-        DisplayTableRange(numberOfPeople, 1, 4); // Tables 1-4
-
-        //Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
-
-        // Second row of tables (4 seats)
-        DisplayTableRange(numberOfPeople, 5, 8); // Tables 5-8
-
-        //Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
-
-        // Third row of tables (2 seats)
-        DisplayTableRange(numberOfPeople, 9, 12); // Tables 9-12
-
-        //Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
-
-        // Fourth row of tables (6 seats)
-        DisplayTableRange(numberOfPeople, 13, 15); // Tables 13-15
-    }
-
-    private static void DisplayTableRange(int numberOfPeople, int startTable, int endTable)
-    {
-        // Display a range of tables
-        for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
-        {
-            Table table = Restaurant.Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
-            if (table != null)
-            {
-                if (table.IsReservated)
-                    Console.ForegroundColor = ConsoleColor.Red;
-                else if (table.Capacity < numberOfPeople)
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                else
-                    Console.ForegroundColor = ConsoleColor.Green;
-
-                // Display a single table with the appropriate number of seats
-                if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]  ");
-                else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]  ", table.TableNumber);
-                else // 6-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]-[ {table.TableNumber} ]  ");
-            }
-            Console.ResetColor();
-        }
-        Console.WriteLine("\n");
-    }
-
-
-    //private static (int, int) DetermineMaxCoordinates(List<Table> tables)
-    //{
-    //    int maxX = tables.Max(t => t.Coordinate.Item1);
-    //    int maxY = tables.Max(t => t.Coordinate.Item2);
-    //    return (maxX, maxY);
-    //}
-
 
     public static List<int> GetReservatedTablesAtDateAndTimeslot(DateOnly date, string timeslot) // todo: improve method + var name
     {
+        // find all reservations made at the date and time of the new reservation
+        // select all the tables numbers those reservation were made at
+        // convert IEnumerable to List
         List<int> reservatedTablesAtDateAndTimeslot = Restaurant.Reservations
-            .FindAll(reservation => reservation.Date == date && reservation.TimeSlot == timeslot) // find all reservations made at the date and time of the new reservation
-            .Select(reservation => reservation.SelectedTable.TableNumber) // collect all the tables those reservation were made at
-            .ToList(); // convert IEnumerable to List
+            .FindAll(reservation => reservation.Date == date && reservation.TimeSlot == timeslot)
+            .Select(reservation => reservation.SelectedTable.TableNumber)
+            .ToList();
         return reservatedTablesAtDateAndTimeslot;
 
     }
 
     public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
+        List<int> reservatedTablesNumbers = GetReservatedTablesAtDateAndTimeslot(date, timeslot);
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
-
-        List<int> reservatedTablesNumbers = GetReservatedTablesAtDateAndTimeslot(date, timeslot);
-
 
         (int x, int y) currentTableCoordinate = (1, 1);
         Table? chosenTable = null;
@@ -244,42 +185,36 @@ public static class ReservationSystem // Made class static so loginsystem and da
         while (true)
         {
             Console.Clear();
-            //DisplayTablesMap(numberOfPeople);
             PrintTablesMapClean(currentTableCoordinate, reservatedTablesNumbers, numberOfPeople);
-            //selectedTable = ShowSelectedTable(currentTableCoordinate.x, currentTableCoordinate.y, numberOfPeople);
 
-            if (reservatedTablesNumbers.Count < 15)
-            {
-                //TableSelectionFeedback(selectedTable, numberOfPeople);
-                keyInfo = Console.ReadKey();
-                if (keyInfo.Key == ConsoleKey.UpArrow)
-                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Up"); }
-                else if (keyInfo.Key == ConsoleKey.DownArrow)
-                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Down"); }
-                else if (keyInfo.Key == ConsoleKey.LeftArrow)
-                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Left"); }
-                else if (keyInfo.Key == ConsoleKey.RightArrow)
-                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
-                else if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    chosenTable = Restaurant.Tables.Find(table => table.Coordinate == currentTableCoordinate)!;
-                    if (!reservatedTablesNumbers.Contains(chosenTable.TableNumber)) // the table has not been reservated yet
-                    {
-                        if (numberOfPeople <= chosenTable.Capacity) // the table has enough seats
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-            else
+            if (reservatedTablesNumbers.Count >= 15)
             {
                 Console.WriteLine("Sorry! We are booked!");
                 break;
             }
 
+            //TableSelectionFeedback(selectedTable, numberOfPeople);
+            keyInfo = Console.ReadKey();
+            if (keyInfo.Key == ConsoleKey.UpArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Up"); }
+            else if (keyInfo.Key == ConsoleKey.DownArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Down"); }
+            else if (keyInfo.Key == ConsoleKey.LeftArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Left"); }
+            else if (keyInfo.Key == ConsoleKey.RightArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                chosenTable = Restaurant.Tables.Find(table => table.Coordinate == currentTableCoordinate)!;
+                if (!reservatedTablesNumbers.Contains(chosenTable.TableNumber)) // the table has not been reservated yet
+                {
+                    if (numberOfPeople <= chosenTable.Capacity) // the table has enough seats
+                    {
+                        break;
+                    }
+                }
+            }
         }
-
 
         return chosenTable;
     }
@@ -346,29 +281,16 @@ public static class ReservationSystem // Made class static so loginsystem and da
         (int, int) coordinateIndirection = (0, 0);
         (int, int) newCoordinate;
         if (direction == "Up")
-        {
-            coordinateIndirection = (coordinate.x, coordinate.y - 1);
-            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
-            if (containsValue) { return newCoordinate; }
-        }
+        { coordinateIndirection = (coordinate.x, coordinate.y - 1); }
         else if (direction == "Down")
-        {
-            coordinateIndirection = (coordinate.x, coordinate.y + 1);
-            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
-            if (containsValue) { return newCoordinate; }
-        }
+        { coordinateIndirection = (coordinate.x, coordinate.y + 1); }
         else if (direction == "Left")
-        {
-            coordinateIndirection = (coordinate.x - 1, coordinate.y);
-            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
-            if (containsValue) { return newCoordinate; }
-        }
+        { coordinateIndirection = (coordinate.x - 1, coordinate.y); }
         else if (direction == "Right")
-        {
-            coordinateIndirection = (coordinate.x + 1, coordinate.y);
-            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
-            if (containsValue) { return newCoordinate; }
-        }
+        { coordinateIndirection = (coordinate.x + 1, coordinate.y); }
+
+        bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
+        if (containsValue) { return newCoordinate; }
 
         List<(int, int)> coordinatesToRedirect = new List<(int, int)>() { (1, 4), (3, 4), (5, 4), (5, 2) };
         if (coordinatesToRedirect.Contains(coordinateIndirection))
@@ -389,59 +311,6 @@ public static class ReservationSystem // Made class static so loginsystem and da
         {
             Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
         }
-    }
-
-    public static Table ShowSelectedTable(int xc, int yc, int numberOfPeople)
-    {
-        Table selectedTable = null;
-        int availableTablesCount = 0;
-
-        // colors tables that are already booked red
-        // tables with too little seats gray
-        // puts [] around the selected table
-        foreach (Table table in Restaurant.Tables)
-        {
-            string ws = table.TableNumber < 10 ? " " : ""; // ws = whitespace to format the table options
-            string wst = table.TablePrice < 10 ? " " : ""; // wst = whitespace table to format the table options
-
-            if (table.IsReservated)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                availableTablesCount++;
-            }
-            else if (numberOfPeople > table.Capacity)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                availableTablesCount++;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Green; // Green for available
-            }
-
-            string tablePrice = table.TablePrice.ToString("F2");
-            if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
-            {
-                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity} Seats   ${tablePrice}]  {wst}");
-                selectedTable = table;
-            }
-            else
-            {
-                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity} Seats   ${tablePrice}   {wst}");
-            }
-            Console.ResetColor();
-
-            if (table.Coordinate.Item1 % 3 == 0)
-            {
-                Console.WriteLine(); //creates new row after every 3 tables
-            }
-        }
-
-        if (availableTablesCount >= Restaurant.Tables.Count) // None of the tables are available for this reservation
-        {
-            return null;
-        }
-        return selectedTable;
     }
 
     public static void DisplayReservationDetails(Reservation R)
@@ -469,8 +338,12 @@ public static class ReservationSystem // Made class static so loginsystem and da
         
     }
 
-    public static int GenerateReservationNumber()
+    /// <summary>
+    /// Generates returns a random 32-bit signed integer between 10 000 and 99 999 (inclusive).
+    /// </summary>
+    /// <returns></returns>
+    public static int GenerateReservationNumber()  // todo: make it so that there is no chance for 2 reservations to have the same number
     {
-        return Random.Next(10000, 100000); // Generates a random number between 10 000 and 99 999 (inclusive).
+        return Random.Next(10000, 100000); // 
     }
 }
