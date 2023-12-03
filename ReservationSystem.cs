@@ -184,6 +184,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         while (true)
         {
             Console.Clear();
+            PrintBarDisplay();
             PrintTablesMapClean(currentTableCoordinate, reservatedTablesNumbers, numberOfPeople);
 
             if (reservatedTablesNumbers.Count >= 15)
@@ -273,6 +274,33 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.WriteLine(" \\");
         Console.WriteLine("  \\");
         Console.WriteLine("   \\~");
+    }
+
+    public static void PrintBarDisplay()
+    {
+        int windowWidth = Console.WindowWidth / 100 * 75;
+
+        int barSeatAmount = 8;
+        string barSeatStr = "()";
+        int totalBarSeatWidth = barSeatStr.Length * barSeatAmount;
+        int totalSpaces = windowWidth - totalBarSeatWidth;
+        int spacesBetweenAmount = totalSpaces / (barSeatAmount + 1);
+
+        string barTitle = "B A R";
+        int barCounterLength = spacesBetweenAmount * (barSeatAmount + 1) + totalBarSeatWidth;
+        string barCounter = new string('=', barCounterLength);
+
+        Console.SetCursorPosition((barCounterLength - barTitle.Length) / 2, Console.CursorTop);
+        Console.WriteLine(barTitle);
+
+        Console.WriteLine(barCounter);
+
+        for (int barSeat = 1; barSeat <= barSeatAmount; barSeat++)
+        {
+            Console.SetCursorPosition(Console.CursorLeft + spacesBetweenAmount, Console.CursorTop);
+            Console.Write(barSeatStr);
+        }
+        Console.WriteLine("\n\n");
     }
 
     public static void SetColor(Table table, List<int> reservatedTableNumbers, int numberOfPeople)
