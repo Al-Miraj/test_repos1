@@ -5,9 +5,12 @@ using System.Xml.Serialization;
 public class DisplayObject
 {
     [XmlIgnore]
+    [JsonIgnore]
     public char[,] Display { get; protected set; } = new char[0, 0];
 
+    [JsonIgnore]
     public int Height => Display.GetLength(0);
+    [JsonIgnore]
     public int Width => Display.GetLength(1);
 
     /// <summary>

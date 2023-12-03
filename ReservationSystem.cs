@@ -231,12 +231,14 @@ public static class ReservationSystem // Made class static so loginsystem and da
         while (true)
         {
             Console.Clear();
-            DisplayTablesMap(numberOfPeople);
-            selectedTable = ShowSelectedTable(currentTableCoordinate.x, currentTableCoordinate.y, numberOfPeople);
+            //DisplayTablesMap(numberOfPeople);
+            PrintTablesMapClean(currentTableCoordinate);
+            //selectedTable = ShowSelectedTable(currentTableCoordinate.x, currentTableCoordinate.y, numberOfPeople);
+            selectedTable = Restaurant.Tables[0]; // todo: delete. just to test the new table selection.
 
             if (selectedTable != null)
             {
-                TableSelectionFeedback(selectedTable, numberOfPeople);
+                //TableSelectionFeedback(selectedTable, numberOfPeople);
                 keyInfo = Console.ReadKey();
                 if (keyInfo.Key == ConsoleKey.UpArrow)
                 { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Up"); }
@@ -248,15 +250,16 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
                 else if (keyInfo.Key == ConsoleKey.Enter)
                 {
-                    if (!selectedTable.IsReservated) // the table has not been reservated yet
-                    {
-                        if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
-                        {
-                            selectedTable.IsReservated = true; // table at that coordinate has now been reservated
-                            JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this
-                            break;
-                        }
-                    }
+                    //if (!selectedTable.IsReservated) // the table has not been reservated yet
+                    //{
+                    //    if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
+                    //    {
+                    //        selectedTable.IsReservated = true; // table at that coordinate has now been reservated
+                    //        JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this
+                    //        break;
+                    //    }
+                    //}
+                    break;
                 }
             }
             else
@@ -269,6 +272,43 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
 
         return selectedTable;
+    }
+
+    public static void PrintTablesMapClean((int, int) currentTableCoordinate)
+    {
+        int windowWidth = Console.WindowWidth / 100 * 75;
+        int xConsolePosition = Console.CursorLeft;
+        int yConsolePosition = Console.CursorTop;
+        int firstTableInRowIndex = 0;
+
+        foreach (int numOfTablesInRow in Restaurant.NumOfTablesPerRow)
+        {
+            // Get Table objects of the table in the current row
+            List<Table> tablesInRow = Restaurant.Tables.GetRange(firstTableInRowIndex, numOfTablesInRow);
+
+            foreach (Table table in tablesInRow)
+            {
+                // Calculate the spacing between each table
+                int totalTablesWidth = table.Width * numOfTablesInRow;
+                int totalSpaces = windowWidth - totalTablesWidth;
+                int spacesBetweenAmount = totalSpaces / (numOfTablesInRow + 1);
+                xConsolePosition += spacesBetweenAmount;
+
+                // print the user cursor and the table display
+                if (table.Coordinate == currentTableCoordinate)
+                {
+                    Console.SetCursorPosition(xConsolePosition, yConsolePosition);
+                    Console.WriteLine("   \\/   ");
+                }
+                table.PrintAt((xConsolePosition, yConsolePosition + 1));
+                xConsolePosition += table.Width;
+            }
+
+            // update the Console Cursor position for the next row
+            yConsolePosition += 5 + 2;  // 5 == height of the table display, 2 == spaces between each row
+            xConsolePosition = 0;
+            firstTableInRowIndex += numOfTablesInRow;
+        }
     }
 
     public static (int, int) GetNewCoordinate((int x, int y) coordinate, string direction)
