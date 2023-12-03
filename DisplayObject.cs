@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 public class DisplayObject
 {
+    [XmlIgnore]
     public char[,] Display { get; protected set; } = new char[0, 0];
 
     public int Height => Display.GetLength(0);

@@ -224,36 +224,28 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
 
-        int xc = 1;
-        int yc = 1;
+
+        (int x, int y) currentTableCoordinate = (1, 1);
         Table selectedTable;
 
         while (true)
         {
             Console.Clear();
             DisplayTablesMap(numberOfPeople);
-            selectedTable = ShowSelectedTable(xc, yc, numberOfPeople);
+            selectedTable = ShowSelectedTable(currentTableCoordinate.x, currentTableCoordinate.y, numberOfPeople);
 
             if (selectedTable != null)
             {
                 TableSelectionFeedback(selectedTable, numberOfPeople);
                 keyInfo = Console.ReadKey();
-                if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
-                {
-                    yc--;
-                }
-                else if (keyInfo.Key == ConsoleKey.DownArrow && yc < 5)
-                {
-                    yc++;
-                }
-                else if (keyInfo.Key == ConsoleKey.LeftArrow && xc > 1)
-                {
-                    xc--;
-                }
-                else if (keyInfo.Key == ConsoleKey.RightArrow && xc < 3)
-                {
-                    xc++;
-                }
+                if (keyInfo.Key == ConsoleKey.UpArrow)
+                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Up"); }
+                else if (keyInfo.Key == ConsoleKey.DownArrow)
+                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Down"); }
+                else if (keyInfo.Key == ConsoleKey.LeftArrow)
+                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Left"); }
+                else if (keyInfo.Key == ConsoleKey.RightArrow)
+                { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
                 else if (keyInfo.Key == ConsoleKey.Enter)
                 {
                     if (!selectedTable.IsReservated) // the table has not been reservated yet
@@ -277,6 +269,52 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
 
         return selectedTable;
+    }
+
+    public static (int, int) GetNewCoordinate((int x, int y) coordinate, string direction)
+    {
+        HashSet<(int, int)> validCoordinates = new HashSet<(int, int)>()
+        {
+            (1,1), (2,1), (3,1), (4,1),
+            (1,2), (2,2), (3,2), (4,2),
+            (1,3), (2,3), (3,3), (4,3), (5,3),
+                   (2,4),        (4,4),
+        };
+
+        (int, int) coordinateIndirection = (0, 0);
+        (int, int) newCoordinate;
+        if (direction == "Up")
+        {
+            coordinateIndirection = (coordinate.x, coordinate.y - 1);
+            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
+            if (containsValue) { return newCoordinate; }
+        }
+        else if (direction == "Down")
+        {
+            coordinateIndirection = (coordinate.x, coordinate.y + 1);
+            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
+            if (containsValue) { return newCoordinate; }
+        }
+        else if (direction == "Left")
+        {
+            coordinateIndirection = (coordinate.x - 1, coordinate.y);
+            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
+            if (containsValue) { return newCoordinate; }
+        }
+        else if (direction == "Right")
+        {
+            coordinateIndirection = (coordinate.x + 1, coordinate.y);
+            bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
+            if (containsValue) { return newCoordinate; }
+        }
+
+        List<(int, int)> coordinatesToRedirect = new List<(int, int)>() { (1, 4), (3, 4), (5, 4), (5, 2) };
+        if (coordinatesToRedirect.Contains(coordinateIndirection))
+        {
+            return coordinateIndirection.Item2 == 2 ? (4, 2) : (coordinateIndirection.Item1, 3);
+        }
+
+        return coordinate;
     }
 
     public static void TableSelectionFeedback(Table selectedTable, int numberOfPeople)
