@@ -2,8 +2,18 @@
 
 public class Table : DisplayObject
 {
+    private int _tableNumber;
     [JsonPropertyName("TableNumber")]
-    public int TableNumber;
+    public int TableNumber
+    {
+        get { return _tableNumber; }
+        set 
+        { 
+            _tableNumber = value;
+            Display = new char[5, 8];
+            CreateTableDisplay();
+        }
+    }
 
     [JsonPropertyName("Coordinate")]
     public (int, int) Coordinate;
@@ -24,8 +34,6 @@ public class Table : DisplayObject
         Capacity = capacity;
         TablePrice = tablePrice;
         IsReservated = isReservated;
-        Display = new char[5, 8];
-        CreateTableDisplay();
     }
 
     public Table() { }
