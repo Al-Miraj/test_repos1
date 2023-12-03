@@ -250,16 +250,16 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
                 else if (keyInfo.Key == ConsoleKey.Enter)
                 {
-                    //if (!selectedTable.IsReservated) // the table has not been reservated yet
-                    //{
-                    //    if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
-                    //    {
-                    //        selectedTable.IsReservated = true; // table at that coordinate has now been reservated
-                    //        JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this
-                    //        break;
-                    //    }
-                    //}
+                    Table chosenTable = Restaurant.Tables.Find(table => table.Coordinate == currentTableCoordinate)!;
+                    if (!chosenTable.IsReservated) // the table has not been reservated yet
+                    {
+                        if (numberOfPeople <= chosenTable.Capacity) // the table has enough seats
+                        {
+                            chosenTable.IsReservated = true; // table at that coordinate has now been reservated
+                            JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this when IsReservated no longer exists
                     break;
+                }
+            }
                 }
             }
             else
@@ -276,7 +276,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
     public static void PrintTablesMapClean((int, int) currentTableCoordinate)
     {
-        int windowWidth = Console.WindowWidth / 100 * 75;
+        int windowWidth = Console.WindowWidth / 100 * 75; // 75% of terminal width
         int xConsolePosition = Console.CursorLeft;
         int yConsolePosition = Console.CursorTop;
         int firstTableInRowIndex = 0;
@@ -300,7 +300,9 @@ public static class ReservationSystem // Made class static so loginsystem and da
                     Console.SetCursorPosition(xConsolePosition, yConsolePosition);
                     Console.WriteLine("   \\/   ");
                 }
+                SetColor(table);
                 table.PrintAt((xConsolePosition, yConsolePosition + 1));
+                Console.ResetColor();
                 xConsolePosition += table.Width;
             }
 
@@ -309,6 +311,14 @@ public static class ReservationSystem // Made class static so loginsystem and da
             xConsolePosition = 0;
             firstTableInRowIndex += numOfTablesInRow;
         }
+    }
+
+    public static void SetColor(Table table)
+    {
+        if (table.IsReservated)
+        { Console.ForegroundColor = ConsoleColor.Red; }
+        else
+        { Console.ForegroundColor = ConsoleColor.DarkGreen; }
     }
 
     public static (int, int) GetNewCoordinate((int x, int y) coordinate, string direction)
