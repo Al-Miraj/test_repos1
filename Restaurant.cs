@@ -13,6 +13,9 @@ public static class Restaurant
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
 
+    // i.e first row has 4, the last has 2 tables in it
+    public static List<int> NumOfTablesPerRow = new List<int>() { 4, 4, 0, 5, 2 };
+
 
     private static List<Account> InitializeAccounts()
     {
