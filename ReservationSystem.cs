@@ -42,7 +42,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.WriteLine("Choose your timeslot:");
         string timeslot = GetTimeslot();
 
-        Table table = GetChosenTable(numberOfPeople);
+        Table table = GetChosenTable(numberOfPeople, date, timeslot);
         if (table != null)
         {
             int reservationNumber = GenerateReservationNumber();
@@ -219,24 +219,36 @@ public static class ReservationSystem // Made class static so loginsystem and da
     //    return (maxX, maxY);
     //}
 
-    public static Table GetChosenTable(int numberOfPeople)
+
+    public static List<int> GetReservatedTablesAtDateAndTimeslot(DateOnly date, string timeslot) // todo: improve method + var name
+    {
+        List<int> reservatedTablesAtDateAndTimeslot = Restaurant.Reservations
+            .FindAll(reservation => reservation.Date == date && reservation.TimeSlot == timeslot) // find all reservations made at the date and time of the new reservation
+            .Select(reservation => reservation.SelectedTable.TableNumber) // collect all the tables those reservation were made at
+            .ToList(); // convert IEnumerable to List
+        return reservatedTablesAtDateAndTimeslot;
+
+    }
+
+    public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
 
+        List<int> reservatedTablesNumbers = GetReservatedTablesAtDateAndTimeslot(date, timeslot);
+
 
         (int x, int y) currentTableCoordinate = (1, 1);
-        Table selectedTable;
+        Table? chosenTable = null;
 
         while (true)
         {
             Console.Clear();
             //DisplayTablesMap(numberOfPeople);
-            PrintTablesMapClean(currentTableCoordinate);
+            PrintTablesMapClean(currentTableCoordinate, reservatedTablesNumbers, numberOfPeople);
             //selectedTable = ShowSelectedTable(currentTableCoordinate.x, currentTableCoordinate.y, numberOfPeople);
-            selectedTable = Restaurant.Tables[0]; // todo: delete. just to test the new table selection.
 
-            if (selectedTable != null)
+            if (reservatedTablesNumbers.Count < 15)
             {
                 //TableSelectionFeedback(selectedTable, numberOfPeople);
                 keyInfo = Console.ReadKey();
@@ -250,16 +262,14 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
                 else if (keyInfo.Key == ConsoleKey.Enter)
                 {
-                    Table chosenTable = Restaurant.Tables.Find(table => table.Coordinate == currentTableCoordinate)!;
-                    if (!chosenTable.IsReservated) // the table has not been reservated yet
+                    chosenTable = Restaurant.Tables.Find(table => table.Coordinate == currentTableCoordinate)!;
+                    if (!reservatedTablesNumbers.Contains(chosenTable.TableNumber)) // the table has not been reservated yet
                     {
                         if (numberOfPeople <= chosenTable.Capacity) // the table has enough seats
                         {
-                            chosenTable.IsReservated = true; // table at that coordinate has now been reservated
-                            JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this when IsReservated no longer exists
-                    break;
-                }
-            }
+                            break;
+                        }
+                    }
                 }
             }
             else
@@ -271,10 +281,10 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
 
 
-        return selectedTable;
+        return chosenTable;
     }
 
-    public static void PrintTablesMapClean((int, int) currentTableCoordinate)
+    public static void PrintTablesMapClean((int, int) currentTableCoordinate, List<int> reservatedTableNumbers, int numberOfPeople)
     {
         int windowWidth = Console.WindowWidth / 100 * 75; // 75% of terminal width
         int xConsolePosition = Console.CursorLeft;
@@ -300,7 +310,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
                     Console.SetCursorPosition(xConsolePosition, yConsolePosition);
                     Console.WriteLine("   \\/   ");
                 }
-                SetColor(table);
+                SetColor(table, reservatedTableNumbers, numberOfPeople);
                 table.PrintAt((xConsolePosition, yConsolePosition + 1));
                 Console.ResetColor();
                 xConsolePosition += table.Width;
@@ -313,10 +323,12 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
     }
 
-    public static void SetColor(Table table)
+    public static void SetColor(Table table, List<int> reservatedTableNumbers, int numberOfPeople)
     {
-        if (table.IsReservated)
+        if (reservatedTableNumbers.Contains(table.TableNumber))
         { Console.ForegroundColor = ConsoleColor.Red; }
+        else if (table.Capacity < numberOfPeople)
+        { Console.ForegroundColor = ConsoleColor.DarkGray; }
         else
         { Console.ForegroundColor = ConsoleColor.DarkGreen; }
     }
