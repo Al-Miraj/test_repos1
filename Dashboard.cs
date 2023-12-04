@@ -75,7 +75,7 @@
         foreach (Reservation reservation in reservations)
         {
             Console.WriteLine(reservation.ToString());
-            Console.WriteLine();
+            Console.WriteLine(); //test
         }
     }
 }
