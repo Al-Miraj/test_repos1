@@ -1,4 +1,4 @@
-﻿
+﻿using Menus;
 public static class OptionMenu // Made class static so LoginSystem and Dashboard files don't rely on instances
 {
     public static bool IsUserLoggedIn = false;
