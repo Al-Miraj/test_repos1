@@ -1,15 +1,10 @@
 ﻿public sealed class Feedback
 {
-    public Reservation Reservation { get; }
-    public string Email { get; }
-    public int Rating { get; }
-    public string Message { get; }
+    public int ID { get; set; }
+    //public Reservation Reservation { get; set; }
 
-    public Feedback(string email, int rating, string message, Reservation reservation)
-    {
-        Email = email;
-        Rating = rating;
-        Message = message;
-        Reservation = reservation;
-    }
+    public int ReservationNumber { get; set;  }
+    public string Email { get; set; }
+    public int Rating { get; set; }
+    public string Message { get; set; }
 }

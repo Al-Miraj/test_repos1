@@ -72,8 +72,18 @@ public class Dashboard : Reservation
         Console.WriteLine("What could we have done better to improve your experience? Or what went good?");
         string message = Console.ReadLine()!;
         Console.WriteLine("Thank you for the feedback!");
-        Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message, reservation);
+        //Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message, reservation);
         // todo: write to xml file
+        Feedback feedback = new Feedback()
+        {
+            Email = ((CustomerAccount)CurrentUser).Email,
+            Rating = rating,
+            Message = message,
+            ReservationNumber = reservation.ReservationNumber,
+        };
+
+        Program.context.Feedbacks.Add(feedback);
+        Program.context.SaveChanges();
     }
 
     private void ReadFeedback()
