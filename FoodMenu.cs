@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 using System.Threading;
+namespace Menus;
 
 public static class FoodMenu
 {

@@ -1,4 +1,6 @@
-﻿public class SeasonalMenuItem
+﻿
+
+public class SeasonalMenuItem
 {
     public string Name { get; set; }
     public string Description { get; set; }
