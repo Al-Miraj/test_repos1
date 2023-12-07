@@ -186,6 +186,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
             Console.Clear();
             PrintBarDisplay();
             PrintTablesMapClean(currentTableCoordinate, reservatedTablesNumbers, numberOfPeople);
+            PrintTableInfo(currentTableCoordinate);
 
             if (reservatedTablesNumbers.Count >= 15)
             {
@@ -346,15 +347,51 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return coordinate;
     }
 
-    public static void TableSelectionFeedback(Table selectedTable, int numberOfPeople)
+    public static void PrintTableInfo((int, int) tableCoordinate)
     {
-        if (selectedTable.IsReservated)
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        (int x, int y) currentCursorPosition = Console.GetCursorPosition();
+        int windowWidth = Console.WindowWidth / 100 * 90;
+        int windowHeight = Console.WindowHeight * 25 / 100;
+
+        Table table = Restaurant.Tables.Find(table => table.Coordinate == tableCoordinate)!;
+        List<string> infos = new List<string>()
         {
-            Console.WriteLine($"\nTable {selectedTable.TableNumber} has already been reservated. try another!");
+            $"table number: {table.TableNumber}",
+            $"Price: €{table.TablePrice:0.00}",
+            $"Seats: {table.Capacity}",
+        };
+
+        PrintLegend((windowWidth, 5));
+
+        int xCursor = windowWidth;
+        int yCursor = windowHeight;
+        foreach (string info in infos)
+        {
+            Console.SetCursorPosition(xCursor, yCursor);
+            Console.Write(info);
+            yCursor++;
         }
-        else if (numberOfPeople > selectedTable.Capacity)
+        Console.SetCursorPosition(currentCursorPosition.x, currentCursorPosition.y);
+    }
+
+    public static void PrintLegend((int x, int y) coordinate)
+    {
+        var legend = new[]
         {
-            Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
+            (ConsoleColor.Red, "Red: Already booked"),
+            (ConsoleColor.DarkGray, "Gray: Not enough seats"),
+            (ConsoleColor.Green, "Green: Available")
+        };
+
+        foreach (var (color, text) in legend)
+        {
+            Console.SetCursorPosition(coordinate.x, coordinate.y);
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ResetColor();
+            coordinate.y++;
         }
     }
 
@@ -379,7 +416,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.WriteLine($"  > {deal.Name} ({deal.DiscountFactor * 100}% discount)");
             }
         }
-        Console.WriteLine($"Total Price: {R.GetTotalPrice()}");
+        Console.WriteLine($"Total Price: €{R.GetTotalPrice():0.00}");
         
     }
 
