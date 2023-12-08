@@ -272,9 +272,10 @@ public static class ReservationSystem // Made class static so loginsystem and da
     {
         Console.WriteLine("\n");
         Console.WriteLine("\\");
-        Console.WriteLine(" \\");
-        Console.WriteLine("  \\");
-        Console.WriteLine("   \\~");
+        Console.WriteLine(" \\~");
+        Console.WriteLine();
+        Console.WriteLine(" /~");
+        Console.WriteLine("/");
     }
 
     public static void PrintBarDisplay()
