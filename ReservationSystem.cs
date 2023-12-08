@@ -33,8 +33,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.Clear();
             }
         }
-        
 
+        Console.Clear();
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly date = GetReservationDate();
         Console.Clear();
