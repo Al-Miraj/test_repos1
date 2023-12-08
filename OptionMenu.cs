@@ -23,29 +23,13 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
         {
             Console.Clear();
 
-            //Console.WriteLine("╦  ┌─┐  ╔╦╗┌─┐┬  ┬┌─┐┌─┐  ╔═╗┬─┐┌─┐┌┐┌┌─┐┌─┐┬┌─┐");
-            //Console.WriteLine("║  ├┤    ║║├┤ │  ││  ├┤   ╠╣ ├┬┘├─┤││││  ├─┤│└─┐");
-            //Console.WriteLine("╩═╝└─┘  ═╩╝└─┘┴─┘┴└─┘└─┘  ╚  ┴└─┴ ┴┘└┘└─┘┴ ┴┴└─┘\n");
 
-
+            // Inside the while loop so that the name gets displayed each time the options menu is shown
             Console.WriteLine("    __            ____       ___              ______                            _     ");
             Console.WriteLine("   / /   ___     / __ \\___  / (_)_______     / ____/________ _____  _________ _(_)____");
             Console.WriteLine("  / /   / _ \\   / / / / _ \\/ / / ___/ _ \\   / /_  / ___/ __ `/ __ \\/ ___/ __ `/ / ___/");
             Console.WriteLine(" / /___/  __/  / /_/ /  __/ / / /__/  __/  / __/ / /  / /_/ / / / / /__/ /_/ / (__  ) ");
             Console.WriteLine("/_____/\\___/  /_____/\\___/_/_/\\___/\\___/  /_/   /_/   \\__,_/_/ /_/\\___/\\__,_/_/____/ \n ");
-
-            //Console.WriteLine("   __           ___     _ _              ___                          _     ");
-            //Console.WriteLine("  / /  ___     /   \\___| (_) ___ ___    / __\\ __ __ _ _ __   ___ __ _(_)___ ");
-            //Console.WriteLine(" / /  / _ \\   / /\\ / _ \\ | |/ __/ _ \\  / _\\| '__/ _` | '_ \\ / __/ _` | / __|");
-            //Console.WriteLine("/ /__|  __/  / /_//  __/ | | (_|  __/ / /  | | | (_| | | | | (_| (_| | \\__ \\");
-            //Console.WriteLine("\\____/\\___| /___,' \\___|_|_|\\___\\___| \\/   |_|  \\__,_|_| |_|\\___\\__,_|_|___/ \n");
-
-            //Console.WriteLine("  _            _____       _ _            ______                         _     ");
-            //Console.WriteLine(" | |          |  __ \\     | (_)          |  ____|                       (_)    ");
-            //Console.WriteLine(" | |     ___  | |  | | ___| |_  ___ ___  | |__ _ __ __ _ _ __   ___ __ _ _ ___ ");
-            //Console.WriteLine(" | |    / _ \\ | |  | |/ _ \\ | |/ __/ _ \\ |  __| '__/ _` | '_ \\ / __/ _` | / __|");
-            //Console.WriteLine(" | |___|  __/ | |__| |  __/ | | (_|  __/ | |  | | | (_| | | | | (_| (_| | \\__ \\");
-            //Console.WriteLine(" |______\\___| |_____/ \\___|_|_|\\___\\___| |_|  |_|  \\__,_|_| |_|\\___\\__,_|_|___/ \n");
 
 
             int selectedOption = MenuSelector.RunMenuNavigator(menuOptions);

@@ -23,12 +23,27 @@ public static class Restaurant
         }
         else
         {
+            // There is always 1 default super admin account
+            SuperAdminAccount superAdmin = new SuperAdminAccount(1, "Super Admin", "superadmin@work.com", "SuperAdmin-123");
             // there is always 1 default admin account
-            AdminAccount admin = new AdminAccount(1, "Admin", "admin@work.com", "Admin-123");
-            accounts = new List<Account>() { admin };
+            AdminAccount admin = new AdminAccount(2, "Admin", "admin@work.com", "Admin-123");
+            accounts = new List<Account>() { superAdmin, admin };
             XmlFileHandler.WriteToFile(accounts, AccountsXmlFileName);
         }
         return accounts;
+    }
+
+    public static List<SuperAdminAccount> GetSuperAdminAccount()
+    {
+        List<SuperAdminAccount> adminAccounts = new List<SuperAdminAccount>();
+        foreach (Account account in Accounts)
+        {
+            if (account is SuperAdminAccount admin)
+            {
+                adminAccounts.Add(admin);
+            }
+        }
+        return adminAccounts;
     }
 
     public static List<AdminAccount> GetAdminAccounts()
@@ -125,10 +140,10 @@ public static class Restaurant
         {
             XmlFileHandler.WriteToFile(reservations, ReservationsXmlFileName);
         }
-        foreach(Reservation reservation in reservations)
+        foreach (Reservation reservation in reservations)
         {
             Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.ID);
-            if ( account is CustomerAccount cAccount)
+            if (account is CustomerAccount cAccount)
             {
                 cAccount.Reservations.Add(reservation);
             }
@@ -167,10 +182,10 @@ public static class Restaurant
         Console.WriteLine("-------------------------------\n");
         Console.WriteLine("Deals that we are currently offering!\n");
 
-        if (Deals.Count <= 0) 
-        { 
-            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!"); 
-            return;  
+        if (Deals.Count <= 0)
+        {
+            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!");
+            return;
         }
         else
         {
