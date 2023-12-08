@@ -1,0 +1,326 @@
+[
+  {
+    "Name": "Grilled Salmon",
+    "Description": "Freshly grilled salmon served with a lemon butter sauce",
+    "Ingredients": [ "Salmon", "Lemon", "Butter" ],
+    "Timeslot": "Dinner",
+    "Price": 15.99,
+    "Potential Allergens": [ "Fish", "Milk" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Caesar Salad",
+    "Description": "Crisp romaine lettuce tossed with our homemade Caesar dressing",
+    "Ingredients": [ "Romaine Lettuce", "Caesar Dressing" ],
+    "Timeslot": "Lunch",
+    "Price": 7.99,
+    "Potential Allergens": [],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Steak Frites",
+    "Description": "Juicy steak served with a side of crispy fries",
+    "Ingredients": [ "Steak", "Fries" ],
+    "Timeslot": "Dinner",
+    "Price": 18.99,
+    "Potential Allergens": [],
+    "Icon": "Meat"
+  },
+  {
+    "Name": "Mozzarella Sticks",
+    "Description": "Deep-fried cheese sticks",
+    "Ingredients": [ "Mozzarella Cheese", "Flour", "Panko", "Milk" ],
+    "Timeslot": "Lunch",
+    "Price": 5.99,
+    "Potential Allergens": [ "Milk", "Wheat" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Chicken Wings",
+    "Description": "Boneless chicken wings",
+    "Ingredients": [ "Chicken" ],
+    "Timeslot": "Dinner",
+    "Price": 8.99,
+    "Potential Allergens": [],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Chicken Tagine",
+    "Description": "This dish features tender chicken pieces that have been slow-cooked with aromatic spices",
+    "Ingredients": [ "Chicken", "Onion", "Cilantro", "Potato", "Tomato", "Carrot", "Lemon", "Peas" ],
+    "Timeslot": "Dinner",
+    "Price": 12.99,
+    "Potential Allergens": [],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Korean Spicy Ramen",
+    "Description": "Spicy ramen served with a side of kimchi in a beef broth",
+    "Ingredients": [ "Noodles", "Kimchi", "Eggs", "Spring Onions", "Seaweed", "Beef Broth", "Gochujang Chili Powder" ],
+    "Timeslot": "Dinner",
+    "Price": 18.99,
+    "Potential Allergens": [ "Eggs", "Wheat" ],
+    "Icon": "Meat"
+  },
+  {
+    "Name": "Grilled Cheese Sandwich",
+    "Description": "Two slices of bread with melted cheese",
+    "Ingredients": [ "Cheese", "Bread" ],
+    "Timeslot": "Lunch",
+    "Price": 5.99,
+    "Potential Allergens": [ "Milk", "Wheat" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "French Fries",
+    "Description": "Crispy french fries",
+    "Ingredients": [ "French Fries" ],
+    "Timeslot": "Lunch",
+    "Price": 2.99,
+    "Potential Allergens": [],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Pizza",
+    "Description": "Freshly baked pizza",
+    "Ingredients": [ "Pizza Dough", "Tomato Sauce", "Cheese", "Pepperoni" ],
+    "Timeslot": "Dinner",
+    "Price": 10.99,
+    "Potential Allergens": [ "Milk", "Wheat" ],
+    "Icon": "Pizza"
+  },
+  {
+    "Name": "Spicy Tuna Roll",
+    "Description": "Spicy tuna roll",
+    "Ingredients": [ "Tuna", "Spicy Sauce" ],
+    "Timeslot": "Dinner",
+    "Price": 9.99,
+    "Potential Allergens": [ "Fish" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Salmon Roll",
+    "Description": "Salmon roll",
+    "Ingredients": [ "Salmon", "Spicy Sauce" ],
+    "Timeslot": "Dinner",
+    "Price": 9.99,
+    "Potential Allergens": [ "Fish" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Vegetable Stir Fry",
+    "Description": "A medley of fresh vegetables stir-fried in a savory sauce",
+    "Ingredients": [ "Broccoli", "Carrots", "Bell Peppers", "Soy Sauce", "Garlic" ],
+    "Timeslot": "Lunch",
+    "Price": 8.99,
+    "Potential Allergens": [ "Soybeans" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Chicken Caesar Wrap",
+    "Description": "Grilled chicken and crisp romaine lettuce wrapped in a soft tortilla",
+    "Ingredients": [ "Chicken", "Romaine Lettuce", "Caesar Dressing", "Tortilla" ],
+    "Timeslot": "Lunch",
+    "Price": 7.99,
+    "Potential Allergens": [ "Wheat" ],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Tuna Salad Sandwich",
+    "Description": "Freshly made tuna salad served on whole grain bread",
+    "Ingredients": [ "Tuna", "Mayonnaise", "Celery", "Whole Grain Bread" ],
+    "Timeslot": "Lunch",
+    "Price": 6.99,
+    "Potential Allergens": [ "Fish", "Milk", "Wheat" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Crispy Tofu Bites",
+    "Description": "Crispy fried tofu bites with a tangy dipping sauce",
+    "Ingredients": [ "Tofu", "Flour", "Soy Sauce", "Sesame Seeds" ],
+    "Timeslot": "Lunch",
+    "Price": 7.99,
+    "Potential Allergens": [ "Sesame Seeds", "Soybeans" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "BBQ Pulled Pork Sandwich",
+    "Description": "Slow-cooked pulled pork in barbecue sauce, served on a bun",
+    "Ingredients": [ "Pulled Pork", "Barbecue Sauce", "Bun" ],
+    "Timeslot": "Lunch",
+    "Price": 9.99,
+    "Potential Allergens": ["Wheat"],
+    "Icon": "Meat"
+  },
+  {
+    "Name": "Shrimp Scampi",
+    "Description": "Garlicky shrimp served over a bed of linguine",
+    "Ingredients": [ "Shrimp", "Garlic", "Butter", "Linguine" ],
+    "Timeslot": "Dinner",
+    "Price": 13.99,
+    "Potential Allergens": [ "Fish", "Milk" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Spinach and Feta Stuffed Chicken",
+    "Description": "Chicken breast stuffed with spinach and feta cheese",
+    "Ingredients": [ "Chicken", "Spinach", "Feta Cheese" ],
+    "Timeslot": "Dinner",
+    "Price": 11.99,
+    "Potential Allergens": [ "Milk" ],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Vegetable Spring Rolls",
+    "Description": "Crispy spring rolls filled with mixed vegetables",
+    "Ingredients": [ "Cabbage", "Carrots", "Mushrooms", "Spring Roll Wrappers" ],
+    "Timeslot": "Lunch",
+    "Price": 6.99,
+    "Potential Allergens": [ "Mushrooms" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Caprese Salad",
+    "Description": "Fresh tomatoes, mozzarella cheese, and basil drizzled with balsamic glaze",
+    "Ingredients": [ "Tomatoes", "Mozzarella Cheese", "Basil", "Balsamic Glaze" ],
+    "Timeslot": "Lunch",
+    "Price": 9.99,
+    "Potential Allergens": [ "Milk" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Lemon Garlic Shrimp Pasta",
+    "Description": "Shrimp sautéed in a lemon garlic butter sauce, served over a bed of pasta",
+    "Ingredients": [ "Shrimp", "Pasta", "Lemon", "Garlic", "Butter" ],
+    "Timeslot": "Dinner",
+    "Price": 14.99,
+    "Potential Allergens": [ "Fish", "Milk", "Wheat" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Vegan Buddha Bowl",
+    "Description": "A nourishing bowl with quinoa, roasted vegetables, avocado, and a tahini dressing",
+    "Ingredients": [ "Quinoa", "Mixed Vegetables", "Avocado", "Tahini" ],
+    "Timeslot": "Lunch",
+    "Price": 11.99,
+    "Potential Allergens": [ "Avocado" ],
+    "Icon": "Vegan"
+  },
+  {
+    "Name": "Pesto Chicken Penne",
+    "Description": "Grilled chicken and penne pasta tossed in a flavorful pesto sauce",
+    "Ingredients": [ "Chicken", "Penne Pasta", "Pesto Sauce" ],
+    "Timeslot": "Dinner",
+    "Price": 12.99,
+    "Potential Allergens": [ "Milk", "Wheat" ],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Margherita Pizza",
+    "Description": "Classic pizza with tomato, mozzarella, and fresh basil",
+    "Ingredients": [ "Pizza Dough", "Tomato Sauce", "Mozzarella Cheese", "Fresh Basil" ],
+    "Timeslot": "Dinner",
+    "Price": 11.99,
+    "Potential Allergens": [ "Milk", "Wheat" ],
+    "Icon": "Pizza"
+  },
+  {
+    "Name": "Quinoa Avocado Salad",
+    "Description": "A light and healthy salad with quinoa, avocado, cherry tomatoes, and a lemon vinaigrette",
+    "Ingredients": [ "Quinoa", "Avocado", "Cherry Tomatoes", "Lemon Vinaigrette" ],
+    "Timeslot": "Lunch",
+    "Price": 10.99,
+    "Potential Allergens": [ "Avocado" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Beef and Broccoli Stir Fry",
+    "Description": "Tender beef strips and broccoli florets stir-fried in a savory sauce",
+    "Ingredients": [ "Beef Strips", "Broccoli", "Soy Sauce", "Garlic" ],
+    "Timeslot": "Dinner",
+    "Price": 13.99,
+    "Potential Allergens": ["Soybeans"],
+    "Icon": "Meat"
+  },
+  {
+    "Name": "Caprese Panini",
+    "Description": "Tomato, mozzarella, and basil pressed between slices of ciabatta bread",
+    "Ingredients": [ "Tomato", "Mozzarella Cheese", "Basil", "Ciabatta Bread" ],
+    "Timeslot": "Lunch",
+    "Price": 8.99,
+    "Potential Allergens": [ "Milk", "Wheat"],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Hawaiian Chicken Skewers",
+    "Description": "Grilled chicken skewers with pineapple chunks, glazed in a sweet and tangy sauce",
+    "Ingredients": [ "Chicken", "Pineapple", "Teriyaki Sauce" ],
+    "Timeslot": "Dinner",
+    "Price": 15.99,
+    "Potential Allergens": [],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Mushroom Risotto",
+    "Description": "Creamy risotto with sautéed mushrooms and Parmesan cheese",
+    "Ingredients": [ "Arborio Rice", "Mushrooms", "Parmesan Cheese", "Chicken Broth" ],
+    "Timeslot": "Dinner",
+    "Price": 11.99,
+    "Potential Allergens": [ "Milk", "Mushrooms" ],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Teriyaki Salmon Bowl",
+    "Description": "Grilled teriyaki-glazed salmon served over a bed of steamed rice with vegetables",
+    "Ingredients": [ "Salmon", "Teriyaki Sauce", "Rice", "Vegetables" ],
+    "Timeslot": "Dinner",
+    "Price": 16.99,
+    "Potential Allergens": [ "Fish" ],
+    "Icon": "Fish"
+  },
+  {
+    "Name": "Mango Tango Smoothie",
+    "Description": "A tropical blend of mango, banana, and orange juice",
+    "Ingredients": [ "Mango", "Banana", "Orange Juice" ],
+    "Timeslot": "Anytime",
+    "Price": 5.99,
+    "Potential Allergens": [],
+    "Icon": "Beverage"
+  },
+  {
+    "Name": "Turkey Club Sandwich",
+    "Description": "Turkey, bacon, lettuce, and tomato stacked between three slices of toasted bread",
+    "Ingredients": [ "Turkey", "Bacon", "Lettuce", "Tomato", "Bread" ],
+    "Timeslot": "Lunch",
+    "Price": 9.99,
+    "Potential Allergens": ["Wheat"],
+    "Icon": "Meat"
+  },
+  {
+    "Name": "Sweet Potato Fries",
+    "Description": "Crispy sweet potato fries seasoned with a hint of cinnamon and paprika",
+    "Ingredients": [ "Sweet Potatoes", "Cinnamon", "Paprika" ],
+    "Timeslot": "Anytime",
+    "Price": 4.99,
+    "Potential Allergens": [],
+    "Icon": "Vegetarian"
+  },
+  {
+    "Name": "Chicken Alfredo Pasta",
+    "Description": "Grilled chicken and fettuccine pasta in a creamy Alfredo sauce",
+    "Ingredients": [ "Chicken", "Fettuccine Pasta", "Alfredo Sauce" ],
+    "Price": 14.99,
+    "Timeslot": "Dinner",
+    "Potential Allergens": [ "Milk" ],
+    "Icon": "Chicken"
+  },
+  {
+    "Name": "Greek Salad",
+    "Description": "Crisp lettuce, tomatoes, cucumbers, olives, and feta cheese with Greek dressing",
+    "Ingredients": [ "Lettuce", "Tomatoes", "Cucumbers", "Olives", "Feta Cheese", "Greek Dressing" ],
+    "Price": 10.99,
+    "Timeslot": "Lunch",
+    "Potential Allergens": [ "Milk" ],
+    "Icon": "Vegetarian"
+  }
+]
