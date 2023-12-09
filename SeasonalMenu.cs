@@ -34,6 +34,7 @@ namespace Menus
             }
         }
 
+        //entry point
         public static void PrintInfo(bool keyContinue = true)
         {
             string currentHoliday = "";
