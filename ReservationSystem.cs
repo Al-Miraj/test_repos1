@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Diagnostics.Tracing;
 using System.Text.Json;
-
+//begin
 public static class ReservationSystem // Made class static so loginsystem and dashboard don't rely on instances
 {
     public static Random Random = new Random();
