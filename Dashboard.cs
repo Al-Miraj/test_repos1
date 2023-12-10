@@ -6,7 +6,7 @@
     {
         CurrentUser = account;
     }
-
+//next
     public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
