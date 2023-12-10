@@ -65,6 +65,7 @@ namespace Menus
                 else if (keyInfo.Key == ConsoleKey.Enter)
                 {
                     HandleSelection();
+                    return;
                 }
             }
         }
@@ -74,6 +75,7 @@ namespace Menus
         {
             Console.Clear();
             Console.WriteLine(timeSlot);
+            if (MenuItems.Count < 1) { Console.WriteLine("no menu items found"); }
             Console.WriteLine(); Console.WriteLine("==================================================================================================================");
             for (int i = 0; i < MenuItems.Count; i++)
             {
@@ -89,7 +91,6 @@ namespace Menus
                 }
                 Console.WriteLine($"Ingredients: {string.Join(", ", MenuItems[i].Ingredients)}");
                 Console.WriteLine();
-                Thread.Sleep(100);
             }
             Console.WriteLine("==================================================================================================================");
 
@@ -151,8 +152,7 @@ namespace Menus
                     //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
                     break;
                 case 4:
-                    Environment.Exit(0);
-                    break;
+                    return;
             }
         }
 

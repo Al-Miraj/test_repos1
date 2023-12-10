@@ -5,7 +5,7 @@
     "Ingredients": [ "Asparagus", "Cherry Tomatoes", "Mixed Greens", "Lemon" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 10.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Vegetarian",
     "Season": "Spring"
   },
@@ -15,7 +15,7 @@
     "Ingredients": [ "Arborio Rice", "Peas", "Spinach", "Parmesan Cheese" ],
     "Timeslot": "Dinner",
     "Price": 14.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Season": "Spring"
   },
@@ -25,7 +25,7 @@
     "Ingredients": [ "Baby Spinach", "Strawberries", "Almonds", "Feta Cheese", "Balsamic Vinaigrette" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 12.99,
-    "Potential Allergens": [ "Dairy", "Nuts" ],
+    "PotentialAllergens": [ "Dairy", "Nuts" ],
     "Icon": "Vegetarian",
     "Season": "Spring"
   },
@@ -35,7 +35,7 @@
     "Ingredients": [ "Chicken Breast", "Artichoke Hearts", "Lemon", "Potatoes" ],
     "Timeslot": "Dinner",
     "Price": 16.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Spring"
   },
@@ -45,7 +45,7 @@
     "Ingredients": [ "Eggs", "Zucchini", "Bell Peppers", "Herbs" ],
     "Timeslot": "Brunch/Lunch",
     "Price": 11.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Vegetarian",
     "Season": "Spring"
   },
@@ -55,7 +55,7 @@
     "Ingredients": [ "Salmon Fillet", "Lemon", "Herbs" ],
     "Timeslot": "Dinner",
     "Price": 18.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Seafood",
     "Season": "Spring"
   },
@@ -65,7 +65,7 @@
     "Ingredients": [ "Pasta", "Cherry Tomatoes", "Asparagus", "Peas", "Garlic", "Butter" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 13.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Season": "Spring"
   },
@@ -75,7 +75,7 @@
     "Ingredients": [ "Citrus Zest", "Mixed Berries", "Pastry Dough" ],
     "Timeslot": "Dessert",
     "Price": 9.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Dessert",
     "Season": "Spring"
   },
@@ -85,7 +85,7 @@
     "Ingredients": [ "Tomatoes", "Mozzarella", "Basil", "Balsamic Vinegar" ],
     "Timeslot": "Appetizer",
     "Price": 12.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Season": "Summer"
   },
@@ -95,7 +95,7 @@
     "Ingredients": [ "Shrimp", "Garlic", "Lemon", "Herbs", "Mango" ],
     "Timeslot": "Dinner",
     "Price": 18.99,
-    "Potential Allergens": [ "Shellfish" ],
+    "PotentialAllergens": [ "Shellfish" ],
     "Icon": "Seafood",
     "Season": "Summer"
   },
@@ -105,7 +105,7 @@
     "Ingredients": [ "Pasta", "Zucchini", "Cherry Tomatoes", "Garlic", "Fresh Herbs" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 14.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Vegetarian",
     "Season": "Summer"
   },
@@ -115,7 +115,7 @@
     "Ingredients": [ "Watermelon", "Feta Cheese", "Mint", "Citrus" ],
     "Timeslot": "Appetizer",
     "Price": 10.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Season": "Summer"
   },
@@ -125,7 +125,7 @@
     "Ingredients": [ "Chicken Breast", "Romaine Lettuce", "Croutons", "Parmesan Cheese" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 16.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Meat",
     "Season": "Summer"
   },
@@ -135,7 +135,7 @@
     "Ingredients": [ "Mango", "Avocado", "Red Onion", "Cilantro", "Lime Juice" ],
     "Timeslot": "Appetizer",
     "Price": 9.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Vegetarian",
     "Season": "Summer"
   },
@@ -145,7 +145,7 @@
     "Ingredients": [ "Spinach", "Assorted Berries", "Goat Cheese", "Raspberry Vinaigrette" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 13.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Season": "Summer"
   },
@@ -155,7 +155,7 @@
     "Ingredients": [ "Fish Fillet", "Lemon", "Herbs", "Summer Vegetables" ],
     "Timeslot": "Dinner",
     "Price": 19.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Seafood",
     "Season": "Summer"
   },
@@ -165,7 +165,7 @@
     "Ingredients": [ "Butternut Squash", "Cinnamon", "Nutmeg", "Pumpkin Seeds" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 11.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Vegetarian",
     "Season": "Fall"
   },
@@ -175,7 +175,7 @@
     "Ingredients": [ "Pork Chops", "Maple Syrup", "Apples", "Sage", "Potatoes" ],
     "Timeslot": "Dinner",
     "Price": 20.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Fall"
   },
@@ -185,7 +185,7 @@
     "Ingredients": [ "Mixed Greens", "Butternut Squash", "Cranberries", "Pecans", "Balsamic Vinaigrette" ],
     "Timeslot": "Appetizer",
     "Price": 12.99,
-    "Potential Allergens": [ "Nuts" ],
+    "PotentialAllergens": [ "Nuts" ],
     "Icon": "Vegetarian",
     "Season": "Fall"
   },
@@ -195,7 +195,7 @@
     "Ingredients": [ "Chicken Breasts", "Apple Cider", "Root Vegetables", "Thyme", "Rice" ],
     "Timeslot": "Dinner",
     "Price": 18.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Fall"
   },
@@ -205,7 +205,7 @@
     "Ingredients": [ "Pumpkin", "Ricotta Cheese", "Sage", "Pasta Dough" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 15.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Vegetarian",
     "Season": "Fall"
   },
@@ -215,7 +215,7 @@
     "Ingredients": [ "Flour", "Cranberries", "Walnuts", "Honey Butter" ],
     "Timeslot": "Appetizer",
     "Price": 8.99,
-    "Potential Allergens": [ "Nuts", "Gluten" ],
+    "PotentialAllergens": [ "Nuts", "Gluten" ],
     "Icon": "Vegetarian",
     "Season": "Fall"
   },
@@ -225,7 +225,7 @@
     "Ingredients": [ "Quinoa", "Seasonal Vegetables", "Tahini", "Pumpkin Seeds" ],
     "Timeslot": "Lunch/Dinner",
     "Price": 14.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Vegetarian",
     "Season": "Fall"
   },
@@ -235,7 +235,7 @@
     "Ingredients": [ "Apples", "Cinnamon", "Oats", "Brown Sugar", "Vanilla Ice Cream" ],
     "Timeslot": "Dessert",
     "Price": 9.99,
-    "Potential Allergens": [ "Gluten", "Dairy" ],
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
     "Icon": "Dessert",
     "Season": "Fall"
   },
@@ -245,7 +245,7 @@
     "Ingredients": [ "Beef Chunks", "Root Vegetables", "Red Wine", "Herbs", "Crusty Bread" ],
     "Timeslot": "Dinner",
     "Price": 22.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Winter"
   },
@@ -255,7 +255,7 @@
     "Ingredients": [ "Seasonal Vegetables", "Pasta", "Béchamel Sauce", "Cheese" ],
     "Timeslot": "Dinner",
     "Price": 19.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Vegetarian",
     "Season": "Winter"
   },
@@ -265,7 +265,7 @@
     "Ingredients": [ "Lamb Shanks", "Red Wine", "Rosemary", "Potatoes", "Garlic" ],
     "Timeslot": "Dinner",
     "Price": 28.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Winter"
   },
@@ -275,7 +275,7 @@
     "Ingredients": [ "Butternut Squash", "Ravioli Dough", "Sage", "Butter" ],
     "Timeslot": "Dinner",
     "Price": 17.99,
-    "Potential Allergens": [ "Dairy", "Gluten" ],
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
     "Icon": "Vegetarian",
     "Season": "Winter"
   },
@@ -285,7 +285,7 @@
     "Ingredients": [ "Pot Roast", "Winter Vegetables", "Gravy" ],
     "Timeslot": "Dinner",
     "Price": 24.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Winter"
   },
@@ -295,7 +295,7 @@
     "Ingredients": [ "Arborio Rice", "Mushrooms", "Chestnuts", "Parmesan Cheese" ],
     "Timeslot": "Dinner",
     "Price": 18.99,
-    "Potential Allergens": [ "Dairy" ],
+    "PotentialAllergens": [ "Dairy" ],
     "Icon": "Vegetarian",
     "Season": "Winter"
   },
@@ -305,7 +305,7 @@
     "Ingredients": [ "Pork Tenderloin", "Cranberry Glaze", "Sweet Potatoes" ],
     "Timeslot": "Dinner",
     "Price": 21.99,
-    "Potential Allergens": [ "None" ],
+    "PotentialAllergens": [ "None" ],
     "Icon": "Meat",
     "Season": "Winter"
   },
@@ -315,7 +315,7 @@
     "Ingredients": [ "Seasonal Vegetables", "Lentils", "Puff Pastry" ],
     "Timeslot": "Dinner",
     "Price": 16.99,
-    "Potential Allergens": [ "Gluten" ],
+    "PotentialAllergens": [ "Gluten" ],
     "Icon": "Vegetarian",
     "Season": "Winter"
   }

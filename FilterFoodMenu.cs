@@ -124,7 +124,7 @@ public static class FilterFoodMenu
             switch (category)
             {
                 case "1":
-                    selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Meat"));
+                    selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Meat" || x.Category == "Chicken"));
                     break;
                 case "2":
                     selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Chicken"));

@@ -130,7 +130,7 @@ public static class DrinksMenu
             Console.WriteLine($"Description: {drink.Description}");
             Console.WriteLine($"Price: {drink.Price}");
             Console.WriteLine($"Category: {drink.Category}");
-            Console.WriteLine($"Alcohol percentage: {drink.Alcohol}");
+            Console.WriteLine($"Alcohol percentage: {drink.Alcohol}%");
             Console.WriteLine();
 
             if (CurrentCategory != drink.Category)

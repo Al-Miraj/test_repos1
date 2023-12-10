@@ -25,6 +25,27 @@ namespace Menus
             { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
         };
 
+        public static void DisplayAllHolidays()
+        {
+            bool christmasDisplayed = false;
+
+            foreach (var holiday in HolidayMenu.holidays)
+            {
+                if (holiday.Value == "Christmas")
+                {
+                    if (!christmasDisplayed)
+                    {
+                        Console.WriteLine($"{holiday.Value} - Date: 25-12-2023 to 31-12-2023");
+                        christmasDisplayed = true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{holiday.Value} - Date: {holiday.Key.ToShortDateString()}");
+                }
+            }
+        }
+
         private static List<DateTime> keys = new List<DateTime>();
 
         private static List<HolidayMenuItem> rawMenu = LoadFoodMenuData();
@@ -34,14 +55,14 @@ namespace Menus
 
         public static bool CheckDate(DateTime date) => holidays.ContainsKey(date) ? true : false;
 
-        public static void getHoliday(DateTime customDate)
+        public static void getHoliday(DateTime Date)
         {
             addKeys();
             bool foundHoliday = false;
 
             foreach (DateTime key in holidays.Keys)
             {
-                if (key == customDate)
+                if (key == Date)
                 {
                     foundHoliday = true;
                     Console.WriteLine($"today is {holidays[key]}");

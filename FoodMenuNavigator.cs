@@ -1,7 +1,7 @@
 ﻿using Menus;
 
 //should be called first
-public abstract class FoodMenuNavigator
+public static class FoodMenuNavigator
 {
     private static int selectedOption = 1;
 
@@ -21,7 +21,7 @@ public abstract class FoodMenuNavigator
             {
                 selectedOption--;
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 4)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 5)
             {
                 selectedOption++;
             }
@@ -35,7 +35,7 @@ public abstract class FoodMenuNavigator
 
     public static void GetCorrectMenu()
     {
-        for (int i = 1; i <= 4; i++)
+        for (int i = 1; i <= 5; i++)
         {
             if (i == selectedOption)
             {
@@ -85,10 +85,18 @@ public abstract class FoodMenuNavigator
                     HolidayMenu.getHoliday(DateTime.Now.Date);
                 else
                     Console.WriteLine("Today is not a holiday.");
+                    Console.WriteLine("Here are the holidays:");
+                    Console.WriteLine();
+                    HolidayMenu.DisplayAllHolidays();
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
                 break;
             case 4:
                 DrinksMenu.Display();
                 break;
+            case 5:
+                return true;
         }
         return exitMenu;
     }
