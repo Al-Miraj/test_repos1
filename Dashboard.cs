@@ -1,6 +1,6 @@
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-public class Dashboard : Reservation
+public class Dashboard
 {
     public Account CurrentUser { get; set; }
     private static int selectedOption = 1;
@@ -106,16 +106,19 @@ public class Dashboard : Reservation
 
         if (withFeedback)
         {
-            DisplayMenuOptions(reservations);
-            Display(reservations);
+            /*DisplayMenuOptions(reservations);
+            Display(reservations);*/
+            int selectedOption = MenuSelector.RunMenuNavigator(reservations);
         }
 
         return;
     }
 
-    private void DisplayMenuOptions(List<Reservation> reservations)
+    /*private void DisplayMenuOptions(List<Reservation> reservations)
     {
-        for (int i = 1; i < reservations.Count; i++)
+        
+
+        *//*for (int i = 1; i < reservations.Count; i++)
         {
             if (i == selectedOption)
             {
@@ -128,8 +131,8 @@ public class Dashboard : Reservation
 
             // Display each reservation as a menu option
             Console.WriteLine($"{i}: {GetReservationInfo(reservations[i - 1])}");
-        }
-    }
+        }*//*
+    }*/
 
     private string GetReservationInfo(Reservation reservation)
     {
@@ -139,7 +142,7 @@ public class Dashboard : Reservation
             $"\nPrice: {reservation.GetTotalPrice()}".ToString();
     }
 
-    public void Display(List<Reservation> reservations)
+    /*public void Display(List<Reservation> reservations)
     {
         Console.CursorVisible = false;
 
@@ -163,7 +166,7 @@ public class Dashboard : Reservation
                 if (exitMenu) { break; }
             }
         }
-    }
+    }*/
 
     private bool HandleSelection(List<Reservation> reservations)
     {
