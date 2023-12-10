@@ -109,11 +109,11 @@ public sealed class SuperAdminAccount : Account
             // Update the XML file with the modified list
             XmlFileHandler.WriteToFile(allAccounts, AccountsXmlFileName);
 
-            Console.WriteLine($"Admin account with email '{emailFromToBeDeletedAdmin}' has been removed.");
+            Console.WriteLine($"Admin account with the email '{emailFromToBeDeletedAdmin}' has been removed.");
         }
         else
         {
-            Console.WriteLine($"Admin account with email '{emailFromToBeDeletedAdmin}' not found.");
+            Console.WriteLine($"Admin account with the email '{emailFromToBeDeletedAdmin}' not found.");
         }
     }
 

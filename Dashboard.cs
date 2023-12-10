@@ -102,7 +102,7 @@
 
     private void DailyMenu()
     {
-        Console.WriteLine("Daily Menu");
+        DailyMenuGenerator.DisplayDailyMenu();
     }
 
     private void ReservationManager()

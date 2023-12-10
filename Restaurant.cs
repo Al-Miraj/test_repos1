@@ -27,6 +27,7 @@ public static class Restaurant
             SuperAdminAccount superAdmin = new SuperAdminAccount(1, "Super Admin", "superadmin@work.com", "SuperAdmin-123");
             // there is always 1 default admin account
             AdminAccount admin = new AdminAccount(2, "Admin", "admin@work.com", "Admin-123");
+
             accounts = new List<Account>() { superAdmin, admin };
             XmlFileHandler.WriteToFile(accounts, AccountsXmlFileName);
         }
