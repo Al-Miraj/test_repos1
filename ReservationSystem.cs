@@ -33,8 +33,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.Clear();
             }
         }
-        
 
+        Console.Clear();
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly date = GetReservationDate();
         Console.Clear();
@@ -42,7 +42,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.WriteLine("Choose your timeslot:");
         string timeslot = GetTimeslot();
 
-        Table table = GetChosenTable(numberOfPeople);
+        Table? table = GetChosenTable(numberOfPeople, date, timeslot);
         if (table != null)
         {
             int reservationNumber = GenerateReservationNumber();
@@ -154,192 +154,246 @@ public static class ReservationSystem // Made class static so loginsystem and da
             "Dinner (18:00-20:00)",
             "Late Dinner (20:00-22:00)"
         };
-        
-        int selectedOption = MenuSelector.RunMenuNavigator(timeslots );
+
+        int selectedOption = MenuSelector.RunMenuNavigator(timeslots);
         return timeslots[selectedOption];
     }
 
-    public static void DisplayTablesMap()
+    public static List<int> GetReservatedTablesAtDateAndTimeslot(DateOnly date, string timeslot) // todo: improve method + var name
     {
-        string door = "Entrance";
-        string aisle = "Main Aisle";
+        // find all reservations made at the date and time of the new reservation
+        // select all the tables numbers those reservation were made at
+        // convert IEnumerable to List
+        List<int> reservatedTablesAtDateAndTimeslot = Restaurant.Reservations
+            .FindAll(reservation => reservation.Date == date && reservation.TimeSlot == timeslot)
+            .Select(reservation => reservation.SelectedTable.TableNumber)
+            .ToList();
+        return reservatedTablesAtDateAndTimeslot;
 
-        // First row of tables (2 seats)
-        DisplayTableRange(1, 4); // Tables 1-4
-
-        Console.WriteLine("  {0}  ", door.PadRight(10)); // Entrance representation
-
-        // Second row of tables (4 seats)
-        DisplayTableRange(5, 8); // Tables 5-8
-
-        Console.WriteLine("  {0}  ", new string(' ', 10)); // Space representing an aisle
-
-        // Third row of tables (2 seats)
-        DisplayTableRange(9, 12); // Tables 9-12
-
-        Console.WriteLine("  {0}  ", aisle.PadRight(10)); // Main Aisle
-
-        // Fourth row of tables (6 seats)
-        DisplayTableRange(13, 15); // Tables 13-15
     }
 
-    private static void DisplayTableRange(int startTable, int endTable)
+    public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
-        // Display a range of tables
-        for (int tableNumber = startTable; tableNumber <= endTable; tableNumber++)
-        {
-            Table table = Restaurant.Tables.FirstOrDefault(t => t.TableNumber == tableNumber);
-            if (table != null)
-            {
-                if (table.IsReservated)
-                    Console.ForegroundColor = ConsoleColor.Red;
-                else
-                    Console.ForegroundColor = ConsoleColor.Green;
-
-                // Display a single table with the appropriate number of seats
-                if (tableNumber <= 4 || (tableNumber >= 9 && tableNumber <= 12)) // 2-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]  ");
-                else if (tableNumber >= 5 && tableNumber <= 8) // 4-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]  ", table.TableNumber);
-                else // 6-seat tables
-                    Console.Write($"  [ {table.TableNumber} ]-[ {table.TableNumber} ]-[ {table.TableNumber} ]  ");
-            }
-            Console.ResetColor();
-        }
-        Console.WriteLine("\n");
-    }
-
-
-    //private static (int, int) DetermineMaxCoordinates(List<Table> tables)
-    //{
-    //    int maxX = tables.Max(t => t.Coordinate.Item1);
-    //    int maxY = tables.Max(t => t.Coordinate.Item2);
-    //    return (maxX, maxY);
-    //}
-
-    public static Table GetChosenTable(int numberOfPeople)
-    {
+        List<int> reservatedTablesNumbers = GetReservatedTablesAtDateAndTimeslot(date, timeslot);
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
 
-        int xc = 1;
-        int yc = 1;
-        Table selectedTable;
+        (int x, int y) currentTableCoordinate = (1, 1);
+        Table? chosenTable = null;
 
         while (true)
         {
             Console.Clear();
-            DisplayTablesMap();
-            selectedTable = ShowSelectedTable(xc, yc, numberOfPeople);
+            PrintBarDisplay();
+            PrintTablesMapClean(currentTableCoordinate, reservatedTablesNumbers, numberOfPeople);
+            PrintTableInfo(currentTableCoordinate);
 
-            if (selectedTable != null)
-            {
-                TableSelectionFeedback(selectedTable, numberOfPeople);
-                keyInfo = Console.ReadKey();
-                if (keyInfo.Key == ConsoleKey.UpArrow && yc > 1)
-                {
-                    yc--;
-                }
-                else if (keyInfo.Key == ConsoleKey.DownArrow && yc < 5)
-                {
-                    yc++;
-                }
-                else if (keyInfo.Key == ConsoleKey.LeftArrow && xc > 1)
-                {
-                    xc--;
-                }
-                else if (keyInfo.Key == ConsoleKey.RightArrow && xc < 3)
-                {
-                    xc++;
-                }
-                else if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    if (!selectedTable.IsReservated) // the table has not been reservated yet
-                    {
-                        if (numberOfPeople <= selectedTable.Capacity) // the table has enough seats
-                        {
-                            selectedTable.IsReservated = true; // table at that coordinate has now been reservated
-                            JsonFileHandler.WriteToFile(Restaurant.Tables, Restaurant.TablesJsonFileName);  // todo: remove this
-                            break;
-                        }
-                    }
-                }
-            }
-            else
+            if (reservatedTablesNumbers.Count >= 15)
             {
                 Console.WriteLine("Sorry! We are booked!");
                 break;
             }
 
-        }
-
-
-        return selectedTable;
-    }
-
-    public static void TableSelectionFeedback(Table selectedTable, int numberOfPeople)
-    {
-        if (selectedTable.IsReservated)
-        {
-            Console.WriteLine($"\nTable {selectedTable.TableNumber} has already been reservated. try another!");
-        }
-        else if (numberOfPeople > selectedTable.Capacity)
-        {
-            Console.WriteLine($"\nTable {selectedTable.TableNumber} does not have enough seats for you. Try another!");
-        }
-    }
-
-    public static Table ShowSelectedTable(int xc, int yc, int numberOfPeople)
-    {
-        Table selectedTable = null;
-        int availableTablesCount = 0;
-
-        // colors tables that are already booked red
-        // tables with too little seats gray
-        // puts [] around the selected table
-        foreach (Table table in Restaurant.Tables)
-        {
-            string ws = table.TableNumber < 10 ? " " : ""; // ws = whitespace to format the table options
-            string wst = table.TablePrice < 10 ? " " : ""; // wst = whitespace table to format the table options
-
-            if (table.IsReservated)
+            //TableSelectionFeedback(selectedTable, numberOfPeople);
+            keyInfo = Console.ReadKey();
+            if (keyInfo.Key == ConsoleKey.UpArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Up"); }
+            else if (keyInfo.Key == ConsoleKey.DownArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Down"); }
+            else if (keyInfo.Key == ConsoleKey.LeftArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Left"); }
+            else if (keyInfo.Key == ConsoleKey.RightArrow)
+            { currentTableCoordinate = GetNewCoordinate(currentTableCoordinate, "Right"); }
+            else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                availableTablesCount++;
+                chosenTable = Restaurant.Tables.Find(table => table.Coordinate == currentTableCoordinate)!;
+                if (!reservatedTablesNumbers.Contains(chosenTable.TableNumber)) // the table has not been reservated yet
+                {
+                    if (numberOfPeople <= chosenTable.Capacity) // the table has enough seats
+                    {
+                        break;
+                    }
+                }
             }
-            else if (numberOfPeople > table.Capacity)
+        }
+
+        return chosenTable;
+    }
+
+    public static void PrintTablesMapClean((int, int) currentTableCoordinate, List<int> reservatedTableNumbers, int numberOfPeople)
+    {
+        int windowWidth = Console.WindowWidth / 100 * 75; // 75% of terminal width
+        int xConsolePosition = Console.CursorLeft;
+        int yConsolePosition = Console.CursorTop;
+        int firstTableInRowIndex = 0;
+
+        foreach (int numOfTablesInRow in Restaurant.NumOfTablesPerRow)
+        {
+            // Get Table objects of the table in the current row
+            List<Table> tablesInRow = Restaurant.Tables.GetRange(firstTableInRowIndex, numOfTablesInRow);
+
+            foreach (Table table in tablesInRow)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                availableTablesCount++;
+                // Calculate the spacing between each table
+                int totalTablesWidth = table.Width * numOfTablesInRow;
+                int totalSpaces = windowWidth - totalTablesWidth;
+                int spacesBetweenAmount = totalSpaces / (numOfTablesInRow + 1);
+                xConsolePosition += spacesBetweenAmount;
+
+                // print the user cursor and the table display
+                if (table.Coordinate == currentTableCoordinate)
+                {
+                    Console.SetCursorPosition(xConsolePosition, yConsolePosition);
+                    Console.WriteLine("   \\/   ");
+                }
+                SetColor(table, reservatedTableNumbers, numberOfPeople);
+                table.PrintAt((xConsolePosition, yConsolePosition + 1));
+                Console.ResetColor();
+                xConsolePosition += table.Width;
+            }
+
+            // update the Console Cursor position for the next row
+            if (numOfTablesInRow == 0)
+            {
+                PrintEntranceDisplay();
+                yConsolePosition += 4;  // 4 == height of the door display.
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Green; // Green for available
+                yConsolePosition += 5 + 2;  // 5 == height of the table display, 2 == spaces between each row
             }
 
-            string tablePrice = table.TablePrice.ToString("F2");
-            if (table.Coordinate.Item1 == xc && table.Coordinate.Item2 == yc)
-            {
-                Console.Write($"[Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}]  {wst}");
-                selectedTable = table;
-            }
-            else
-            {
-                Console.Write($" Table {table.TableNumber} {ws} {table.Capacity}   Seats ${tablePrice}   {wst}");
-            }
+            xConsolePosition = 0;
+            firstTableInRowIndex += numOfTablesInRow;
+        }
+    }
+
+    public static void PrintEntranceDisplay()
+    {
+        Console.WriteLine("\n");
+        Console.WriteLine("\\");
+        Console.WriteLine(" \\~");
+        Console.WriteLine();
+        Console.WriteLine(" /~");
+        Console.WriteLine("/");
+    }
+
+    public static void PrintBarDisplay()
+    {
+        int windowWidth = Console.WindowWidth / 100 * 75;
+
+        int barSeatAmount = 8;
+        string barSeatStr = "()";
+        int totalBarSeatWidth = barSeatStr.Length * barSeatAmount;
+        int totalSpaces = windowWidth - totalBarSeatWidth;
+        int spacesBetweenAmount = totalSpaces / (barSeatAmount + 1);
+
+        string barTitle = "B A R";
+        int barCounterLength = spacesBetweenAmount * (barSeatAmount + 1) + totalBarSeatWidth;
+        string barCounter = new string('=', barCounterLength);
+
+        Console.SetCursorPosition((barCounterLength - barTitle.Length) / 2, Console.CursorTop);
+        Console.WriteLine(barTitle);
+
+        Console.WriteLine(barCounter);
+
+        for (int barSeat = 1; barSeat <= barSeatAmount; barSeat++)
+        {
+            Console.SetCursorPosition(Console.CursorLeft + spacesBetweenAmount, Console.CursorTop);
+            Console.Write(barSeatStr);
+        }
+        Console.WriteLine("\n\n");
+    }
+
+    public static void SetColor(Table table, List<int> reservatedTableNumbers, int numberOfPeople)
+    {
+        if (reservatedTableNumbers.Contains(table.TableNumber))
+        { Console.ForegroundColor = ConsoleColor.Red; }
+        else if (table.Capacity < numberOfPeople)
+        { Console.ForegroundColor = ConsoleColor.DarkGray; }
+        else
+        { Console.ForegroundColor = ConsoleColor.DarkGreen; }
+    }
+
+    public static (int, int) GetNewCoordinate((int x, int y) coordinate, string direction)
+    {
+        HashSet<(int, int)> validCoordinates = new HashSet<(int, int)>()
+        {
+            (1,1), (2,1), (3,1), (4,1),
+            (1,2), (2,2), (3,2), (4,2),
+            (1,3), (2,3), (3,3), (4,3), (5,3),
+                   (2,4),        (4,4),
+        };
+
+        (int, int) coordinateIndirection = (0, 0);
+        (int, int) newCoordinate;
+        if (direction == "Up")
+        { coordinateIndirection = (coordinate.x, coordinate.y - 1); }
+        else if (direction == "Down")
+        { coordinateIndirection = (coordinate.x, coordinate.y + 1); }
+        else if (direction == "Left")
+        { coordinateIndirection = (coordinate.x - 1, coordinate.y); }
+        else if (direction == "Right")
+        { coordinateIndirection = (coordinate.x + 1, coordinate.y); }
+
+        bool containsValue = validCoordinates.TryGetValue(coordinateIndirection, out newCoordinate);
+        if (containsValue) { return newCoordinate; }
+
+        List<(int, int)> coordinatesToRedirect = new List<(int, int)>() { (1, 4), (3, 4), (5, 4), (5, 2) };
+        if (coordinatesToRedirect.Contains(coordinateIndirection))
+        {
+            return coordinateIndirection.Item2 == 2 ? (4, 2) : (coordinateIndirection.Item1, 3);
+        }
+
+        return coordinate;
+    }
+
+    public static void PrintTableInfo((int, int) tableCoordinate)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        (int x, int y) currentCursorPosition = Console.GetCursorPosition();
+        int windowWidth = Console.WindowWidth / 100 * 90;
+        int windowHeight = Console.WindowHeight * 25 / 100;
+
+        Table table = Restaurant.Tables.Find(table => table.Coordinate == tableCoordinate)!;
+        List<string> infos = new List<string>()
+        {
+            $"table number: {table.TableNumber}",
+            $"Price: €{table.TablePrice:0.00}",
+            $"Seats: {table.Capacity}",
+        };
+
+        PrintLegend((windowWidth, 5));
+
+        int xCursor = windowWidth;
+        int yCursor = windowHeight;
+        foreach (string info in infos)
+        {
+            Console.SetCursorPosition(xCursor, yCursor);
+            Console.Write(info);
+            yCursor++;
+        }
+        Console.SetCursorPosition(currentCursorPosition.x, currentCursorPosition.y);
+    }
+
+    public static void PrintLegend((int x, int y) coordinate)
+    {
+        var legend = new[]
+        {
+            (ConsoleColor.Red, "Red: Already booked"),
+            (ConsoleColor.DarkGray, "Gray: Not enough seats"),
+            (ConsoleColor.Green, "Green: Available")
+        };
+
+        foreach (var (color, text) in legend)
+        {
+            Console.SetCursorPosition(coordinate.x, coordinate.y);
+            Console.ForegroundColor = color;
+            Console.Write(text);
             Console.ResetColor();
-
-            if (table.Coordinate.Item1 % 3 == 0)
-            {
-                Console.WriteLine(); //creates new row after every 3 tables
-            }
+            coordinate.y++;
         }
-
-        if (availableTablesCount >= Restaurant.Tables.Count) // None of the tables are available for this reservation
-        {
-            return null;
-        }
-        return selectedTable;
     }
 
     public static void DisplayReservationDetails(Reservation R)
@@ -363,12 +417,16 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.WriteLine($"  > {deal.Name} ({deal.DiscountFactor * 100}% discount)");
             }
         }
-        Console.WriteLine($"Total Price: {R.GetTotalPrice()}");
-        
+        Console.WriteLine($"Total Price: €{R.GetTotalPrice():0.00}");
+
     }
 
-    public static int GenerateReservationNumber()
+    /// <summary>
+    /// Generates returns a random 32-bit signed integer between 10 000 and 99 999 (inclusive).
+    /// </summary>
+    /// <returns></returns>
+    public static int GenerateReservationNumber()  // todo: make it so that there is no chance for 2 reservations to have the same number
     {
-        return Random.Next(10000, 100000); // Generates a random number between 10 000 and 99 999 (inclusive).
+        return Random.Next(10000, 100000); // 
     }
 }

@@ -15,37 +15,44 @@
         Console.WriteLine("This is your dashboard.");
 
         List<string> dashboardOptions = new List<string>()
-        { isAdmin ? "Reservation Management" : "Order History", // todo: ipv order history misschien view profile details ofzo?
-          isAdmin ? "Customer Management" : "Reservation Manager",
-          "Exit to main menu",
-          "Log out"
+        {
+            "Reservation Management",
+            isAdmin ? "Reservation Overview" : "Order History",
+            isAdmin ? "Customer Management" : "Reservation Overview",
+            "Exit to main menu",
+            "Log out"
         };
+
         int selectedOption = MenuSelector.RunMenuNavigator(dashboardOptions);
+
         switch (selectedOption)
         {
             case 0:
-                if (isAdmin)
-                { ReservationManager(); }
-                else
-                { Console.Clear(); OrderHistory(); }
+                ReservationManager();
                 break;
             case 1:
                 if (isAdmin)
-                { CustomerManager(); }
+                { ReservationOverview(); }
                 else
-                { ReservationManager(); }
+                { Console.Clear(); OrderHistory(); }
                 break;
             case 2:
-                OptionMenu.RunMenu(); // loop warning
+                if (isAdmin)
+                { CustomerManager(); }
+                else
+                { ReservationOverview(); }
                 break;
             case 3:
+                OptionMenu.RunMenu();
+                break;
+            case 4:
                 LoginSystem.Logout();
                 return;
             default:
                 break;
         }
 
-        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
+        Console.WriteLine("\n[Press any key to return to your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
     }
@@ -78,4 +85,23 @@
             Console.WriteLine();
         }
     }
+    private void ReservationOverview()
+    {
+        Console.Clear();
+        Console.WriteLine("Reservation Overview\n");
+
+        // Example values, replace these with appropriate values for your application
+        (int, int) currentTableCoordinate = (1, 1);
+        List<int> reservatedTableNumbers = new List<int>(); // Replace with actual values
+        int numberOfPeople = 4; // Replace with actual value
+
+        // Display the visual map of the restaurant with reserved/available tables
+        ReservationSystem.PrintTablesMapClean(currentTableCoordinate, reservatedTableNumbers, numberOfPeople);
+
+        Console.WriteLine("\n[Press any key to return to your dashboard.]");
+        Console.ReadKey();
+        RunDashboardMenu();
+    }
+
 }
+
