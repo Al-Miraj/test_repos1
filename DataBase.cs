@@ -16,10 +16,9 @@ public class Database : DbContext
         context.SaveChanges();
     }
 
-    public void DataReader()
+    public List<Feedback> DataReader()
     {
-        Feedback feedback = context.Feedbacks.ToList()[0];
-        Console.WriteLine(feedback.Email);
+        return context.Feedbacks.ToList();
     }
 
 }

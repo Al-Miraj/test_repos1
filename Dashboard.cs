@@ -100,12 +100,6 @@ public class Dashboard : Reservation
         database.DataWriter(feedback);
     }
 
-    private void ReadFeedback()
-    {
-        List<Feedback> feedback = XmlFileHandler.ReadFromFile<Feedback>("Feedback.xml");
-    }
-
-
     private void ReservationManager()
     {
         ReservationManagement.CurrentUser = CurrentUser;
@@ -138,5 +132,25 @@ public class Dashboard : Reservation
         $" \n    Price: {reservation.GetTotalPrice()}" +
         $"\n"; 
 
+    }
+
+    private void ReadFeedback()
+    {
+        Database db = new Database();
+        Console.WriteLine("Customer Feedback: \n");
+        List<Feedback> feedbacks = db.DataReader();
+        foreach (Feedback feedback in feedbacks)
+        {
+            DisplayFeedback(feedback);
+        }
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
+    }
+
+    private void DisplayFeedback(Feedback feedback)
+    {
+        Console.WriteLine(feedback.Email + "                  " + feedback.Rating + " out of 5");
+        Console.WriteLine(feedback.Message);
+        Console.WriteLine();
     }
 }
