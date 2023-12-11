@@ -1,5 +1,5 @@
-﻿namespace Menus
-{
+﻿
+
     public class HolidayMenuItem
     {
         public string Name { get; set; }
@@ -33,5 +33,3 @@
             };
         }
     }
-}
-

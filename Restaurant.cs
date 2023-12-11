@@ -6,12 +6,14 @@ public static class Restaurant
     public static string TablesJsonFileName = "Tables.json";
     public static string ReservationsXmlFileName = "Reservations.xml";
     public static string AccountsXmlFileName = "Accounts.xml";
+    public static string FeedbackXmlFileName = "Feedback.xml";
     public static List<Account> Accounts = InitializeAccounts();
     public static List<AdminAccount> AdminAccounts { get { return GetAdminAccounts(); } }
     public static List<CustomerAccount> CustomerAccounts { get { return GetCustomerAccounts(); } }
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
+    /*public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers*/
 
     // i.e first row has 4, the last has 2 tables in it
     public static List<int> NumOfTablesPerRow = new List<int>() { 4, 4, 0, 5, 2 };
@@ -128,15 +130,30 @@ public static class Restaurant
         {
             XmlFileHandler.WriteToFile(reservations, ReservationsXmlFileName);
         }
-        foreach(Reservation reservation in reservations)
+        foreach (Reservation reservation in reservations)
         {
             Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.ID);
-            if ( account is CustomerAccount cAccount)
+            if (account is CustomerAccount cAccount)
             {
                 cAccount.Reservations.Add(reservation);
             }
         }
         return reservations;
+    }
+
+    private static List<Feedback> InitializeFeedback()
+    {
+        List<Feedback> feedback = new List<Feedback>();
+
+        if (File.Exists(FeedbackXmlFileName))
+        {
+            feedback.AddRange(XmlFileHandler.ReadFromFile<Feedback>(FeedbackXmlFileName));
+        }
+        else
+        {
+            XmlFileHandler.WriteToFile(feedback, FeedbackXmlFileName);
+        }
+        return feedback;
     }
 
     public static void UpdateRestaurantFiles()
@@ -170,10 +187,10 @@ public static class Restaurant
         Console.WriteLine("-------------------------------\n");
         Console.WriteLine("Deals that we are currently offering!\n");
 
-        if (Deals.Count <= 0) 
-        { 
-            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!"); 
-            return;  
+        if (Deals.Count <= 0)
+        {
+            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!");
+            return;
         }
         else
         {

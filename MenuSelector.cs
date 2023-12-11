@@ -1,4 +1,4 @@
-﻿public static class MenuSelector
+public static class MenuSelector
 {
     private static string Cursor = " >";
 

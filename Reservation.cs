@@ -71,7 +71,7 @@ public class Reservation
             $"\nAmount of People: {NumberOfPeople}" +
             $"\nDate: {Date}\nTimeslot: {TimeSlot}" +
             $"\nTable number: {SelectedTable.TableNumber}" +
-            $"\nPrice: {GetTotalPrice()}";
+            $"\nPrice: {GetTotalPrice()}".ToString();
     }
 
     public double GetTotalPrice()
