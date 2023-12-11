@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 
 [XmlInclude(typeof(AdminAccount))]
 [XmlInclude(typeof(CustomerAccount))]
+[XmlInclude(typeof(SuperAdminAccount))]
 [XmlInclude(typeof(Reservation))]
 
 
