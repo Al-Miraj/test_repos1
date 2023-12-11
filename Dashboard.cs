@@ -14,14 +14,18 @@ public class Dashboard : Reservation
     public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
+        bool isSuperAdmin = CurrentUser is SuperAdminAccount;
         Console.Clear();
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
 
         List<string> dashboardOptions = new List<string>()
-        { isAdmin ? "Reservation Management" : "Order History", // todo: ipv order history misschien view profile details ofzo?   : ja, in reservation management heb je al order history (view reservations)
-          isAdmin ? "Customer Management" : "Reservation Manager",
-          isAdmin ? "Read Feedback" : "Send Feedback",
+        { isSuperAdmin ? "Reservation Management" : (isAdmin ? "Reservation Management" : "Order History"), // todo: ipv order history misschien view profile details ofzo?   : ja, in reservation management heb je al order history (view reservations)
+          isSuperAdmin ? "Customer Management" : (isAdmin ? "Customer Management" : "Reservation Manager"),
+          isSuperAdmin ? "Read Feedback" : (isAdmin ? "Read Feedback" : "Send Feedback"),
+          isSuperAdmin ? "Add admin" : (isAdmin ? null : "Daily Menu"),
+          isSuperAdmin ? "Remove admin" : null,
+          isSuperAdmin ? "Admin Overview" : null,
           "Exit to main menu",
           "Log out"
         };
@@ -30,27 +34,45 @@ public class Dashboard : Reservation
         switch (selectedOption)
         {
             case 0:
-                if (isAdmin)
+                if (isAdmin || isSuperAdmin)
                 { ReservationManager(); }
                 else
                 { Console.Clear(); OrderHistory(); }
                 break;
             case 1:
-                if (isAdmin)
+                if (isAdmin || isSuperAdmin)
                 { CustomerManager(); }
                 else
                 { ReservationManager(); }
                 break;
             case 2:
-                if (isAdmin)
+                if (isAdmin || isSuperAdmin)
                 { Console.Clear(); ReadFeedback(); }
                 else
                 { Console.Clear(); GetOrders(); }
                 break;
             case 3:
-                OptionMenu.RunMenu(); // loop warning
+                if (isSuperAdmin)
+                { AddAdmin(); } // Add this case for regular users
+                else
+                { DailyMenu(); }
                 break;
             case 4:
+                if (isSuperAdmin)
+                { RemoveAdmin(); }
+                else
+                { OptionMenu.RunMenu(); }
+                break;
+            case 5:
+                if (isSuperAdmin)
+                { AdminOverview(); }
+                else
+                { OptionMenu.RunMenu(); }
+                break;
+            case 6:
+                OptionMenu.RunMenu(); // loop warning
+                break;
+            case 7:
                 LoginSystem.Logout();
                 return;
             default:
@@ -60,6 +82,32 @@ public class Dashboard : Reservation
         Console.WriteLine("\n[Press any key to return to the your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
+    }
+
+    //private void DailyMenu()
+    //{
+    //    DailyMenuGenerator.DisplayDailyMenu();
+    //}
+
+    private void AddAdmin()
+    {
+        SuperAdminAccount.SuperAdminCanAddAdmin();
+    }
+
+    private void RemoveAdmin()
+    {
+        SuperAdminAccount.SuperAdminCanRemoveAdmin();
+    }
+
+    private void AdminOverview()
+    {
+        SuperAdminAccount.AdminAccountsOverview();
+    }
+
+
+    private void DailyMenu()
+    {
+        DailyMenuGenerator.DisplayDailyMenu();
     }
 
     private void GetOrders()
@@ -118,7 +166,7 @@ public class Dashboard : Reservation
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works: WORKS
         if (reservations.Count == 0)
         {
-            Console.WriteLine("You have not reservated at this restaurant yet.");
+            Console.WriteLine("You have not booked at this restaurant yet.");
             return;
         }
     }

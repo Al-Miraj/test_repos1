@@ -140,7 +140,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
             }
 
         }
-        while (formatIsIncorrect || dateHasPassed);
+        while (formatIsIncorrect || dateHasPassed || dateIsMoreThanYearFromNow);
 
         return reservationDate;
     }
