@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+namespace Menus;
 
 public static class DrinksMenu
 {
     private static int selectedOption = 1;
 
-    private static List<Drinks> drinksMenu = new List<Drinks>();
+    private static List<Drinks> defaultMenu = LoadDrinksData();
 
     public static List<Drinks>? LoadDrinksData()
     {
@@ -26,12 +27,12 @@ public static class DrinksMenu
     public static void Display()
     {
         Console.CursorVisible = false;
-        drinksMenu = LoadDrinksData();
-        PrintInfo(GetDefaultMenu());
+        PrintInfo(defaultMenu);
 
         while (true)
         {
             Console.Clear();
+
             DisplayMenuOptions();
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
@@ -46,7 +47,6 @@ public static class DrinksMenu
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                if (selectedOption == 7) { return; }
                 HandleSelection();
             }
         }
@@ -97,33 +97,22 @@ public static class DrinksMenu
         switch (selectedOption)
         {
             case 1:
-                PrintInfo(GetDefaultMenu());
-                drinksMenu.Clear();
+                PrintInfo(defaultMenu);
                 break;
             case 2:
-                GetSoda();
-                PrintInfo(drinksMenu);
-                drinksMenu.Clear();
+                PrintInfo(GetCategory("Soda"));
                 break;
             case 3:
-                GetWine();
-                PrintInfo(drinksMenu);
-                drinksMenu.Clear();
+                PrintInfo(GetCategory("Wine"));
                 break;
             case 4:
-                GetWhiskey();
-                PrintInfo(drinksMenu);
-                drinksMenu.Clear();
+                PrintInfo(GetCategory("Whiskey"));
                 break;
             case 5:
-                GetCognac();
-                PrintInfo(drinksMenu);
-                drinksMenu.Clear();
+                PrintInfo(GetCategory("Cognac"));
                 break;
             case 6:
-                GetBeer();
-                PrintInfo(drinksMenu);
-                drinksMenu.Clear();
+                PrintInfo(GetCategory("Beer"));
                 break;
             case 7:
                 break;
@@ -141,7 +130,7 @@ public static class DrinksMenu
             Console.WriteLine($"Description: {drink.Description}");
             Console.WriteLine($"Price: {drink.Price}");
             Console.WriteLine($"Category: {drink.Category}");
-            Console.WriteLine($"Alcohol percentage: {drink.Alcohol}");
+            Console.WriteLine($"Alcohol percentage: {drink.Alcohol}%");
             Console.WriteLine();
 
             if (CurrentCategory != drink.Category)
@@ -159,121 +148,5 @@ public static class DrinksMenu
         }
     }
 
-    public static List<Drinks>? GetDefaultMenu()
-    {
-        var sodas = GetSoda(true);
-        var wine = GetWine(true);
-        var whiskey = GetWhiskey(true);
-        var cognac = GetCognac(true);
-        var beer = GetBeer(true);
-
-        List<Drinks> defaultMenu = new List<Drinks>();
-        if (sodas != null)
-        {
-            defaultMenu.AddRange(sodas);
-        }
-        if (wine != null)
-        {
-            defaultMenu.AddRange(wine);
-        }
-        if (whiskey != null)
-        {
-            defaultMenu.AddRange(whiskey);
-        }
-        if (cognac != null)
-        {
-            defaultMenu.AddRange(cognac);
-        }
-        if (beer != null)
-        {
-            defaultMenu.AddRange(beer);
-        }
-
-        return defaultMenu;
-    }
-
-    public static List<Drinks>? GetSoda(bool returnable = false)
-    {
-        var sodaDrinks = LoadDrinksData()?.FindAll(x => x.Category == "Soda");
-        if (sodaDrinks != null)
-        {
-            drinksMenu.AddRange(sodaDrinks);
-
-            if (returnable)
-            {
-                return sodaDrinks;
-            }
-
-            else
-            {
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-    public static List<Drinks>? GetWine(bool returnable = false)
-    {
-        var wineDrinks = LoadDrinksData()?.FindAll(x => x.Category == "Wine");
-        if (wineDrinks != null)
-        {
-            drinksMenu.AddRange(wineDrinks);
-
-            if (returnable)
-            {
-                return wineDrinks;
-            }
-        }
-
-        return null;
-    }
-
-    public static List<Drinks>? GetWhiskey(bool returnable = false)
-    {
-        var whiskeyDrinks = LoadDrinksData()?.FindAll(x => x.Category == "Whiskey");
-        if (whiskeyDrinks != null)
-        {
-            drinksMenu.AddRange(whiskeyDrinks);
-
-            if (returnable)
-            {
-                return whiskeyDrinks;
-            }
-        }
-
-        return null;
-    }
-
-    public static List<Drinks>? GetCognac(bool returnable = false)
-    {
-        var cognacDrinks = LoadDrinksData()?.FindAll(x => x.Category == "Cognac");
-        if (cognacDrinks != null)
-        {
-            drinksMenu.AddRange(cognacDrinks);
-
-            if (returnable)
-            {
-                return cognacDrinks;
-            }
-        }
-
-        return null;
-    }
-
-    public static List<Drinks>? GetBeer(bool returnable = false)
-    {
-        var beerDrinks = LoadDrinksData()?.FindAll(x => x.Category == "Beer");
-        if (beerDrinks != null)
-        {
-            drinksMenu.AddRange(beerDrinks);
-
-            if (returnable)
-            {
-                return beerDrinks;
-            }
-        }
-
-        return null;
-    }
+    public static List<Drinks> GetCategory(string type) => defaultMenu.FindAll(x => x.Category == type);
 }

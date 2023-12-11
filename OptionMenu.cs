@@ -1,4 +1,4 @@
-﻿
+﻿using Menus;
 public static class OptionMenu // Made class static so LoginSystem and Dashboard files don't rely on instances
 {
     public static bool IsUserLoggedIn = false;
@@ -36,7 +36,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     AboutUs.travel();
                     break;
                 case 3:
-                    FoodMenu.Display(); 
+                    HolidayMenu.getHoliday(DateTime.Now.Date);
                     break;
                 case 4:
                     DrinksMenu.Display();

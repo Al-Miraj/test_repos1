@@ -58,7 +58,7 @@ class Program
         //Reservation reservationx = rs[0];
         //Console.WriteLine(reservationx.Date);
 
-        OptionMenu.RunMenu();
+        FoodMenuNavigator.Display();
 
 
 
