@@ -1,8 +1,8 @@
-﻿public static class MenuSelector
+public static class MenuSelector
 {
     private static string Cursor = " >";
 
-    public static int RunMenuNavigator(List<string> options)
+    public static int RunMenuNavigator<T>(List<T> options)
     {
         int selectedOption = 0;
         int x = Console.CursorLeft;

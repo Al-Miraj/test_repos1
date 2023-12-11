@@ -26,6 +26,11 @@ public sealed class AdminAccount : Account
     {
         return Restaurant.Accounts;
     }
+
+    public List<string>? GetFeedback()
+    {
+        return null;
+    }
 }
 
 

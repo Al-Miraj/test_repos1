@@ -6,12 +6,17 @@ public static class Restaurant
     public static string TablesJsonFileName = "Tables.json";
     public static string ReservationsXmlFileName = "Reservations.xml";
     public static string AccountsXmlFileName = "Accounts.xml";
+    public static string FeedbackXmlFileName = "Feedback.xml";
     public static List<Account> Accounts = InitializeAccounts();
     public static List<AdminAccount> AdminAccounts { get { return GetAdminAccounts(); } }
     public static List<CustomerAccount> CustomerAccounts { get { return GetCustomerAccounts(); } }
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
+    /*public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers*/
+
+    // i.e first row has 4, the last has 2 tables in it
+    public static List<int> NumOfTablesPerRow = new List<int>() { 4, 4, 0, 5, 2 };
 
 
     private static List<Account> InitializeAccounts()
@@ -95,18 +100,18 @@ public static class Restaurant
                 new Table(1, (1, 1), 2, 7.50, false),
                 new Table(2, (2, 1), 2, 7.50, false),
                 new Table(3, (3, 1), 2, 7.50, false),
-                new Table(4, (1, 2), 2, 7.50, false),
-                new Table(5, (2, 2), 2, 7.50, false),
-                new Table(6, (3, 2), 2, 7.50, false),
-                new Table(7, (1, 3), 2, 7.50, false),
-                new Table(8, (2, 3), 2, 7.50, false),
-                new Table(9, (3, 3), 4, 10.0, false),
-                new Table(10, (1, 4), 4, 10.0, false),
-                new Table(11, (2, 4), 4, 10.0, false),
-                new Table(12, (3, 4), 4, 10.0, false),
-                new Table(13, (1, 5), 4, 10.0, false),
-                new Table(14, (2, 5), 6, 15.0, false),
-                new Table(15, (3, 5), 6, 15.0, false),
+                new Table(4, (4, 1), 2, 7.50, false),
+                new Table(5, (1, 2), 2, 7.50, false),
+                new Table(6, (2, 2), 2, 7.50, false),
+                new Table(7, (3, 2), 2, 7.50, false),
+                new Table(8, (4, 2), 2, 7.50, false),
+                new Table(9, (1, 3), 4, 10.0, false),
+                new Table(10, (2, 3), 4, 10.0, false),
+                new Table(11, (3, 3), 4, 10.0, false),
+                new Table(12, (4, 3), 4, 10.0, false),
+                new Table(13, (5, 3), 4, 10.0, false),
+                new Table(14, (2, 4), 6, 15.0, false),
+                new Table(15, (4, 4), 6, 15.0, false),
             };
             JsonFileHandler.WriteToFile(tables, TablesJsonFileName);
         }
@@ -125,15 +130,30 @@ public static class Restaurant
         {
             XmlFileHandler.WriteToFile(reservations, ReservationsXmlFileName);
         }
-        foreach(Reservation reservation in reservations)
+        foreach (Reservation reservation in reservations)
         {
             Account account = Accounts.FirstOrDefault(account => reservation.CustomerID == account.ID);
-            if ( account is CustomerAccount cAccount)
+            if (account is CustomerAccount cAccount)
             {
                 cAccount.Reservations.Add(reservation);
             }
         }
         return reservations;
+    }
+
+    private static List<Feedback> InitializeFeedback()
+    {
+        List<Feedback> feedback = new List<Feedback>();
+
+        if (File.Exists(FeedbackXmlFileName))
+        {
+            feedback.AddRange(XmlFileHandler.ReadFromFile<Feedback>(FeedbackXmlFileName));
+        }
+        else
+        {
+            XmlFileHandler.WriteToFile(feedback, FeedbackXmlFileName);
+        }
+        return feedback;
     }
 
     public static void UpdateRestaurantFiles()
@@ -167,10 +187,10 @@ public static class Restaurant
         Console.WriteLine("-------------------------------\n");
         Console.WriteLine("Deals that we are currently offering!\n");
 
-        if (Deals.Count <= 0) 
-        { 
-            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!"); 
-            return;  
+        if (Deals.Count <= 0)
+        {
+            Console.WriteLine("We are currently offering 0 Deals. Come back later or contact us for more information!");
+            return;
         }
         else
         {
