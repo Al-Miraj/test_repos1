@@ -13,6 +13,9 @@ public static class Restaurant
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
 
+    // i.e first row has 4, the last has 2 tables in it
+    public static List<int> NumOfTablesPerRow = new List<int>() { 4, 4, 0, 5, 2 };
+
 
     private static List<Account> InitializeAccounts()
     {
@@ -95,18 +98,18 @@ public static class Restaurant
                 new Table(1, (1, 1), 2, 7.50, false),
                 new Table(2, (2, 1), 2, 7.50, false),
                 new Table(3, (3, 1), 2, 7.50, false),
-                new Table(4, (1, 2), 2, 7.50, false),
-                new Table(5, (2, 2), 2, 7.50, false),
-                new Table(6, (3, 2), 2, 7.50, false),
-                new Table(7, (1, 3), 2, 7.50, false),
-                new Table(8, (2, 3), 2, 7.50, false),
-                new Table(9, (3, 3), 4, 10.0, false),
-                new Table(10, (1, 4), 4, 10.0, false),
-                new Table(11, (2, 4), 4, 10.0, false),
-                new Table(12, (3, 4), 4, 10.0, false),
-                new Table(13, (1, 5), 4, 10.0, false),
-                new Table(14, (2, 5), 6, 15.0, false),
-                new Table(15, (3, 5), 6, 15.0, false),
+                new Table(4, (4, 1), 2, 7.50, false),
+                new Table(5, (1, 2), 2, 7.50, false),
+                new Table(6, (2, 2), 2, 7.50, false),
+                new Table(7, (3, 2), 2, 7.50, false),
+                new Table(8, (4, 2), 2, 7.50, false),
+                new Table(9, (1, 3), 4, 10.0, false),
+                new Table(10, (2, 3), 4, 10.0, false),
+                new Table(11, (3, 3), 4, 10.0, false),
+                new Table(12, (4, 3), 4, 10.0, false),
+                new Table(13, (5, 3), 4, 10.0, false),
+                new Table(14, (2, 4), 6, 15.0, false),
+                new Table(15, (4, 4), 6, 15.0, false),
             };
             JsonFileHandler.WriteToFile(tables, TablesJsonFileName);
         }
