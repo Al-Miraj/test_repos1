@@ -1,21 +1,18 @@
-﻿
-
-
-
-
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Reflection.Metadata.Ecma335;
 
 public static class ReservationManagement
 {
     public static Account CurrentUser { get; set; } = Restaurant.AdminAccounts[0];
     private static bool IsAdmin { get { return CurrentUser is AdminAccount; } }
-    private static List<Reservation> ReservationsOfUser 
+    private static bool IsSuperAdmin { get { return CurrentUser is SuperAdminAccount; } }
+
+    private static List<Reservation> ReservationsOfUser
     { get { return GetReservationsOfUser(); } }
 
 
     public static void Display()
     {
-        string accountType = IsAdmin ? "Admin" : "Customer";
+        string accountType = IsAdmin || IsSuperAdmin ? "Admin" : "Customer";
         List<string> RMOptions = new List<string>() // RM == ReservationManager
         {
             "View Reservations",
@@ -68,7 +65,7 @@ public static class ReservationManagement
     private static List<Reservation> GetReservationsOfUser()
     {
         List<Reservation> reservations;
-        if (IsAdmin)
+        if (IsAdmin || IsSuperAdmin)
         {
             reservations = Restaurant.Reservations;
         }
@@ -249,7 +246,7 @@ public static class ReservationManagement
         Console.WriteLine("Search Reservation\n");
         if (ReservationsIsEmpty(ReservationsOfUser)) { return; }
         Console.WriteLine("Search by:");
-        int selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Reservation number", "Date"});
+        int selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Reservation number", "Date" });
         if (selectedOption == 0)
         {
             SearchReservationByNumber();

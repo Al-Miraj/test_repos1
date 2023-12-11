@@ -28,12 +28,28 @@ public static class Restaurant
         }
         else
         {
+            // There is always 1 default super admin account
+            SuperAdminAccount superAdmin = new SuperAdminAccount(1, "Super Admin", "superadmin@work.com", "SuperAdmin-123");
             // there is always 1 default admin account
-            AdminAccount admin = new AdminAccount(1, "Admin", "admin@work.com", "Admin-123");
-            accounts = new List<Account>() { admin };
+            AdminAccount admin = new AdminAccount(2, "Admin", "admin@work.com", "Admin-123");
+
+            accounts = new List<Account>() { superAdmin, admin };
             XmlFileHandler.WriteToFile(accounts, AccountsXmlFileName);
         }
         return accounts;
+    }
+
+    public static List<SuperAdminAccount> GetSuperAdminAccount()
+    {
+        List<SuperAdminAccount> adminAccounts = new List<SuperAdminAccount>();
+        foreach (Account account in Accounts)
+        {
+            if (account is SuperAdminAccount admin)
+            {
+                adminAccounts.Add(admin);
+            }
+        }
+        return adminAccounts;
     }
 
     public static List<AdminAccount> GetAdminAccounts()

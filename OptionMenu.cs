@@ -1,4 +1,4 @@
-﻿using Menus;
+﻿
 public static class OptionMenu // Made class static so LoginSystem and Dashboard files don't rely on instances
 {
     public static bool IsUserLoggedIn = false;
@@ -7,6 +7,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
 
     public static void RunMenu()
     {
+
         List<string> menuOptions = new List<string>()
         {
             "Reservation",
@@ -21,6 +22,16 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
         while (true)
         {
             Console.Clear();
+
+
+            // Inside the while loop so that the name gets displayed each time the options menu is shown
+            Console.WriteLine("    __            ____       ___              ______                            _     ");
+            Console.WriteLine("   / /   ___     / __ \\___  / (_)_______     / ____/________ _____  _________ _(_)____");
+            Console.WriteLine("  / /   / _ \\   / / / / _ \\/ / / ___/ _ \\   / /_  / ___/ __ `/ __ \\/ ___/ __ `/ / ___/");
+            Console.WriteLine(" / /___/  __/  / /_/ /  __/ / / /__/  __/  / __/ / /  / /_/ / / / / /__/ /_/ / (__  ) ");
+            Console.WriteLine("/_____/\\___/  /_____/\\___/_/_/\\___/\\___/  /_/   /_/   \\__,_/_/ /_/\\___/\\__,_/_/____/ \n ");
+
+
             int selectedOption = MenuSelector.RunMenuNavigator(menuOptions);
             Console.Clear();
             switch (selectedOption)
@@ -36,7 +47,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     AboutUs.travel();
                     break;
                 case 3:
-                    HolidayMenu.getHoliday(DateTime.Now.Date);
+                    FoodMenu.Display();
                     break;
                 case 4:
                     DrinksMenu.Display();
