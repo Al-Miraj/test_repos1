@@ -1,5 +1,4 @@
-﻿using Menus;
-
+﻿
 //should be called first
 public static class FoodMenuNavigator
 {

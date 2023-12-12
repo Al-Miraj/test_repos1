@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 using System.Threading;
+using Menus;
 
 public static class FoodMenu
 {
@@ -167,9 +168,9 @@ public static class FoodMenu
                 PrintInfo(GetDinnerMenu(), "Dinner");
                 break;
             case 3:
-                string timeSlot = SortFoodMenu.cursoroptionTimeSlot();
+                string timeSlot = FilterFoodMenu.cursoroptionTimeSlot();
                 if (timeSlot == "") { break; }
-                PrintInfo(SortFoodMenu.cursoroptionMenu(), timeSlot);
+                PrintInfo(FilterFoodMenu.cursoroptionMenu(), timeSlot);
                 //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
                 break;
             case 4:

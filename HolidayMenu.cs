@@ -3,24 +3,46 @@
 public static class HolidayMenu
 {
     private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
-    {
-        // International holidays
-        { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
-        { new DateTime(DateTime.Now.Year, 12, 25), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 12, 26), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 12, 27), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 12, 28), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 12, 29), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 12, 30), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 12, 31), "Christmas" },
-        { new DateTime(DateTime.Now.Year, 10, 31), "Halloween" },
-        // Nederlandse feestdagen
-        { new DateTime(DateTime.Now.Year, 4, 27), "Koningsdag" },
-        //{ new DateTime(DateTime.Now.Year, 5, 5), "Bevrijdingsdag" },
-        { new DateTime(DateTime.Now.Year, 12, 5), "Sinterklaas" },
-        { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
+        {
+            // International holidays
+            { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
+            { new DateTime(DateTime.Now.Year, 12, 25), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 12, 26), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 12, 27), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 12, 28), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 12, 29), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 12, 30), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 12, 31), "Christmas" },
+            { new DateTime(DateTime.Now.Year, 10, 31), "Halloween" },
 
-    };
+            // Nederlandse feestdagen
+
+            { new DateTime(DateTime.Now.Year, 4, 27), "Koningsdag" },
+            //{ new DateTime(DateTime.Now.Year, 5, 5), "Bevrijdingsdag" },
+            { new DateTime(DateTime.Now.Year, 12, 5), "Sinterklaas" },
+            { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
+        };
+
+    public static void DisplayAllHolidays()
+    {
+        bool christmasDisplayed = false;
+
+        foreach (var holiday in HolidayMenu.holidays)
+        {
+            if (holiday.Value == "Christmas")
+            {
+                if (!christmasDisplayed)
+                {
+                    Console.WriteLine($"{holiday.Value} - Date: 25-12-2023 to 31-12-2023");
+                    christmasDisplayed = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"{holiday.Value} - Date: {holiday.Key.ToShortDateString()}");
+            }
+        }
+    }
 
     private static List<DateTime> keys = new List<DateTime>();
 
@@ -29,16 +51,16 @@ public static class HolidayMenu
 
     private static void addKeys() => keys.AddRange(holidays.Keys);
 
-    public static void getHoliday()
+    public static bool CheckDate(DateTime date) => holidays.ContainsKey(date) ? true : false;
+
+    public static void getHoliday(DateTime Date)
     {
         addKeys();
-        //DateTime today = DateTime.Now.Date;
-        DateTime today = new DateTime(2023, 12, 25);
         bool foundHoliday = false;
 
         foreach (DateTime key in holidays.Keys)
         {
-            if (key == today)
+            if (key == Date)
             {
                 foundHoliday = true;
                 Console.WriteLine($"today is {holidays[key]}");
@@ -97,9 +119,7 @@ public static class HolidayMenu
     public static void getHolidayMenu(string holiday)
     {
         List<HolidayMenuItem> holidayMenu = new List<HolidayMenuItem>();
-        Console.WriteLine($"{rawMenu.Count} menu");
         holidayMenu = rawMenu.FindAll(x => x.Holiday == holiday);
-        Console.WriteLine($"{holidayMenu.Count} menu");
         finishedHolidayMenu.AddRange(holidayMenu);
     }
 
