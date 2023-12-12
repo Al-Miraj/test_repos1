@@ -99,7 +99,9 @@ public class Dashboard
         // Retrieve reserved tables for the specified date and timeslot
         List<int> reservedTableNumbers = ReservationSystem.GetReservatedTablesAtDateAndTimeslot(overviewDate, overviewTimeslot);
 
+        Console.Clear();
         // Display the visual map of the restaurant with reserved/available tables
+        ReservationSystem.PrintBarDisplay();
         ReservationSystem.PrintTablesMapClean((1, 1), reservedTableNumbers, 0);
 
         Console.WriteLine("\n[Press any key to return to your dashboard.]");
