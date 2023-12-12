@@ -20,6 +20,7 @@ public static class ReservationManagement
             "Update Reservation by number",
             "Cancel Reservation by number",
             "Search Reservations",
+            "View Table Availablity",
             $"Back to {accountType} Dashboard"
         };
         while (true)
@@ -50,6 +51,9 @@ public static class ReservationManagement
                     SearchReservations();
                     break;
                 case 5:
+                    ViewTableAvailability();
+                    break;
+                case 6:
                     return;
                 default:
                     Console.WriteLine("Invalid choice. Please select a valid option.");
@@ -60,6 +64,27 @@ public static class ReservationManagement
             Console.WriteLine("\n[Press any key to return to the Reservation Manager menu.]");
             Console.ReadKey();
         }
+    }
+
+
+    private static void ViewTableAvailability()
+    {
+        Console.Clear();
+        Console.WriteLine("Reservation Overview\n");
+
+        Console.Write("Enter the date that you want to see the table availability of (dd-mm-yyyy): ");
+        DateOnly overviewDate = ReservationSystem.GetReservationDate(); // Use ReservationSystem.GetReservationDate
+
+        Console.WriteLine("Choose timeslot that you want to see the table availability of: ");
+        string overviewTimeslot = ReservationSystem.GetTimeslot(); // Use ReservationSystem.GetTimeslot
+
+        // Retrieve reserved tables for the specified date and timeslot
+        List<int> reservedTableNumbers = ReservationSystem.GetReservatedTablesAtDateAndTimeslot(overviewDate, overviewTimeslot);
+
+        Console.Clear();
+        // Display the visual map of the restaurant with reserved/available tables
+        ReservationSystem.PrintBarDisplay();
+        ReservationSystem.PrintTablesMapClean((1, 1), reservedTableNumbers, 0);
     }
 
     private static List<Reservation> GetReservationsOfUser()
