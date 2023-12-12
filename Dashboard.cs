@@ -6,7 +6,7 @@
     {
         CurrentUser = account;
     }
-//next
+    //next
     public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
@@ -90,18 +90,24 @@
         Console.Clear();
         Console.WriteLine("Reservation Overview\n");
 
-        // Example values, replace these with appropriate values for your application
-        (int, int) currentTableCoordinate = (1, 1);
-        List<int> reservatedTableNumbers = new List<int>(); // Replace with actual values
-        int numberOfPeople = 4; // Replace with actual value
+        Console.Write("Enter the date for reservation overview (dd-mm-yyyy): ");
+        DateOnly overviewDate = ReservationSystem.GetReservationDate(); // Use ReservationSystem.GetReservationDate
+
+        Console.WriteLine("Choose timeslot for reservation overview:");
+        string overviewTimeslot = ReservationSystem.GetTimeslot(); // Use ReservationSystem.GetTimeslot
+
+        // Retrieve reserved tables for the specified date and timeslot
+        List<int> reservedTableNumbers = ReservationSystem.GetReservatedTablesAtDateAndTimeslot(overviewDate, overviewTimeslot);
 
         // Display the visual map of the restaurant with reserved/available tables
-        ReservationSystem.PrintTablesMapClean(currentTableCoordinate, reservatedTableNumbers, numberOfPeople);
+        ReservationSystem.PrintTablesMapClean((1, 1), reservedTableNumbers, 0);
 
         Console.WriteLine("\n[Press any key to return to your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
     }
+
+
 
 }
 
