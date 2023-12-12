@@ -19,13 +19,11 @@ public class Dashboard : Reservation
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
 
-        List<string> dashboardOptions = new List<string>()
+        List<string?> dashboardOptions = new List<string?>()
         { isSuperAdmin ? "Reservation Management" : (isAdmin ? "Reservation Management" : "Order History"), // todo: ipv order history misschien view profile details ofzo?   : ja, in reservation management heb je al order history (view reservations)
           isSuperAdmin ? "Customer Management" : (isAdmin ? "Customer Management" : "Reservation Manager"),
+          isSuperAdmin ? "Admin Management" : (isAdmin ? null : "Daily Menu"),
           isSuperAdmin ? "Read Feedback" : (isAdmin ? "Read Feedback" : "Send Feedback"),
-          isSuperAdmin ? "Add admin" : (isAdmin ? null : "Daily Menu"),
-          isSuperAdmin ? "Remove admin" : null,
-          isSuperAdmin ? "Admin Overview" : null,
           "Exit to main menu",
           "Log out"
         };
@@ -48,28 +46,16 @@ public class Dashboard : Reservation
                 { ReservationManager(); }
                 break;
             case 2:
+                if (isSuperAdmin)
+                { SuperAdminAccount.SuperAdminStart(); } // Add this case for regular users
+                else
+                { DailyMenu(); }
+                break;
+            case 3:
                 if (isAdmin || isSuperAdmin)
                 { Console.Clear(); ReadFeedback(); }
                 else
                 { Console.Clear(); GetOrders(); }
-                break;
-            case 3:
-                if (isSuperAdmin)
-                { AddAdmin(); } // Add this case for regular users
-                else
-                { DailyMenu(); }
-                break;
-            case 4:
-                if (isSuperAdmin)
-                { RemoveAdmin(); }
-                else
-                { OptionMenu.RunMenu(); }
-                break;
-            case 5:
-                if (isSuperAdmin)
-                { AdminOverview(); }
-                else
-                { OptionMenu.RunMenu(); }
                 break;
             case 6:
                 OptionMenu.RunMenu(); // loop warning
@@ -91,22 +77,6 @@ public class Dashboard : Reservation
     //    DailyMenuGenerator.DisplayDailyMenu();
     //}
 
-    private void AddAdmin()
-    {
-        SuperAdminAccount.SuperAdminCanAddAdmin();
-    }
-
-    private void RemoveAdmin()
-    {
-        SuperAdminAccount.SuperAdminCanRemoveAdmin();
-    }
-
-    private void AdminOverview()
-    {
-        SuperAdminAccount.AdminAccountsOverview();
-    }
-
-
     private void DailyMenu()
     {
         DailyMenuGenerator.DisplayDailyMenu();
@@ -115,7 +85,7 @@ public class Dashboard : Reservation
     private void GetOrders()
     {
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
-        List<string> options = reservations.Select(r => GetReservationInfo(r)).ToList();
+        List<string> options = reservations.Select(GetReservationInfo).ToList();
         options.Add("Exit");
         if (reservations != null) { selectedOption = MenuSelector.RunMenuNavigator(options); }
         else { return; }

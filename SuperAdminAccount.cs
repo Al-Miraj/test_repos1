@@ -54,7 +54,7 @@ public sealed class SuperAdminAccount : Account
     }
     public static string AccountsXmlFileName = "Accounts.xml";
 
-    public static void SuperAdminCanAddAdmin()
+    public static void AddAdmin()
     {
         // Call existing methods to get name, email, and password
         string name = LoginSystem.GetAccountName();
@@ -80,7 +80,7 @@ public sealed class SuperAdminAccount : Account
         //return adminAccounts;
     }
 
-    public static void SuperAdminCanRemoveAdmin()
+    public static void RemoveAdmin()
     {
         // Retrieve all accounts from the accounts file
         List<Account> allAccounts = XmlFileHandler.ReadFromFile<Account>(AccountsXmlFileName);
@@ -146,6 +146,24 @@ public sealed class SuperAdminAccount : Account
         foreach (var adminAccount in adminAccounts)
         {
             Console.WriteLine(adminAccount);
+        }
+    }
+
+    public static void SuperAdminStart()
+    {
+        Console.Clear();
+        List<string> options = new()
+        {
+            "Add Admin",
+            "Remove Admin",
+            "Admin Overview"
+        };
+        int option = MenuSelector.RunMenuNavigator(options);
+        switch (option)
+        {
+            case 0: AddAdmin(); break;
+            case 1: RemoveAdmin(); break;
+            case 2: AdminAccountsOverview(); break;
         }
     }
 }
