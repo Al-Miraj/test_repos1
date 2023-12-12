@@ -8,6 +8,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
     public static void RunSystem()
     {
+        
         Reservate(false);
     }
 
@@ -159,22 +160,54 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return timeslots[selectedOption];
     }
 
-    public static List<int> GetReservatedTablesAtDateAndTimeslot(DateOnly date, string timeslot) // todo: improve method + var name
+    public static List<int> GetAvailability(DateOnly date, string timeslot) // todo: improve method + var name
     {
         // find all reservations made at the date and time of the new reservation
         // select all the tables numbers those reservation were made at
         // convert IEnumerable to List
-        List<int> reservatedTablesAtDateAndTimeslot = Restaurant.Reservations
+        List<int> availability = Restaurant.Reservations
             .FindAll(reservation => reservation.Date == date && reservation.TimeSlot == timeslot)
             .Select(reservation => reservation.SelectedTable.TableNumber)
             .ToList();
-        return reservatedTablesAtDateAndTimeslot;
+        return availability;
+    }
 
+    public static void WaitingListOffer()
+    {
+        Console.Clear();
+        Console.WriteLine("Would you like to receive an email in case a table becomes available?");
+        List<string> options = new() { "Yes", "No, thanks" };
+        int option = MenuSelector.RunMenuNavigator(options);
+        if (option == 1)
+            return;
+        Console.Clear();
+        if (OptionMenu.IsUserLoggedIn)
+        { 
+            Console.WriteLine($"An email will be send to {OptionMenu.CurrentUser!.Email} if a table is free"); 
+            return; 
+        }
+        else
+        {
+            Console.WriteLine("Please enter your email or sign in.");
+            options = new() { "Enter email", "Create new account or login" };
+            option = MenuSelector.RunMenuNavigator(options);
+            if (option == 1)
+                LoginSystem.Start();
+            else
+            {
+                string email = LoginSystem.GetAccountEmail();
+                Console.WriteLine("Thank you for using the waiting list!");
+                // maybe add function to send email when the Reservated tables at the right date and timeslot are below 15;
+                return;
+            }
+        }
+            
+            
     }
 
     public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
-        List<int> reservatedTablesNumbers = GetReservatedTablesAtDateAndTimeslot(date, timeslot);
+        List<int> reservatedTablesNumbers = new() { 1,1,1,1,1,1,1} /*GetAvailability(date, timeslot);*/ 
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
 
@@ -191,6 +224,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
             if (reservatedTablesNumbers.Count >= 15)
             {
                 Console.WriteLine("Sorry! We are booked!");
+                WaitingListOffer();
                 break;
             }
 
