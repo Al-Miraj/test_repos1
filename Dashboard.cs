@@ -30,6 +30,8 @@ public class Dashboard : Reservation
           "Log out"
         };
 
+        dashboardOptions.RemoveAll(option => option == null);
+
         int selectedOption = MenuSelector.RunMenuNavigator(dashboardOptions);
         switch (selectedOption)
         {
