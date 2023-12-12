@@ -3,8 +3,8 @@
 public static class ReservationManagement
 {
     public static Account CurrentUser { get; set; } = Restaurant.AdminAccounts[0];
-    private static bool IsAdmin { get { return CurrentUser is AdminAccount; } }
-    private static bool IsSuperAdmin { get { return CurrentUser is SuperAdminAccount; } }
+    private static bool IsAdmin => CurrentUser is AdminAccount;
+    private static bool IsSuperAdmin => CurrentUser is SuperAdminAccount;
 
     private static List<Reservation> ReservationsOfUser
     { get { return GetReservationsOfUser(); } }
@@ -79,7 +79,7 @@ public static class ReservationManagement
         string overviewTimeslot = ReservationSystem.GetTimeslot(); // Use ReservationSystem.GetTimeslot
 
         // Retrieve reserved tables for the specified date and timeslot
-        List<int> reservedTableNumbers = ReservationSystem.GetReservatedTablesAtDateAndTimeslot(overviewDate, overviewTimeslot);
+        List<int> reservedTableNumbers = ReservationSystem.GetAvailability(overviewDate, overviewTimeslot);
 
         Console.Clear();
         // Display the visual map of the restaurant with reserved/available tables
