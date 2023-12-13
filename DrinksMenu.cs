@@ -7,27 +7,13 @@ public static class DrinksMenu
 
     private static List<Drinks> defaultMenu = LoadDrinksData();
 
-    public static List<Drinks>? LoadDrinksData()
-    {
-        try
-        {
-            using StreamReader reader = new StreamReader("Drinks.json");
-            string json = reader.ReadToEnd();
-            var items = JsonConvert.DeserializeObject<List<Drinks>>(json);
-            return items;
-        }
-        catch (JsonReaderException)
-        { return null; }
-        catch (FileNotFoundException)
-        { return null; }
-        catch (UnauthorizedAccessException)
-        { return null; }
-    }
+    public static List<Drinks>? LoadDrinksData() => JsonFileHandler.ReadFromFile<Drinks>("Drinks.json");
+    
 
     public static void Display()
     {
         Console.CursorVisible = false;
-        PrintInfo(defaultMenu);
+        //PrintInfo(defaultMenu);
 
         while (true)
         {
@@ -126,19 +112,21 @@ public static class DrinksMenu
 
         foreach (var drink in drinks)
         {
+
+            if (CurrentCategory != drink.Category)
+            {
+                CurrentCategory = drink.Category;
+                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+
             Console.WriteLine($"Name: {drink.Name}");
             Console.WriteLine($"Description: {drink.Description}");
             Console.WriteLine($"Price: {drink.Price}");
             Console.WriteLine($"Category: {drink.Category}");
             Console.WriteLine($"Alcohol percentage: {drink.Alcohol}%");
             Console.WriteLine();
-
-            if (CurrentCategory != drink.Category)
-            {
-                Console.WriteLine("------------------------------------------------------------------------------------");
-                Console.WriteLine();
-                CurrentCategory = drink.Category;
-            }
         }
 
         if (KeyContinue)

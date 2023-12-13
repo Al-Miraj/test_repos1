@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Menus
 {
@@ -7,7 +8,7 @@ namespace Menus
         private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
         {
             // International holidays
-            { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
+            //{ new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
             { new DateTime(DateTime.Now.Year, 12, 25), "Christmas" },
             { new DateTime(DateTime.Now.Year, 12, 26), "Christmas" },
             { new DateTime(DateTime.Now.Year, 12, 27), "Christmas" },
@@ -55,27 +56,53 @@ namespace Menus
 
         public static bool CheckDate(DateTime date) => holidays.ContainsKey(date) ? true : false;
 
-        public static void getHoliday(DateTime Date)
+        public static void getHoliday(DateTime key)
         {
-            addKeys();
-            bool foundHoliday = false;
-
-            foreach (DateTime key in holidays.Keys)
+            if (CheckDate(key))
             {
-                if (key == Date)
-                {
-                    foundHoliday = true;
-                    Console.WriteLine($"today is {holidays[key]}");
-                    holidayNavigator(holidays[key]);
-                    PrintInfo();
-                    return;
-                }
+                addKeys();
+                finishedHolidayMenu.Clear();
+                Console.WriteLine($"today is {holidays[key]}");
+                holidayNavigator(holidays[key]);
+                PrintInfo();
+                return;
             }
 
-            if (!foundHoliday)
+            GetNearestMenu();
+        }
+
+        public static void GetNearestMenu()
+        {
+            Console.WriteLine("No holiday found for today.");
+            Console.WriteLine("Do you want to see the menu of the nearest holiday?");
+            int choice = MenuSelector.RunMenuNavigator(new List<string>() { "yes", "no" });
+            Console.WriteLine();
+
+            if (choice == 0) // 'yes' was selected
             {
-                Console.WriteLine("No holiday found for today.");
+                string closestHoliday = FindNextHoliday();
+                holidayNavigator(closestHoliday);
+                Console.WriteLine($"Displaying the menu of the nearest holiday: {closestHoliday}");
+                Console.WriteLine();
+                Thread.Sleep(250);
+                PrintInfo();
+                Console.WriteLine();
+                Console.WriteLine();
+                
             }
+            else // 'no' was selected
+            {
+                Console.WriteLine("press anything to continue");
+                Console.ReadKey();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Here are the holidays as reference: ");
+            Console.WriteLine();
+            DisplayAllHolidays();
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit");
+            Console.ReadKey();
         }
 
         public static void holidayNavigator(string holiday)
@@ -154,21 +181,22 @@ namespace Menus
             }
         }
 
-        public static List<HolidayMenuItem>? LoadFoodMenuData()
+        public static string FindNextHoliday()
         {
-            try
+            DateTime date = DateTime.Now.Date;
+            DateTime? holidayDate = keys.Where(x => x.Date > date).OrderBy(x => x.Date - date).FirstOrDefault();
+
+            if (holidayDate != null && holidays.ContainsKey(holidayDate.Value))
             {
-                using StreamReader reader = new StreamReader("HolidayItems.json");
-                string json = reader.ReadToEnd();
-                var items = JsonConvert.DeserializeObject<List<HolidayMenuItem>>(json);
-                return items;
+                return holidays[holidayDate.Value];
             }
-            catch (JsonReaderException)
-            { return null; }
-            catch (FileNotFoundException)
-            { return null; }
-            catch (UnauthorizedAccessException)
-            { return null; }
+            else
+            {
+                return "No upcoming holiday found";
+            }
         }
+
+        public static List<HolidayMenuItem>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<HolidayMenuItem>("HolidayItems.json");
+
     }
 }

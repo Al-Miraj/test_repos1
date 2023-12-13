@@ -25,22 +25,8 @@ namespace Menus
     };
 
         //raw data
-        public static List<MenuItem>? LoadFoodMenuData()
-        {
-            try
-            {
-                using StreamReader reader = new StreamReader("Items.json");
-                string json = reader.ReadToEnd();
-                var items = JsonConvert.DeserializeObject<List<MenuItem>>(json);
-                return items;
-            }
-            catch (JsonReaderException)
-            { return null; }
-            catch (FileNotFoundException)
-            { return null; }
-            catch (UnauthorizedAccessException)
-            { return null; }
-        }
+        public static List<MenuItem>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<MenuItem>("Items.json");
+        
         public static void Display()
         {
             Console.CursorVisible = false;

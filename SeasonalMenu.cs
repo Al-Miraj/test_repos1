@@ -103,25 +103,7 @@ namespace Menus
 
         }
 
-        public static List<SeasonalMenuItem>? LoadFoodMenuData()
-        {
-            try
-            {
-                using StreamReader reader = new StreamReader("SeasonalMenu.json");
-                string json = reader.ReadToEnd();
-                var items = JsonConvert.DeserializeObject<List<SeasonalMenuItem>>(json);
-                return items;
-            }
-            catch (JsonReaderException)
-            { return null; }
-            catch (FileNotFoundException)
-            { return null; }
-            catch (UnauthorizedAccessException)
-            { return null; }
-        }
-
-
-
+        public static List<SeasonalMenuItem>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<SeasonalMenuItem>("SeasonalMenu.json");
 
     }
 }
