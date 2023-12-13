@@ -67,7 +67,7 @@ class Program
 
 
 
-        OptionMenu.RunMenu();
+        LoginSystem.Start();
         //foreach (AdminAccount adminAcc in LoginSystem.AdminAccounts)
         //{
         //    Console.WriteLine(adminAcc.Name);

@@ -2,23 +2,13 @@
 using System.Security.Principal;
 
 
-public sealed class SuperAdminAccount : Account
+public sealed class SuperAdminAccount : AdminAccount // inherits form Admin
 {
     public SuperAdminAccount(int id, string name, string email, string password) : base(id, name, email, password)
     {
     }
 
     public SuperAdminAccount() : base() { }
-
-    public override List<Reservation> GetReservations()
-    {
-        return Restaurant.Reservations;
-    }
-
-    public List<Account>? GetAccounts()
-    {
-        return Restaurant.Accounts;
-    }
 
     //public static string AccountsXmlFileName = "Accounts.xml";
     //public static void SuperAdminCanAddAdmin(int id, string name, string email, string password)
@@ -35,23 +25,7 @@ public sealed class SuperAdminAccount : Account
     //    XmlFileHandler.WriteToFile(adminAccounts, AccountsXmlFileName);
     //}
 
-    public static string GetAccountPassword()
-    {
-        string password;
-        { LoginSystem.DisplayPasswordRequirements(); }
-        Console.WriteLine("Please enter the password: ");
-        while (true)
-        {
-            password = Console.ReadLine()!;
-            if (!LoginSystem.IsValidPassword(password))
-            {
-                Console.WriteLine("Please enter a valid password.");
-                continue;
-            }
-            break;
-        }
-        return password;
-    }
+    
     public static string AccountsXmlFileName = "Accounts.xml";
 
     public static void AddAdmin()
@@ -59,7 +33,7 @@ public sealed class SuperAdminAccount : Account
         // Call existing methods to get name, email, and password
         string name = LoginSystem.GetAccountName();
         string email = LoginSystem.GetAccountEmail();
-        string password = GetAccountPassword();
+        string password = LoginSystem.GetAccountPassword(true);
 
 
         // Retrieve existing admin accounts

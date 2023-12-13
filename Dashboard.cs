@@ -21,7 +21,7 @@ public class Dashboard : Reservation
 
         List<string?> dashboardOptions = new List<string?>()
         { isSuperAdmin ? "Reservation Management" : (isAdmin ? "Reservation Management" : "Order History"), // todo: ipv order history misschien view profile details ofzo?   : ja, in reservation management heb je al order history (view reservations)
-          isSuperAdmin ? "Customer Management" : (isAdmin ? "Customer Management" : "Reservation Manager"),
+          isSuperAdmin ? "Customer Management" : (isAdmin ? "Customer Management" : "Reservation Manager"), 
           isSuperAdmin ? "Admin Management" : (isAdmin ? null : "Daily Menu"),
           isSuperAdmin ? "Read Feedback" : (isAdmin ? "Read Feedback" : "Send Feedback"),
           "Exit to main menu",
@@ -57,10 +57,10 @@ public class Dashboard : Reservation
                 else
                 { Console.Clear(); GetOrders(); }
                 break;
-            case 6:
+            case 4:
                 OptionMenu.RunMenu(); // loop warning
                 break;
-            case 7:
+            case 5:
                 LoginSystem.Logout();
                 return;
             default:
