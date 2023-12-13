@@ -2,23 +2,13 @@
 using System.Security.Principal;
 
 
-public sealed class SuperAdminAccount : Account
+public sealed class SuperAdminAccount : AdminAccount // inherits form Admin
 {
     public SuperAdminAccount(int id, string name, string email, string password) : base(id, name, email, password)
     {
     }
 
     public SuperAdminAccount() : base() { }
-
-    public override List<Reservation> GetReservations()
-    {
-        return Restaurant.Reservations;
-    }
-
-    public List<Account>? GetAccounts()
-    {
-        return Restaurant.Accounts;
-    }
 
     //public static string AccountsXmlFileName = "Accounts.xml";
     //public static void SuperAdminCanAddAdmin(int id, string name, string email, string password)
@@ -35,31 +25,15 @@ public sealed class SuperAdminAccount : Account
     //    XmlFileHandler.WriteToFile(adminAccounts, AccountsXmlFileName);
     //}
 
-    public static string GetAccountPassword()
-    {
-        string password;
-        { LoginSystem.DisplayPasswordRequirements(); }
-        Console.WriteLine("Please enter the password: ");
-        while (true)
-        {
-            password = Console.ReadLine()!;
-            if (!LoginSystem.IsValidPassword(password))
-            {
-                Console.WriteLine("Please enter a valid password.");
-                continue;
-            }
-            break;
-        }
-        return password;
-    }
+    
     public static string AccountsXmlFileName = "Accounts.xml";
 
-    public static void SuperAdminCanAddAdmin()
+    public static void AddAdmin()
     {
         // Call existing methods to get name, email, and password
         string name = LoginSystem.GetAccountName();
         string email = LoginSystem.GetAccountEmail();
-        string password = GetAccountPassword();
+        string password = LoginSystem.GetAccountPassword(true);
 
 
         // Retrieve existing admin accounts
@@ -80,7 +54,7 @@ public sealed class SuperAdminAccount : Account
         //return adminAccounts;
     }
 
-    public static void SuperAdminCanRemoveAdmin()
+    public static void RemoveAdmin()
     {
         // Retrieve all accounts from the accounts file
         List<Account> allAccounts = XmlFileHandler.ReadFromFile<Account>(AccountsXmlFileName);
@@ -146,6 +120,24 @@ public sealed class SuperAdminAccount : Account
         foreach (var adminAccount in adminAccounts)
         {
             Console.WriteLine(adminAccount);
+        }
+    }
+
+    public static void SuperAdminStart()
+    {
+        Console.Clear();
+        List<string> options = new()
+        {
+            "Add Admin",
+            "Remove Admin",
+            "Admin Overview"
+        };
+        int option = MenuSelector.RunMenuNavigator(options);
+        switch (option)
+        {
+            case 0: AddAdmin(); break;
+            case 1: RemoveAdmin(); break;
+            case 2: AdminAccountsOverview(); break;
         }
     }
 }

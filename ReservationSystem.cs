@@ -8,6 +8,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
     public static void RunSystem()
     {
+        
         Reservate(false);
     }
 
@@ -159,22 +160,63 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return timeslots[selectedOption];
     }
 
-    public static List<int> GetReservatedTablesAtDateAndTimeslot(DateOnly date, string timeslot) // todo: improve method + var name
+    public static List<int> GetAvailability(DateOnly date, string timeslot) // todo: improve method + var name: changed name to GetAvailability()
     {
         // find all reservations made at the date and time of the new reservation
         // select all the tables numbers those reservation were made at
         // convert IEnumerable to List
-        List<int> reservatedTablesAtDateAndTimeslot = Restaurant.Reservations
+        List<int> availability = Restaurant.Reservations
             .FindAll(reservation => reservation.Date == date && reservation.TimeSlot == timeslot)
             .Select(reservation => reservation.SelectedTable.TableNumber)
             .ToList();
-        return reservatedTablesAtDateAndTimeslot;
-
+        return availability;
     }
+
+    public static void WaitingListOffer()
+    {
+        Console.Clear();
+        Console.WriteLine("Would you like to receive an email in case a table becomes available?");
+        List<string> options = new() { "Yes", "No, thanks" };
+        int option = MenuSelector.RunMenuNavigator(options);
+        if (option == 1)
+            return;
+        Console.Clear();
+        if (OptionMenu.IsUserLoggedIn)
+        { 
+            Console.WriteLine($"An email will be send to {OptionMenu.CurrentUser!.Email} if a table is free"); 
+            return; 
+        }
+        else
+        {
+            Console.WriteLine("Please enter your email or sign in.");
+            options = new() { "Enter email", "Create new account or login" };
+            option = MenuSelector.RunMenuNavigator(options);
+            if (option == 1)
+            {
+                Console.Clear();
+                LoginSystem.Start();
+            }
+            else
+            {
+                Console.Clear();
+                string email = LoginSystem.GetAccountEmail();
+                Console.WriteLine("Thank you for using the waiting list!");
+                Console.WriteLine($"An email will be send to {email} if a table is free.");
+                // maybe add function to send email when the Reservated tables at the right date and timeslot are below 15;
+                SendEmailIfAvailable(email);
+                return;
+            }
+        }
+    }
+
+    private static void SendEmailIfAvailable(string email)
+    {
+
+    } 
 
     public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
-        List<int> reservatedTablesNumbers = GetReservatedTablesAtDateAndTimeslot(date, timeslot);
+        List<int> reservatedTablesNumbers = GetAvailability(date, timeslot);
         Console.CursorVisible = false;
         ConsoleKeyInfo keyInfo;
 
@@ -190,7 +232,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
             if (reservatedTablesNumbers.Count >= 15)
             {
-                Console.WriteLine("Sorry! We are booked!");
+                WaitingListOffer();
                 break;
             }
 
@@ -403,7 +445,14 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
         Console.Clear();
         Console.WriteLine("R E S E R V A T I O N   D E T A I L S\n");
-        Console.WriteLine($"You ({R.CustomerID}) reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
+        if (OptionMenu.IsUserLoggedIn)
+        {
+            Console.WriteLine($"You ({R.CustomerID}) reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
+        }
+        else
+        {
+            Console.WriteLine($"You reservated Table {T.TableNumber} for {numOfPeople} on {R.Date} during {R.TimeSlot}.");
+        }
         Console.WriteLine($"Your reservation number: {R.ReservationNumber}");
         Console.WriteLine($"Deals applied:");
         if (R.DealsApplied.Count == 0)

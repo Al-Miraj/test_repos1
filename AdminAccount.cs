@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-public sealed class AdminAccount : Account
+public class AdminAccount : Account
 {
     public AdminAccount(int id, string name, string email, string password) : base(id, name, email, password)
     {
