@@ -1,6 +1,6 @@
 ﻿namespace Menus
 {
-    public class SeasonalMenuItem
+    public class SeasonalDishes
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -13,7 +13,7 @@
         public string Season;
         private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
-        public SeasonalMenuItem(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon, string season)
+        public SeasonalDishes(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon, string season)
         {
             Name = name;
             Description = description;

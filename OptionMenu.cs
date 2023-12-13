@@ -47,7 +47,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     AboutUs.travel();
                     break;
                 case 3:
-                    FoodMenu.Display();
+                    FoodMenuNavigator.Display();
                     break;
                 case 4:
                     DrinksMenu.Display();

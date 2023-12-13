@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 
-public static class HolidayMenu
+namespace Menus
 {
-    private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
+    public static class HolidayMenu
+    {
+        private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
         {
             // International holidays
             { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
@@ -23,149 +25,175 @@ public static class HolidayMenu
             { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
         };
 
-    public static void DisplayAllHolidays()
-    {
-        bool christmasDisplayed = false;
+        private static List<DateTime> keys = new List<DateTime>();
 
-        foreach (var holiday in HolidayMenu.holidays)
+        public static void DisplayAllHolidays()
         {
-            if (holiday.Value == "Christmas")
+            bool christmasDisplayed = false;
+
+            foreach (var holiday in holidays)
             {
-                if (!christmasDisplayed)
+                if (holiday.Value == "Christmas")
                 {
-                    Console.WriteLine($"{holiday.Value} - Date: 25-12-2023 to 31-12-2023");
-                    christmasDisplayed = true;
+                    if (!christmasDisplayed)
+                    {
+                        Console.WriteLine($"{holiday.Value} - Date: 25-12-2023 to 31-12-2023");
+                        christmasDisplayed = true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{holiday.Value} - Date: {holiday.Key.ToShortDateString()}");
                 }
             }
-            else
-            {
-                Console.WriteLine($"{holiday.Value} - Date: {holiday.Key.ToShortDateString()}");
-            }
         }
-    }
 
-    private static List<DateTime> keys = new List<DateTime>();
+        private static List<HolidayDishes> rawMenu = LoadFoodMenuData();
+        private static List<HolidayDishes> finishedHolidayMenu = new List<HolidayDishes>();
 
-    private static List<HolidayMenuItem> rawMenu = LoadFoodMenuData();
-    private static List<HolidayMenuItem> finishedHolidayMenu = new List<HolidayMenuItem>();
+        private static void addKeys() => keys.AddRange(holidays.Keys);
 
-    private static void addKeys() => keys.AddRange(holidays.Keys);
+        public static bool CheckDate(DateTime date) => holidays.ContainsKey(date) ? true : false;
 
-    public static bool CheckDate(DateTime date) => holidays.ContainsKey(date) ? true : false;
-
-    public static void getHoliday(DateTime Date)
-    {
-        addKeys();
-        bool foundHoliday = false;
-
-        foreach (DateTime key in holidays.Keys)
+        public static void getHoliday(DateTime key)
         {
-            if (key == Date)
+            addKeys();
+
+            if (CheckDate(key))
             {
-                foundHoliday = true;
+                finishedHolidayMenu.Clear();
                 Console.WriteLine($"today is {holidays[key]}");
                 holidayNavigator(holidays[key]);
                 PrintInfo();
                 return;
             }
+
+            GetNearestMenu();
         }
 
-        if (!foundHoliday)
+        public static void GetNearestMenu()
         {
             Console.WriteLine("No holiday found for today.");
-        }
-    }
-
-    public static void holidayNavigator(string holiday)
-    {
-        //switch case voor elke holiday om later tijdens het debuggen problemen makkelijker op te lossen
-        //dit kan later zonder switch case door direct de holiday mee te geven aab getHolidayMenu
-        switch (holiday)
-        {
-            case "New Year":
-                Console.WriteLine("New Year");
-                getHolidayMenu("New Year");
-                break;
-            case "Christmas":
-                Console.WriteLine("Christmas");
-                getHolidayMenu("Christmas");
-                break;
-            case "Halloween":
-                Console.WriteLine("Halloween");
-                getHolidayMenu("Halloween");
-                break;
-            case "Koningsdag":
-                Console.WriteLine("Koningsdag");
-                getHolidayMenu("Koningsdag");
-                break;
-            //case "Bevrijdingsdag":
-            // Console.WriteLine("Bevrijdingsdag");
-            //getHolidayMenu("Bevrijdingsdag");
-            //break;
-            case "Sinterklaas":
-                Console.WriteLine("Sinterklaas");
-                getHolidayMenu("Sinterklaas");
-                break;
-            case "Carnaval":
-                Console.WriteLine("Carnaval");
-                getHolidayMenu("Carnaval");
-                break;
-            default:
-                Console.WriteLine("Holiday not found.");
-                break;
-        }
-    }
-
-    public static void getHolidayMenu(string holiday)
-    {
-        List<HolidayMenuItem> holidayMenu = new List<HolidayMenuItem>();
-        holidayMenu = rawMenu.FindAll(x => x.Holiday == holiday);
-        finishedHolidayMenu.AddRange(holidayMenu);
-    }
-
-    public static void PrintInfo(bool keyContinue = true)
-    {
-        string currentHoliday = "";
-
-        foreach (var dish in finishedHolidayMenu)
-        {
-            Console.WriteLine($"Name: {dish.Name}");
-            Console.WriteLine($"Description: {dish.Description}");
-            Console.WriteLine($"Ingredients: {string.Join(", ", dish.Ingredients)}");
-            Console.WriteLine($"Timeslot: {dish.Timeslot}");
-            Console.WriteLine($"Price: {dish.Price}");
-            Console.WriteLine($"Potential Allergens: {string.Join(", ", dish.PotentialAllergens)}");
-            Console.WriteLine($"Icon: {dish.Icon}");
-            Console.WriteLine($"Holiday: {dish.Holiday}");
+            Console.WriteLine("Do you want to see the menu of the nearest holiday?");
+            int choice = MenuSelector.RunMenuNavigator(new List<string>() { "yes", "no" });
+            Console.Clear();
             Console.WriteLine();
-            if (currentHoliday != dish.Name)
+
+            if (choice == 0) // 'yes' was selected
             {
-                Console.WriteLine("------------------------------------------------------------------------------------");
+                string closestHoliday = FindNextHoliday();
+                holidayNavigator(closestHoliday);
+                Console.WriteLine($"Displaying the menu of the nearest holiday: {closestHoliday}");
                 Console.WriteLine();
-                currentHoliday = dish.Name;
+                Thread.Sleep(250);
+                PrintInfo();
+                Console.WriteLine();
+                Console.WriteLine();
             }
-        }
-        if (keyContinue)
-        {
-            Console.WriteLine("Press any key to continue");
+
+            Console.WriteLine("Here are the holidays as reference: ");
+            Console.WriteLine();
+            DisplayAllHolidays();
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit");
             Console.ReadKey();
         }
-    }
 
-    public static List<HolidayMenuItem>? LoadFoodMenuData()
-    {
-        try
+        public static void holidayNavigator(string holiday)
         {
-            using StreamReader reader = new StreamReader("HolidayItems.json");
-            string json = reader.ReadToEnd();
-            var items = JsonConvert.DeserializeObject<List<HolidayMenuItem>>(json);
-            return items;
+            //switch case voor elke holiday om later tijdens het debuggen problemen makkelijker op te lossen
+            //dit kan later zonder switch case door direct de holiday mee te geven aab getHolidayMenu
+            switch (holiday)
+            {
+                case "New Year":
+                    getHolidayMenu("New Year");
+                    break;
+                case "Christmas":
+                    getHolidayMenu("Christmas");
+                    break;
+                case "Halloween":
+                    getHolidayMenu("Halloween");
+                    break;
+                case "Koningsdag":
+                    getHolidayMenu("Koningsdag");
+                    break;
+                //case "Bevrijdingsdag":
+                // Console.WriteLine("Bevrijdingsdag");
+                //getHolidayMenu("Bevrijdingsdag");
+                //break;
+                case "Sinterklaas":
+                    getHolidayMenu("Sinterklaas");
+                    break;
+                case "Carnaval":
+                    getHolidayMenu("Carnaval");
+                    break;
+                default:
+                    Console.WriteLine("Holiday not found.");
+                    break;
+            }
         }
-        catch (JsonReaderException)
-        { return null; }
-        catch (FileNotFoundException)
-        { return null; }
-        catch (UnauthorizedAccessException)
-        { return null; }
+
+        public static void getHolidayMenu(string holiday)
+        {
+            List<HolidayDishes> holidayMenu = new List<HolidayDishes>();
+            holidayMenu = rawMenu.FindAll(x => x.Holiday == holiday);
+            finishedHolidayMenu.AddRange(holidayMenu);
+        }
+
+        public static void PrintInfo(bool keyContinue = true)
+        {
+            string currentHoliday = "";
+            var lastDish = finishedHolidayMenu.LastOrDefault();
+            foreach (var dish in finishedHolidayMenu)
+            {
+                if (currentHoliday != dish.Name)
+                {
+                    Console.WriteLine("------------------------------------------------------------------------------------");
+                    Console.WriteLine();
+                    currentHoliday = dish.Name;
+                }
+
+                Console.WriteLine($"Name: {dish.Name}");
+                Console.WriteLine($"Description: {dish.Description}");
+                Console.WriteLine($"Ingredients: {string.Join(", ", dish.Ingredients)}");
+                Console.WriteLine($"Timeslot: {dish.Timeslot}");
+                Console.WriteLine($"Price: {dish.Price}");
+                Console.WriteLine($"Potential Allergens: {string.Join(", ", dish.PotentialAllergens)}");
+                Console.WriteLine($"Icon: {dish.Icon}");
+                Console.WriteLine($"Holiday: {dish.Holiday}");
+                Console.WriteLine();
+
+                if (dish == lastDish)
+                {
+                    Console.WriteLine("------------------------------------------------------------------------------------");
+                    Console.WriteLine();
+                }
+
+            }
+            if (keyContinue)
+            {
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
+        }
+
+        public static string FindNextHoliday()
+        {
+            DateTime date = DateTime.Now.Date;
+            DateTime holidayDate = keys.Where(x => x >= date).FirstOrDefault();
+
+
+            if (holidayDate != null && holidays.ContainsKey(holidayDate))
+            {
+                return holidays[holidayDate];
+            }
+            else
+            {
+                return "No upcoming holiday found";
+            }
+        }
+
+        public static List<HolidayDishes>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<HolidayDishes>("HolidayDishes.json");
+
     }
 }

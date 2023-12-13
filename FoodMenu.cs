@@ -11,7 +11,7 @@ using Menus;
 public static class FoodMenu
 {
     //parsed data
-    //private static List<MenuItem> MenuItems = new();
+    //private static List<Dishes> Dishess = new();
 
     private static int selectedOption = 1;
 
@@ -24,23 +24,8 @@ public static class FoodMenu
     };
 
     //raw data
-    public static List<MenuItem>? LoadFoodMenuData()
-    {
-        try
-        {
-            using StreamReader reader = new StreamReader("Items.json");
-            string json = reader.ReadToEnd();
-            var items = JsonConvert.DeserializeObject<List<MenuItem>>(json);
-            return items;
-        }
-        catch (JsonReaderException)
-        { return null; }
-        catch (FileNotFoundException)
-        { return null; }
-        catch (UnauthorizedAccessException)
-        { return null; }
-    }
-
+    public static List<Dishes>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<Dishes>("Dishes.json");
+    
     public static void Display()
     {
         Console.CursorVisible = false;
@@ -70,24 +55,24 @@ public static class FoodMenu
         }
     }
 
-    public static void PrintInfo(List<MenuItem> MenuItems, string timeSlot, bool keyContinue = true)
+    public static void PrintInfo(List<Dishes> Dishess, string timeSlot, bool keyContinue = true)
     {
         Console.Clear();
         Console.WriteLine(timeSlot);
         Console.WriteLine(); Console.WriteLine("==================================================================================================================");
-        for (int i = 0; i < MenuItems.Count; i++)
+        for (int i = 0; i < Dishess.Count; i++)
         {
-            Console.WriteLine($"{i + 1}. {MenuItems[i].Name,-20} {MenuItems[i].Price,74}");
-            if (MenuItems[i].Description.Length > 52)
+            Console.WriteLine($"{i + 1}. {Dishess[i].Name,-20} {Dishess[i].Price,74}");
+            if (Dishess[i].Description.Length > 52)
             {
-                Console.WriteLine($"{MenuItems[i].Description.Substring(0, 50)}- {MenuItems[i].AllergensInfo,60}");
-                Console.WriteLine(MenuItems[i].Description.Substring(50, MenuItems[i].Description.Length - 50));
+                Console.WriteLine($"{Dishess[i].Description.Substring(0, 50)}- {Dishess[i].AllergensInfo,60}");
+                Console.WriteLine(Dishess[i].Description.Substring(50, Dishess[i].Description.Length - 50));
             }
             else
             {
-                Console.WriteLine($"{MenuItems[i].Description,-50} {MenuItems[i].AllergensInfo,60}");
+                Console.WriteLine($"{Dishess[i].Description,-50} {Dishess[i].AllergensInfo,60}");
             }
-            Console.WriteLine($"Ingredients: {string.Join(", ", MenuItems[i].Ingredients)}");
+            Console.WriteLine($"Ingredients: {string.Join(", ", Dishess[i].Ingredients)}");
             Console.WriteLine();
             Thread.Sleep(100);
         }
@@ -135,13 +120,13 @@ public static class FoodMenu
     /*switch (i)
     {
         case 1:
-            MenuItems = GetLunchMenu();
+            Dishess = GetLunchMenu();
             break;
         case 2:
-            MenuItems = GetDinnerMenu();
+            Dishess = GetDinnerMenu();
             break;
         case 3:
-            MenuItems = SortFoodMenu.SortMenu();
+            Dishess = SortFoodMenu.SortMenu();
             //SortFoodMenu.SortMenu().ForEach(x => Console.WriteLine(x));
             break;
         case 4:
@@ -171,7 +156,7 @@ public static class FoodMenu
                 string timeSlot = FilterFoodMenu.cursoroptionTimeSlot();
                 if (timeSlot == "") { break; }
                 PrintInfo(FilterFoodMenu.cursoroptionMenu(), timeSlot);
-                //PrintInfo(SortFoodMenu.menuItems, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
+                //PrintInfo(SortFoodMenu.Dishess, SortFoodMenu.SelectedTimeSlotOption == 2 ? "Dinner" : "Lunch");
                 break;
             case 4:
                 exitMenu = true;
@@ -180,29 +165,29 @@ public static class FoodMenu
         return exitMenu;
     }
 
-    public static (string timeslot, List<MenuItem> timeslotMenu) GetDefaultMenu()
+    public static (string timeslot, List<Dishes> timeslotMenu) GetDefaultMenu()
     {
         string x = "";
-        var allItems = LoadFoodMenuData();
-        List<MenuItem> timeslotMenu = new List<MenuItem>();
+        var allDishes = LoadFoodMenuData();
+        List<Dishes> timeslotMenu = new List<Dishes>();
 
         var dt = SetTime();
         DateOnly date = dt.date;
         TimeOnly time = dt.time;
 
-        if (ifDinner(time) && allItems != null)
+        if (ifDinner(time) && allDishes != null)
         {
-            var dinnerMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
-            timeslotMenu.AddRange(dinnerMenuItems);
+            var dinnerDishess = allDishes.FindAll(x => x.Timeslot == "Dinner");
+            timeslotMenu.AddRange(dinnerDishess);
             x = "Dinner Menu";
 
         }
         else
         {
-            if (allItems != null)
+            if (allDishes != null)
             {
-                var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
-                timeslotMenu.AddRange(lunchMenuItems);
+                var lunchDishess = allDishes.FindAll(x => x.Timeslot == "Lunch");
+                timeslotMenu.AddRange(lunchDishess);
                 x = "Lunch Menu";
             }
         }
@@ -234,25 +219,25 @@ public static class FoodMenu
 
     }
 
-    public static List<MenuItem> GetLunchMenu()
+    public static List<Dishes> GetLunchMenu()
     {
-        var allItems = LoadFoodMenuData();
-        List<MenuItem> tempMenu = new List<MenuItem>();
+        var allDishes = LoadFoodMenuData();
+        List<Dishes> tempMenu = new List<Dishes>();
 
 
-        var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Lunch");
-        tempMenu.AddRange(lunchMenuItems);
+        var lunchDishess = allDishes.FindAll(x => x.Timeslot == "Lunch");
+        tempMenu.AddRange(lunchDishess);
 
         return tempMenu;
     }
 
-    public static List<MenuItem> GetDinnerMenu()
+    public static List<Dishes> GetDinnerMenu()
     {
-        var allItems = LoadFoodMenuData();
-        List<MenuItem> tempMenu = new List<MenuItem>();
+        var allDishes = LoadFoodMenuData();
+        List<Dishes> tempMenu = new List<Dishes>();
 
-        var lunchMenuItems = allItems.FindAll(x => x.Timeslot == "Dinner");
-        tempMenu.AddRange(lunchMenuItems);
+        var lunchDishess = allDishes.FindAll(x => x.Timeslot == "Dinner");
+        tempMenu.AddRange(lunchDishess);
 
         return tempMenu;
     }

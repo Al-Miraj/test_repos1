@@ -1,4 +1,5 @@
-﻿
+﻿using Menus;
+
 //should be called first
 public static class FoodMenuNavigator
 {
@@ -80,16 +81,7 @@ public static class FoodMenuNavigator
                 SeasonalMenu.PrintInfo();
                 break;
             case 3:
-                if (HolidayMenu.CheckDate(DateTime.Now.Date))
-                    HolidayMenu.getHoliday(DateTime.Now.Date);
-                else
-                    Console.WriteLine("Today is not a holiday.");
-                    Console.WriteLine("Here are the holidays:");
-                    Console.WriteLine();
-                    HolidayMenu.DisplayAllHolidays();
-                    Console.WriteLine();
-                    Console.WriteLine("Press any key to continue");
-                    Console.ReadKey();
+                HolidayMenu.getHoliday(DateTime.Now.Date);
                 break;
             case 4:
                 DrinksMenu.Display();

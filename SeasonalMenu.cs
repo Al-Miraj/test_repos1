@@ -63,7 +63,7 @@ public static class SeasonalMenu
         }
     }
 
-    public static List<SeasonalMenuItem>? MainNavigator()
+    public static List<SeasonalDishes>? MainNavigator()
     {
         DateTime currentDateTime = DateTime.Today;
         int month = currentDateTime.Month;
@@ -73,51 +73,37 @@ public static class SeasonalMenu
 
     }
 
-    public static List<SeasonalMenuItem>? SeasonNavigator(string season)
+    public static List<SeasonalDishes>? SeasonNavigator(string season)
     {
         switch (season)
         {
             case "Winter":
-                return GetSeasonalMenuItems("Winter");
+                return GetSeasonalDishess("Winter");
 
             case "Spring":
-                return GetSeasonalMenuItems("Spring");
+                return GetSeasonalDishess("Spring");
 
             case "Summer":
-                return GetSeasonalMenuItems("Summer");
+                return GetSeasonalDishess("Summer");
 
             case "Autumn":
-                return GetSeasonalMenuItems("Autumn");
+                return GetSeasonalDishess("Autumn");
 
             default:
                 return null;
         }
     }
 
-    public static List<SeasonalMenuItem> GetSeasonalMenuItems(string season)
+    public static List<SeasonalDishes> GetSeasonalDishess(string season)
     {
-        List<SeasonalMenuItem> seasonalMenuItemsRaw = LoadFoodMenuData();
-        List<SeasonalMenuItem> seasonMenu = seasonalMenuItemsRaw.FindAll(x => x.Season == season).OrderBy(x => x.Price).ToList();
+        List<SeasonalDishes> seasonalDishessRaw = LoadFoodMenuData();
+        List<SeasonalDishes> seasonMenu = seasonalDishessRaw.FindAll(x => x.Season == season).OrderBy(x => x.Price).ToList();
         return seasonMenu;
 
     }
 
-    public static List<SeasonalMenuItem>? LoadFoodMenuData()
-    {
-        try
-        {
-            using StreamReader reader = new StreamReader("SeasonalMenu.json");
-            string json = reader.ReadToEnd();
-            var items = JsonConvert.DeserializeObject<List<SeasonalMenuItem>>(json);
-            return items;
-        }
-        catch (JsonReaderException)
-        { return null; }
-        catch (FileNotFoundException)
-        { return null; }
-        catch (UnauthorizedAccessException)
-        { return null; }
-    }
+    public static List<SeasonalDishes>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<SeasonalDishes>("SeasonMenu.json");
+
 
 
 

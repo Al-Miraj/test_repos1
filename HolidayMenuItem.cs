@@ -1,6 +1,6 @@
 ﻿
 
-    public class HolidayMenuItem
+    public class HolidayDishes
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -13,7 +13,7 @@
         public string Holiday;
         private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
-        public HolidayMenuItem(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon, string holiday)
+        public HolidayDishes(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon, string holiday)
         {
             Name = name;
             Description = description;

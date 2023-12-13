@@ -2,7 +2,7 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Security;
 
-public class MenuItem
+public class Dishes
 {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -15,7 +15,7 @@ public class MenuItem
     private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
 
 
-    public MenuItem(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon)
+    public Dishes(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon)
     {
         Name = name;
         Description = description;

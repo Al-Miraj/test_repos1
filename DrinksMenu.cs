@@ -4,37 +4,12 @@ public static class DrinksMenu
 {
     private static int selectedOption = 1;
 
-    private static List<Drinks> defaultMenu = LoadDrinksData();
-
-    public static List<Drinks>? LoadDrinksData()
-    {
-        try
-        {
-            using StreamReader reader = new StreamReader("Drinks.json");
-            string json = reader.ReadToEnd();
-            var items = JsonConvert.DeserializeObject<List<Drinks>>(json);
-            return items;
-        }
-        catch (JsonReaderException)
-        { return null; }
-        catch (FileNotFoundException)
-
-
-
-
-
-
-
-
-        { return null; }
-        catch (UnauthorizedAccessException)
-        { return null; }
-    }
+    private static List<Drinks> defaultMenu = JsonFileHandler.ReadFromFile<Drinks>("Drinks.json");
 
     public static void Display()
     {
         Console.CursorVisible = false;
-        PrintInfo(defaultMenu);
+        //PrintInfo(defaultMenu);
 
         while (true)
         {
@@ -133,19 +108,19 @@ public static class DrinksMenu
 
         foreach (var drink in drinks)
         {
-            Console.WriteLine($"Name: {drink.Name}");
-            Console.WriteLine($"Description: {drink.Description}");
-            Console.WriteLine($"Price: {drink.Price}");
-            Console.WriteLine($"Category: {drink.Category}");
-            Console.WriteLine($"Alcohol percentage: {drink.Alcohol}%");
-            Console.WriteLine();
-
             if (CurrentCategory != drink.Category)
             {
                 Console.WriteLine("------------------------------------------------------------------------------------");
                 Console.WriteLine();
                 CurrentCategory = drink.Category;
             }
+
+            Console.WriteLine($"Name: {drink.Name}");
+            Console.WriteLine($"Description: {drink.Description}");
+            Console.WriteLine($"Price: {drink.Price}");
+            Console.WriteLine($"Category: {drink.Category}");
+            Console.WriteLine($"Alcohol percentage: {drink.Alcohol}%");
+            Console.WriteLine();
         }
 
         if (KeyContinue)
