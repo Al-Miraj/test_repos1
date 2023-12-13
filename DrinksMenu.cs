@@ -112,7 +112,6 @@ public static class DrinksMenu
 
         foreach (var drink in drinks)
         {
-
             if (CurrentCategory != drink.Category)
             {
                 CurrentCategory = drink.Category;

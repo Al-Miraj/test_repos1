@@ -8,7 +8,7 @@ namespace Menus
         private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
         {
             // International holidays
-            //{ new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
+            { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
             { new DateTime(DateTime.Now.Year, 12, 25), "Christmas" },
             { new DateTime(DateTime.Now.Year, 12, 26), "Christmas" },
             { new DateTime(DateTime.Now.Year, 12, 27), "Christmas" },
@@ -26,11 +26,13 @@ namespace Menus
             { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
         };
 
+        private static List<DateTime> keys = new List<DateTime>();
+
         public static void DisplayAllHolidays()
         {
             bool christmasDisplayed = false;
 
-            foreach (var holiday in HolidayMenu.holidays)
+            foreach (var holiday in holidays)
             {
                 if (holiday.Value == "Christmas")
                 {
@@ -46,8 +48,6 @@ namespace Menus
                 }
             }
         }
-
-        private static List<DateTime> keys = new List<DateTime>();
 
         private static List<HolidayMenuItem> rawMenu = LoadFoodMenuData();
         private static List<HolidayMenuItem> finishedHolidayMenu = new List<HolidayMenuItem>();
@@ -81,6 +81,7 @@ namespace Menus
             if (choice == 0) // 'yes' was selected
             {
                 string closestHoliday = FindNextHoliday();
+                Console.WriteLine(closestHoliday);
                 holidayNavigator(closestHoliday);
                 Console.WriteLine($"Displaying the menu of the nearest holiday: {closestHoliday}");
                 Console.WriteLine();
@@ -88,8 +89,8 @@ namespace Menus
                 PrintInfo();
                 Console.WriteLine();
                 Console.WriteLine();
-                
             }
+
             else // 'no' was selected
             {
                 Console.WriteLine("press anything to continue");
@@ -184,11 +185,12 @@ namespace Menus
         public static string FindNextHoliday()
         {
             DateTime date = DateTime.Now.Date;
-            DateTime? holidayDate = keys.Where(x => x.Date > date).OrderBy(x => x.Date - date).FirstOrDefault();
+            DateTime holidayDate = keys.Where(x => x >= date).FirstOrDefault();
+            
 
-            if (holidayDate != null && holidays.ContainsKey(holidayDate.Value))
+            if (holidayDate != null && holidays.ContainsKey(holidayDate))
             {
-                return holidays[holidayDate.Value];
+                return holidays[holidayDate];
             }
             else
             {
