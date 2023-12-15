@@ -23,7 +23,6 @@ public static class FoodMenu
         { "Vegetarian", "🥦" }
     };
 
-    //raw data
     public static List<Dishes>? LoadFoodMenuData() => JsonFileHandler.ReadFromFile<Dishes>("Dishes.json");
     
     public static void Display()
@@ -83,7 +82,6 @@ public static class FoodMenu
             Console.WriteLine("Press any key to continue");
             Console.ReadKey();
         }
-
     }
 
     private static void DisplayMenuOptions()
