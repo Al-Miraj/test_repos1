@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 public class DrinksMenu : MenuItem<Drinks>
 {
     private static int selectedOption;
-    public DrinksMenu() : base("Dish.json")
+    public DrinksMenu() : base("Drinks.json")
     {
         selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Complete menu", "Soda", "Wine", "Whiskey", "Cognac", "Beer", "Exit" });
         HandleSelection();
@@ -13,20 +13,23 @@ public class DrinksMenu : MenuItem<Drinks>
 
     public override void HandleSelection()
     {
-        if (selectedOption >= 1 && selectedOption <= 6)
+        if (selectedOption >= 0 && selectedOption <= 5)
         {
             string? category = selectedOption switch
             {
-                1 => "Soda",
-                2 => "Soda",
-                3 => "Wine",
-                4 => "Whiskey",
-                5 => "Cognac",
-                6 => "Beer",
+                0 => "Full",     // "Complete menu"
+                1 => "Soda",     // "Soda"
+                2 => "Wine",     // "Wine"
+                3 => "Whiskey",  // "Whiskey"
+                4 => "Cognac",   // "Cognac"
+                5 => "Beer",     // "Beer"
                 _ => null
             };
 
-            PrintInfo(GetCategory(category), category);
+            if (category == "Full")
+                PrintInfo(Items, "Complete Menu");
+            else
+                PrintInfo(GetCategory(category), category);
         }
     }
 
@@ -34,12 +37,18 @@ public class DrinksMenu : MenuItem<Drinks>
     {
         Console.Clear();
         string CurrentCategory = "";
+        int consoleWidth = Console.WindowWidth;
+        int timeslotLength = header.Length;
+        int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
+        Console.SetCursorPosition(Math.Max(startPosition, 0), 0);
 
+        Console.WriteLine(header);
+        Console.WriteLine();
         foreach (var drink in drinks)
         {
             if (CurrentCategory != drink.Category)
             {
-                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine("==================================================================================================================");
                 Console.WriteLine();
                 CurrentCategory = drink.Category;
             }
@@ -50,6 +59,7 @@ public class DrinksMenu : MenuItem<Drinks>
             Console.WriteLine($"Category: {drink.Category}");
             Console.WriteLine($"Alcohol percentage: {drink.Alcohol}%");
             Console.WriteLine();
+            Console.WriteLine("==================================================================================================================");
         }
 
         if (KeyContinue)

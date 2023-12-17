@@ -19,9 +19,11 @@ public class Dishes : MenuItem<Dish>
         Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
 
         Console.WriteLine(header);
-        Console.WriteLine(); Console.WriteLine("==================================================================================================================");
+        Console.WriteLine(); 
+        Console.WriteLine("==================================================================================================================");
         for (int i = 0; i < dishlist.Count; i++)
         {
+            Console.WriteLine();
             Console.WriteLine($"{i + 1}. {dishlist[i].Name,-20} {dishlist[i].Price,74}");
             if (dishlist[i].Description.Length > 52)
             {
@@ -34,13 +36,15 @@ public class Dishes : MenuItem<Dish>
                 Console.WriteLine();
                 Thread.Sleep(100);
             }
+            Console.WriteLine();
             Console.WriteLine("==================================================================================================================");
 
-            if (keyContinue)
-            {
-                Console.WriteLine("Press any key to continue");
-                Console.ReadKey();
-            }
+        }
+
+        if (keyContinue)
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
         }
     }
 
@@ -139,17 +143,15 @@ public class Dishes : MenuItem<Dish>
 
     private List<Dish>? HandleFilterMenuSelection()
     {
-        Console.Clear();
-
         switch (selectedFilterMenuOption)
         {
             case 1:
-                return FilterIngredients(HandleTimeSlotSelection().ToString());
+                return FilterIngredients(HandleTimeSlotSelection());
             case 2:
                 Console.WriteLine("Enter the maximum price:");
                 if (double.TryParse(Console.ReadLine(), out double maxPrice))
                 {
-                    return FilterPrice(HandleTimeSlotSelection().ToString(), maxPrice);
+                    return FilterPrice(HandleTimeSlotSelection(), maxPrice);
                 }
                 else
                 {
