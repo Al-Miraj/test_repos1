@@ -2,8 +2,6 @@
 
 public static class CustomerManagement
 {
-    public static AdminAccount CurrentAdmin { private get; set; }
-
     public static void Display()
     {
         List<string> options = new List<string>()

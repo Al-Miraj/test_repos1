@@ -38,9 +38,9 @@ public abstract class Account
     public Account() { }
 
     public abstract List<Reservation> GetReservations();
-
+    public abstract List<ICommand> GetCommands(Dashboard dashboard);
     public override string ToString()
     {
-        return $"ID: {ID}\nName: {Name}\nEmail: {Email}\nPassword: {Utensils.HashPassword(Password)}";   //Password hashed for privacy of customers
+        return $"ID: {ID}\nName: {Name}\nEmail: {Email}";   //Password hashed for privacy of customers
     }
 }

@@ -8,6 +8,18 @@ public sealed class CustomerAccount : Account
         : base(id, name, email, password) { }
 
     public CustomerAccount() : base(){ }
-
+    public override List<ICommand> GetCommands(Dashboard dashboard)
+    {
+        return new()
+        {
+            new OrderHistoryCommand(dashboard),
+            new ReservationManagerCommand(dashboard),
+            new DailyMenuCommand(),
+            new SendFeedBackCommand(dashboard),
+            new OptionMenuCommand(),
+            new LogoutCommand()
+        };
+        
+    }
     public override List<Reservation> GetReservations() => Reservations;
 }
