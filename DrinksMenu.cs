@@ -44,15 +44,13 @@ public class DrinksMenu : MenuItem<Drinks>
 
         Console.WriteLine(header);
         Console.WriteLine();
+        Console.WriteLine("==================================================================================================================");
         foreach (var drink in drinks)
         {
             if (CurrentCategory != drink.Category)
-            {
-                Console.WriteLine("==================================================================================================================");
-                Console.WriteLine();
                 CurrentCategory = drink.Category;
-            }
 
+            Console.WriteLine();
             Console.WriteLine($"Name: {drink.Name}");
             Console.WriteLine($"Description: {drink.Description}");
             Console.WriteLine($"Price: {drink.Price}");

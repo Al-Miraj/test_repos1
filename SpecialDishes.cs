@@ -12,10 +12,12 @@ public class SpecialDishes : MenuItem<Dish>
         {
             rawHolidayMenu = Items;
             keys.AddRange(holidays.Keys);
+            getHoliday(DateTime.Now.Date);
         }
         else
         {
             rawSeasonalMenu = Items;
+            PrintInfo(MainNavigator(), GetSeason(DateTime.Today.Month));
         }
     }
 
@@ -50,12 +52,12 @@ public class SpecialDishes : MenuItem<Dish>
         int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
         Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
         Console.WriteLine(header);
-
+        Console.WriteLine();
         foreach (var dish in dishlist)
         {
             if (currentHoliday != dish.Name)
             {
-                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine("==================================================================================================================");
                 Console.WriteLine();
                 currentHoliday = dish.Name;
             }
@@ -74,7 +76,7 @@ public class SpecialDishes : MenuItem<Dish>
 
             if (dish == lastDish)
             {
-                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine("=================================================================================================================="); ;
                 Console.WriteLine();
             }
 
@@ -147,8 +149,7 @@ public class SpecialDishes : MenuItem<Dish>
         Console.WriteLine();
         DisplayAllHolidays();
         Console.WriteLine();
-        Console.WriteLine("Press any key to exit");
-        Console.ReadKey();
+        return;
     }
     public static List<Dish> getHolidayMenu(string holiday) => rawHolidayMenu.FindAll(x => x.Holiday == holiday);
 
@@ -170,8 +171,6 @@ public class SpecialDishes : MenuItem<Dish>
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public static List<Dish> DishsRaw = JsonFileHandler.ReadFromFile<Dish>("SeasonMenu.json");
     public static string? GetSeason(int month)
     {
         return month switch
@@ -193,5 +192,5 @@ public class SpecialDishes : MenuItem<Dish>
 
     }
 
-    public static List<Dish>? SeasonNavigator(string season) => DishsRaw.Where(dish => dish.Season == season).OrderBy(dish => dish.Price).ToList();
+    public static List<Dish>? SeasonNavigator(string season) => rawSeasonalMenu.Where(dish => dish.Season == season).OrderBy(dish => dish.Price).ToList();
 }

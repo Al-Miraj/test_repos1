@@ -47,7 +47,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     AboutUs.travel();
                     break;
                 case 3:
-                    Dishes dishesMenu = new Dishes();
+                    SpecialDishes specialdish = new SpecialDishes(false);
                     break;
                 case 4:
                     DrinksMenu drinksMenu = new DrinksMenu();
