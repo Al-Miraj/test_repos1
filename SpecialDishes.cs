@@ -1,8 +1,24 @@
-﻿public static class SpecialDishes
+﻿
+public class SpecialDishes : MenuItem<Dish>
 {
-    private static List<Dish> rawHolidayMenu = JsonFileHandler.ReadFromFile<Dish>("HolidayDish.json");
-    private static List<Dish> finishedHolidayMenu = new List<Dish>();
+    private static List<Dish> rawHolidayMenu;
+    private List<Dish> finishedHolidayMenu = new List<Dish>();
     private static List<DateTime> keys = new List<DateTime>();
+    public static List<Dish> rawSeasonalMenu;
+
+    public SpecialDishes(bool isHolidayMenu) : base(isHolidayMenu ? "HolidayMenu.json" : "SeasonalMenu.json")
+    {
+        if (isHolidayMenu)
+        {
+            rawHolidayMenu = Items;
+            keys.AddRange(holidays.Keys);
+        }
+        else
+        {
+            rawSeasonalMenu = Items;
+        }
+    }
+
     private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
     {
         // International holidays
@@ -22,9 +38,55 @@
         //{ new DateTime(DateTime.Now.Year, 5, 5), "Bevrijdingsdag" },
         { new DateTime(DateTime.Now.Year, 12, 5), "Sinterklaas" },
         { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
+    };
+
+    protected override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
+    {
+        string currentHoliday = "";
+        var lastDish = dishlist.LastOrDefault();
+
+        int consoleWidth = Console.WindowWidth;
+        int timeslotLength = header.Length;
+        int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
+        Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
+        Console.WriteLine(header);
+
+        foreach (var dish in dishlist)
+        {
+            if (currentHoliday != dish.Name)
+            {
+                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine();
+                currentHoliday = dish.Name;
+            }
+
+            Console.WriteLine($"Name: {dish.Name}");
+            Console.WriteLine($"Description: {dish.Description}");
+            Console.WriteLine($"Ingredients: {string.Join(", ", dish.Ingredients)}");
+            Console.WriteLine($"Timeslot: {dish.Timeslot}");
+            Console.WriteLine($"Price: {dish.Price}");
+            Console.WriteLine($"Potential Allergens: {string.Join(", ", dish.PotentialAllergens)}");
+            Console.WriteLine($"Icon: {dish.Category}");
+            if (dish.Holiday != "")
+                Console.WriteLine($"Holiday: {dish.Holiday}");
+            Console.WriteLine($"Season: {dish.Season}");
+            Console.WriteLine();
+
+            if (dish == lastDish)
+            {
+                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine();
+            }
+
+        }
+        if (keyContinue)
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+        }
     }
+
     public static bool CheckDate(DateTime date) => holidays.ContainsKey(date) ? true : false;
-    private static void addKeys() => keys.AddRange(holidays.Keys);
 
     public static void DisplayAllHolidays()
     {
@@ -47,23 +109,22 @@
         }
     }
 
-    public static void getHoliday(DateTime key)
+    //entrypoint
+    private void getHoliday(DateTime key)
     {
-        addKeys();
-
         if (CheckDate(key))
         {
             finishedHolidayMenu.Clear();
             Console.WriteLine($"today is {holidays[key]}");
-            holidayNavigator(holidays[key]);
-            PrintInfo();
+            finishedHolidayMenu.AddRange(getHolidayMenu(holidays[key]));
+            PrintInfo(finishedHolidayMenu, holidays[key]);
             return;
         }
 
         GetNearestMenu();
     }
 
-    public static void GetNearestMenu()
+    private void GetNearestMenu()
     {
         Console.WriteLine("No holiday found for today.");
         Console.WriteLine("Do you want to see the menu of the nearest holiday?");
@@ -74,11 +135,10 @@
         if (choice == 0) // 'yes' was selected
         {
             string closestHoliday = FindNextHoliday();
-            holidayNavigator(closestHoliday);
             Console.WriteLine($"Displaying the menu of the nearest holiday: {closestHoliday}");
             Console.WriteLine();
             Thread.Sleep(250);
-            PrintInfo();
+            PrintInfo(getHolidayMenu(closestHoliday), closestHoliday);
             Console.WriteLine();
             Console.WriteLine();
         }
@@ -90,53 +150,12 @@
         Console.WriteLine("Press any key to exit");
         Console.ReadKey();
     }
-
-    public static void holidayNavigator(string holiday)
-    {
-        //switch case voor elke holiday om later tijdens het debuggen problemen makkelijker op te lossen
-        //dit kan later zonder switch case door direct de holiday mee te geven aab getHolidayMenu
-        switch (holiday)
-        {
-            case "New Year":
-                getHolidayMenu("New Year");
-                break;
-            case "Christmas":
-                getHolidayMenu("Christmas");
-                break;
-            case "Halloween":
-                getHolidayMenu("Halloween");
-                break;
-            case "Koningsdag":
-                getHolidayMenu("Koningsdag");
-                break;
-            //case "Bevrijdingsdag":
-            // Console.WriteLine("Bevrijdingsdag");
-            //getHolidayMenu("Bevrijdingsdag");
-            //break;
-            case "Sinterklaas":
-                getHolidayMenu("Sinterklaas");
-                break;
-            case "Carnaval":
-                getHolidayMenu("Carnaval");
-                break;
-            default:
-                Console.WriteLine("Holiday not found.");
-                break;
-        }
-    }
-
-    public static void getHolidayMenu(string holiday)
-    {
-        List<Dish> holidayMenu = new List<Dish>();
-        holidayMenu = rawHolidayMenu.FindAll(x => x.Holiday == holiday);
-        finishedHolidayMenu.AddRange(holidayMenu);
-    }
+    public static List<Dish> getHolidayMenu(string holiday) => rawHolidayMenu.FindAll(x => x.Holiday == holiday);
 
     public static string FindNextHoliday()
     {
         DateTime date = DateTime.Now.Date;
         DateTime holidayDate = keys.Where(x => x >= date).FirstOrDefault();
-
 
         if (holidayDate != null && holidays.ContainsKey(holidayDate))
         {
@@ -155,68 +174,24 @@
     public static List<Dish> DishsRaw = JsonFileHandler.ReadFromFile<Dish>("SeasonMenu.json");
     public static string? GetSeason(int month)
     {
-        // Determine the season based on the month
-        switch (month)
+        return month switch
         {
-            case 12:
-            case 1:
-            case 2:
-                return "Winter";
-
-            case 3:
-            case 4:
-            case 5:
-                return "Spring";
-
-            case 6:
-            case 7:
-            case 8:
-                return "Summer";
-
-            case 9:
-            case 10:
-            case 11:
-                return "Autumn";
-
-            default:
-                return null;
-        }
+            12 or 1 or 2 => "Winter",
+            3 or 4 or 5 => "Spring",
+            6 or 7 or 8 => "Summer",
+            9 or 10 or 11 => "Autumn",
+            _ => null,
+        };
     }
 
     public static List<Dish>? MainNavigator()
     {
-        DateTime currentDateTime = DateTime.Today;
-        int month = currentDateTime.Month;
+        int month = DateTime.Today.Month;
         string? season = GetSeason(month);
         if (season != null) { var menu = SeasonNavigator(season); return menu; }
         return null;
 
     }
 
-    public static List<Dish>? SeasonNavigator(string season)
-    {
-        switch (season)
-        {
-            case "Winter":
-                return GetDishs("Winter");
-
-            case "Spring":
-                return GetDishs("Spring");
-
-            case "Summer":
-                return GetDishs("Summer");
-
-            case "Autumn":
-                return GetDishs("Autumn");
-
-            default:
-                return null;
-        }
-    }
-
-    public static List<Dish> GetDishs(string season)
-    {
-        List<Dish> seasonMenu = DishsRaw.FindAll(x => x.Season == season).OrderBy(x => x.Price).ToList();
-        return seasonMenu;
-    }
+    public static List<Dish>? SeasonNavigator(string season) => DishsRaw.Where(dish => dish.Season == season).OrderBy(dish => dish.Price).ToList();
 }

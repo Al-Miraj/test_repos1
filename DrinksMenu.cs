@@ -1,78 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-public static class DrinksMenu
+public class DrinksMenu : MenuItem
 {
-    private static int selectedOption = 1;
+    private static int selectedOption;
 
-    private static List<Drinks> defaultMenu = JsonFileHandler.ReadFromFile<Drinks>("Drinks.json");
-
-    public static void Display()
+    public Dishes() : base("Dish.json")
     {
-        Console.CursorVisible = false;
-        //PrintInfo(defaultMenu);
-
-        while (true)
-        {
-            Console.Clear();
-
-            DisplayMenuOptions();
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
-            {
-                selectedOption--;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 7)
-            {
-                selectedOption++;
-            }
-            else if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                HandleSelection();
-            }
-        }
+        selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
+        HandleSelection();
     }
 
-    private static void DisplayMenuOptions()
-    {
-        for (int i = 1; i <= 7; i++)
-        {
-            if (i == selectedOption)
-            {
-                Console.Write(">");
-            }
-            else
-            {
-                Console.Write(" ");
-            }
-
-            switch (i)
-            {
-                case 1:
-                    Console.WriteLine(" Drink Menu");
-                    break;
-                case 2:
-                    Console.WriteLine(" Soda");
-                    break;
-                case 3:
-                    Console.WriteLine(" Wine");
-                    break;
-                case 4:
-                    Console.WriteLine(" Whiskey");
-                    break;
-                case 5:
-                    Console.WriteLine(" Cognac");
-                    break;
-                case 6:
-                    Console.WriteLine(" Beer");
-                    break;
-                case 7:
-                    Console.WriteLine(" Exit");
-                    break;
-            }
-        }
-    }
 
     private static void HandleSelection()
     {
@@ -101,7 +38,7 @@ public static class DrinksMenu
         }
     }
 
-    public static void PrintInfo(List<Drinks> drinks, bool KeyContinue = true)
+    protected override void PrintInfo(List<Drinks> drinks, string header, bool KeyContinue = true)
     {
         Console.Clear();
         string CurrentCategory = "";

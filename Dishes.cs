@@ -1,83 +1,26 @@
 ﻿using Menus;
 
-public class Dishes
+public class Dishes : MenuItem<Dish>
 {
-    private static int selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { " Lunch", " Dinner", " Filter Menu", " Exit" });
-    public static List<Dish> rawFoodMenu = JsonFileHandler.ReadFromFile<Dish>("Dish.json");
-    public static List<Dish> finishedFoodMenu = new List<Dish> { };
+    private int selectedFoodMenuOption;
 
-    private static bool HandleFoodMenuSelection()
+    public Dishes() : base("Dish.json")
     {
-        Console.Clear();
-        bool exitMenu = false;
-
-        switch (selectedFoodMenuOption)
-        {
-            case 1:
-                PrintInfo(getTimeSlotMenu("Lunch"), "Lunch");
-                break;
-            case 2:
-                PrintInfo(getTimeSlotMenu("Dinner"), "Dinner");
-                break;
-            case 3:
-                DisplayFilterMenuOptions();
-                break;
-            case 4:
-                exitMenu = true;
-                break;
-        }
-        return exitMenu;
+        selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
+        HandleFoodMenuSelection();
+        PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) == true ? "Dinner" : "Lunch");
     }
 
-    public static (string timeslot, List<Dish> timeslotMenu)? GetDefaultMenu()
+    protected override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
-        var dt = SetTime();
-        DateOnly date = dt.date;
-        TimeOnly time = dt.time;
-
-        if (ifDinner(time) && rawFoodMenu != null)
-        {
-            return ("Dinner", getTimeSlotMenu("Dinner"));
-
-        }
-        else if (rawFoodMenu != null)
-        {
-            return ("Lunch", getTimeSlotMenu("Lunch"));
-        }
-
-        return null;
-    }
-
-    public static bool ifDinner(TimeOnly time)
-    {
-        TimeOnly startTime = new TimeOnly(18, 0);
-        TimeOnly endTime = new TimeOnly(22, 0);
-
-        if (time >= startTime && time <= endTime)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static (DateOnly date, TimeOnly time) SetTime()
-    {
-        DateTime now = DateTime.Now;
-
-        DateOnly date = DateOnly.FromDateTime(now);
-        TimeOnly time = TimeOnly.FromDateTime(now);
-
-        return (date, time);
-
-    }
-
-    public static List<Dish> getTimeSlotMenu(string ts) => rawFoodMenu.FindAll(x => x.Timeslot == ts);
-
-    public static void PrintInfo(List<Dish> dishlist, bool keyContinue = true)
-    {
-        string currentHoliday = "";
         var lastDish = dishlist.LastOrDefault();
+
+        int consoleWidth = Console.WindowWidth;
+        int timeslotLength = header.Length;
+        int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
+        Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
+        Console.WriteLine(header);
+
         foreach (var dish in dishlist)
         {
             if (currentHoliday != dish.Name)
@@ -113,6 +56,70 @@ public class Dishes
         }
     }
 
+    public void HandleFoodMenuSelection()
+    {
+        Console.Clear();
+
+        switch (selectedFoodMenuOption)
+        {
+            case 1:
+                PrintInfo(GetTimeSlotMenu("Lunch"), "Lunch");
+                break;
+            case 2:
+                PrintInfo(GetTimeSlotMenu("Dinner"), "Dinner");
+                break;
+            case 3:
+                HandleFilterMenuSelection();
+                break;
+            case 4:
+                break;
+        }
+        return;
+    }
+
+    private (List<Dish>, string timeslot)? GetDefaultMenu()
+    {
+        var dt = SetTime();
+        DateOnly date = dt.date;
+        TimeOnly time = dt.time;
+
+        if (ifDinner(time))
+        {
+            return (GetTimeSlotMenu("Dinner"), "Dinner");
+
+        }
+        else if (!ifDinner(time))
+        {
+            return (GetTimeSlotMenu("Lunch"), "Lunch");
+        }
+
+        return null;
+    }
+
+    public static bool ifDinner(TimeOnly time)
+    {
+        TimeOnly startTime = new TimeOnly(18, 0);
+        TimeOnly endTime = new TimeOnly(22, 0);
+
+        if (time >= startTime && time <= endTime)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static (DateOnly date, TimeOnly time) SetTime()
+    {
+        DateTime now = DateTime.Now;
+
+        DateOnly date = DateOnly.FromDateTime(now);
+        TimeOnly time = TimeOnly.FromDateTime(now);
+
+        return (date, time);
+
+    }
+
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -135,17 +142,13 @@ public class Dishes
         }
     }
 
-    private static List<Dish>? HandleFilterMenuSelection()
+    private List<Dish>? HandleFilterMenuSelection()
     {
         Console.Clear();
 
         switch (selectedFilterMenuOption)
         {
             case 1:
-                Console.WriteLine("Enter the ingredients (use comma):");
-                string ingredientRaw = Console.ReadLine().ToLower();
-                List<string> ingredients = ingredientRaw.Split(", ").ToList();
-                
                 return FilterIngredients(HandleTimeSlotSelection().ToString());
             case 2:
                 Console.WriteLine("Enter the maximum price:");
@@ -159,12 +162,14 @@ public class Dishes
                 }
                 break;
             case 3:
-                Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
-                List<string> categoryList = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                return FilterCategory(selectedTimeSlotOption == 2 ? true : false, categoryList);
+                return FilterCategory(HandleTimeSlotSelection().ToString());
             case 4:
                 break;
+            default:
+                break;
         }
+
+        return null;
     }
 
     private static string HandleTimeSlotSelection()
@@ -185,68 +190,50 @@ public class Dishes
         return "";
     }
 
-    public static List<Dish> FilterCategory(bool isDinner, List<string> Categories)
+    private List<Dish>? FilterCategory(string menuType)
     {
-        List<Dish> unsortedMenu = isDinner ? getTimeSlotMenu("Dinner") : getTimeSlotMenu("Lunch");
-        List<Dish> selectedCategories = new List<Dish>();
+        List<Dish> unsortedMenu = menuType == "Dinner" ? GetTimeSlotMenu("Dinner") : GetTimeSlotMenu("Lunch");
+        Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
+        List<string> categoryList = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-        Console.WriteLine("Categories:");
-        foreach (var cat in FoodMenu.categoryEmojis)
-        {
-            Console.WriteLine($"{cat.Key}: {cat.Value}");
-        }
-
-        foreach (string category in Categories)
+        foreach (string category in categoryList)
         {
             switch (category)
             {
                 case "1":
-                    selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Meat" || x.Category == "Chicken"));
-                    break;
+                    return unsortedMenu.FindAll(x => x.Category == "Meat" || x.Category == "Chicken");
                 case "2":
-                    selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Chicken"));
-                    break;
+                    return unsortedMenu.FindAll(x => x.Category == "Chicken");
                 case "3":
-                    selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Fish"));
-                    break;
+                    return unsortedMenu.FindAll(x => x.Category == "Fish");
                 case "4":
-                    selectedCategories.AddRange(unsortedMenu.FindAll(x => x.Category == "Vegetarian"));
-                    break;
+                    return unsortedMenu.FindAll(x => x.Category == "Vegetarian");
                 case "5":
-                    return new List<Dish>(); // Return an empty list to indicate the user's exit choice.
+                    return null;
                 default:
                     Console.WriteLine("Input incorrect. Please enter 1, 2, 3, 4, or 5.");
                     break;
             }
         }
-        return selectedCategories;
+        return null;
     }
 
-    public static List<Dish> FilterPrice(string menuType, double price)
+    public List<Dish> FilterPrice(string menuType, double price)
     {
-        List<Dish> finalMenu = new List<Dish>();
         Console.WriteLine(menuType);
-        finalMenu = menuType == "Dinner" ? getTimeSlotMenu("Dinner") : getTimeSlotMenu("Lunch");
-
-        List<Dish> sortedMenu = finalMenu.Where(x => x.Price <= price).ToList();
-        sortedMenu = sortedMenu.OrderBy(x => x.Price).ToList();
-
-        return (sortedMenu);
+        List<Dish> finalMenu = menuType == "Dinner" ? GetTimeSlotMenu("Dinner") : GetTimeSlotMenu("Lunch");
+        return finalMenu.Where(x => x.Price <= price).OrderBy(x => x.Price).ToList();
     }
 
-    public static List<Dish> FilterIngredients(string menuType)
+    public List<Dish> FilterIngredients(string menuType)
     {
         Console.WriteLine("Enter the ingredients (use comma):");
         string ingredientRaw = Console.ReadLine().ToLower();
         List<string> ingredients = ingredientRaw.Split(", ").ToList();
 
-        List<Dish> unsortedDishes = menuType == "Dinner" ? getTimeSlotMenu("Dinner") : getTimeSlotMenu("Lunch");
+        List<Dish> unsortedDishes = menuType == "Dinner" ? GetTimeSlotMenu("Dinner") : GetTimeSlotMenu("Lunch");
         List<Dish> filteredByIngredients = unsortedDishes.Where(x => x.Ingredients.SelectMany(i => i.ToLower().Split(" ")).Any(ingredient => ingredients.Contains(ingredient))).ToList();
         List<Dish> filteredByAllergens = unsortedDishes.Where(x => x.PotentialAllergens.Select(i => i.ToLower()).Any(allergen => ingredients.Contains(allergen.ToLower()))).ToList();
         return filteredByIngredients.Union(filteredByAllergens).OrderBy(x => x.Price).ToList();
     }
-
-
-
-
 }

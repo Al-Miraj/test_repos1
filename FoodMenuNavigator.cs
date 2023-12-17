@@ -1,94 +1,20 @@
 ﻿using Menus;
 
 //should be called first
-public static class FoodMenuNavigator
+public abstract class MenuItem<T> : IMenu
 {
-    private static int selectedOption = 1;
+    protected List<T> Items;
 
-    public static void Display()
+    public MenuItem(string jsonFilePath)
     {
-        Console.CursorVisible = false;
-
-        while (true)
-        {
-            Console.Clear();
-            //PrintInfo(GetDefaultMenu().timeslotMenu, GetDefaultMenu().timeslot, false);
-            GetCorrectMenu();
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-            if (keyInfo.Key == ConsoleKey.UpArrow && selectedOption > 1)
-            {
-                selectedOption--;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && selectedOption < 5)
-            {
-                selectedOption++;
-            }
-            else if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                bool exitMenu = HandleSelection();
-                if (exitMenu) { break; }
-            }
-        }
+        Items = JsonFileHandler.ReadFromFile<T>(jsonFilePath);
     }
 
-    public static void GetCorrectMenu()
-    {
-        for (int i = 1; i <= 5; i++)
-        {
-            if (i == selectedOption)
-            {
-                Console.Write(">");
-            }
-            else
-            {
-                Console.Write(" ");
-            }
+    protected abstract void PrintInfo(List<T> dishlist, string header, bool keyContinue = true);
+    
 
-            switch (i)
-            {
-                case 1:
-                    Console.WriteLine(" default food menu");
-                    break;
-                case 2:
-                    Console.WriteLine(" seasonal food menu");
-                    break;
-                case 3:
-                    Console.WriteLine(" special holiday menu (may not always be applicable)");
-                    break;
-                case 4:
-                    Console.WriteLine(" default menu for drinks");
-                    break;
-                case 5:
-                    Console.WriteLine(" exit menu");
-                    break;
-            }
-        }
-    }
+    // Common methods that can be used in derived classes
+    protected List<Dish> GetTimeSlotMenu(string timeSlot) => Items.Where(dish => dish.Timeslot == timeSlot).ToList();
 
-    private static bool HandleSelection()
-    {
-        Console.Clear();
-        bool exitMenu = false;
 
-        switch (selectedOption)
-        {
-            case 1:
-                FoodMenu.Display();
-                break;
-            case 2:
-                SeasonalMenu.PrintInfo();
-                break;
-            case 3:
-                HolidayMenu.getHoliday(DateTime.Now.Date);
-                break;
-            case 4:
-                DrinksMenu.Display();
-                break;
-            case 5:
-                return true;
-        }
-        return exitMenu;
-    }
 }
