@@ -13,34 +13,38 @@ public class Dashboard
 
     public void RunDashboardMenu()
     {
-        UserRole userRole = GetUserRole();
+        Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
         Console.Clear();
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
-
         List<ICommand> commands = GetCommandsOfType(userRole);
         int selectedOption = MenuSelector.RunMenuNavigator(commands);
         commands[selectedOption].Execute();
-
         Console.WriteLine("\n[Press any key to return to the your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
     }
 
-    public void GetOrders()
+    public void GetReservation()
     {
+        Console.Clear();
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
-        List<string> options = reservations.Select(GetReservationInfo).ToList();
-        options.Add("Exit");
+        List<string> options = reservations.Select(r => r.ToString()).ToList();
+        options.Add("Back");
         if (reservations != null) { selectedOption = MenuSelector.RunMenuNavigator(options); }
         else { return; }
-        Console.Clear();
+        if (selectedOption == options.IndexOf(options.Last()))
+        {
+            return;
+        }
         options.Remove(options.Last());
         Reservation reservation = reservations[selectedOption];
         SendFeedback(reservation);
     }
+
     private void SendFeedback(Reservation reservation)
     {
+        Console.Clear();
         Console.WriteLine("How would you rate our service?");
         int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5 });
         rating++;
@@ -52,8 +56,6 @@ public class Dashboard
         Console.WriteLine("What could we have done better to improve your experience? Or what went good?");
         string message = Console.ReadLine()!;
         Console.WriteLine("Thank you for the feedback!");
-        //Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message, reservation);
-        // todo: write to xml file
         Feedback feedback = new Feedback()
         {
             Email = ((CustomerAccount)CurrentUser).Email,
@@ -64,7 +66,7 @@ public class Dashboard
 
         Restaurant.database.DataWriter(feedback);
     }
-
+    
     public void ReservationManager()
     {
         ReservationManagement.CurrentUser = CurrentUser;
@@ -84,16 +86,7 @@ public class Dashboard
         reservations.ForEach(Console.WriteLine);
     }
 
-    private string GetReservationInfo(Reservation reservation)
-    {
-        return
-        $" Reservation Number: {reservation.ReservationNumber}" +
-        $" \n    Date: {reservation.Date}" +
-        $" \n    Timeslot: {reservation.TimeSlot}" +
-        $" \n    Price: {reservation.GetTotalPrice()}" +
-        $"\n";
-
-    }
+    
 
     public void ReadFeedback() // made some private functions public for using Command Pattern
     {
@@ -114,33 +107,13 @@ public class Dashboard
         Console.WriteLine();
     }
 
-    private enum UserRole // better alternative for booleans
+    private List<ICommand> GetCommandsOfType(Restaurant.UserRole userRole) // more files, but more readability using c# Command Pattern
     {
-        Customer,
-        Admin,
-        SuperAdmin
-    }
-
-    private UserRole GetUserRole() // sets the appropiate UserRole
-    {
-        switch (CurrentUser)
-        {
-            case Account n when n is SuperAdminAccount:
-                return UserRole.SuperAdmin;
-            case Account n when n is AdminAccount:
-                return UserRole.Admin;
-            default:
-                return UserRole.Customer;
-        }
-    }
-
-    private List<ICommand> GetCommandsOfType(UserRole userRole) // more files, but more readability using c# Command Pattern
-    {
-        if (userRole == UserRole.SuperAdmin)
+        if (userRole == Restaurant.UserRole.SuperAdmin)
         {
             return ((SuperAdminAccount)CurrentUser).GetCommands(this);
         }
-        else if (userRole == UserRole.Admin)
+        else if (userRole == Restaurant.UserRole.Admin)
         {
             return ((AdminAccount)CurrentUser).GetCommands(this);
         }

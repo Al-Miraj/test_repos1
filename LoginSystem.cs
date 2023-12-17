@@ -151,7 +151,7 @@ static class LoginSystem
         return email;
     }
 
-    public static string GetAccountPassword(bool registering)
+    public static string GetAccountPassword(bool registering = true)
     {
         string password;
         if (registering) { DisplayPasswordRequirements(); }

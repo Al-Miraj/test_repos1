@@ -221,4 +221,23 @@ public static class Restaurant
         }
     } // todo maybe have a deal handler or put this in Deal.cs
 
+    public enum UserRole // better alternative for booleans
+    {
+        Customer,
+        Admin,
+        SuperAdmin
+    }
+
+    public static UserRole GetUserRole(Account user) // sets the appropiate UserRole
+    {
+        switch (user)
+        {
+            case Account n when n is SuperAdminAccount:
+                return UserRole.SuperAdmin;
+            case Account n when n is AdminAccount:
+                return UserRole.Admin;
+            default:
+                return UserRole.Customer;
+        }
+    }
 }
