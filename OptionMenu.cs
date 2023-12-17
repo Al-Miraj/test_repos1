@@ -47,10 +47,10 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     AboutUs.travel();
                     break;
                 case 3:
-                    MenuItem.Display();
+                    Dishes dishesMenu = new Dishes();
                     break;
                 case 4:
-                    DrinksMenu.Display();
+                    DrinksMenu drinksMenu = new DrinksMenu();
                     break;
                 case 5:
                     Restaurant.DisplayDeals();

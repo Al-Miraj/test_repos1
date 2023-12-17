@@ -1,7 +1,6 @@
-﻿public interface IMenu
+﻿public interface IMenu<T>
 {
-    void HandleFoodMenuSelection();
-    (List<Dish>, string timeslot)? GetDefaultMenu();
-    List<Dish>? HandleFilterMenuSelection();
-    void PrintInfo(List<Dish> dishList, string header, bool keyContinue = true);
+    void HandleSelection();
+    void PrintInfo(List<T> itemList, string header, bool keyContinue = true);
+    List<T> GetTimeSlotMenu(string timeSlot);
 }

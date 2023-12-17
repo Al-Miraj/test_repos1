@@ -13,6 +13,8 @@ public class Dish
     public string Season { get; set; }
     public string Holiday { get; set; }
 
+    public Dish() { }
+
     public Dish(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string category)
     {
         Name = name;

@@ -56,8 +56,8 @@ public class Dashboard : Reservation
             case 3:
                 if (isSuperAdmin)
                 { AddAdmin(); } // Add this case for regular users
-                else
-                { DailyMenu(); }
+                //else
+                //{ DailyMenu(); }
                 break;
             case 4:
                 if (isSuperAdmin)
@@ -107,10 +107,10 @@ public class Dashboard : Reservation
     }
 
 
-    private void DailyMenu()
+    /*private void DailyMenu()
     {
         DailyMenuGenerator.DisplayDailyMenu();
-    }
+    }*/
 
     private void GetOrders()
     {

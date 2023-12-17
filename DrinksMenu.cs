@@ -1,44 +1,36 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
 
-public class DrinksMenu : MenuItem
+public class DrinksMenu : MenuItem<Drinks>
 {
     private static int selectedOption;
-
-    public Dishes() : base("Dish.json")
+    public DrinksMenu() : base("Dish.json")
     {
-        selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
+        selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Complete menu", "Soda", "Wine", "Whiskey", "Cognac", "Beer", "Exit" });
         HandleSelection();
     }
 
 
-    private static void HandleSelection()
+    public override void HandleSelection()
     {
-        switch (selectedOption)
+        if (selectedOption >= 1 && selectedOption <= 6)
         {
-            case 1:
-                PrintInfo(defaultMenu);
-                break;
-            case 2:
-                PrintInfo(GetCategory("Soda"));
-                break;
-            case 3:
-                PrintInfo(GetCategory("Wine"));
-                break;
-            case 4:
-                PrintInfo(GetCategory("Whiskey"));
-                break;
-            case 5:
-                PrintInfo(GetCategory("Cognac"));
-                break;
-            case 6:
-                PrintInfo(GetCategory("Beer"));
-                break;
-            case 7:
-                break;
+            string? category = selectedOption switch
+            {
+                1 => "Soda",
+                2 => "Soda",
+                3 => "Wine",
+                4 => "Whiskey",
+                5 => "Cognac",
+                6 => "Beer",
+                _ => null
+            };
+
+            PrintInfo(GetCategory(category), category);
         }
     }
 
-    protected override void PrintInfo(List<Drinks> drinks, string header, bool KeyContinue = true)
+    public override void PrintInfo(List<Drinks> drinks, string header, bool KeyContinue = true)
     {
         Console.Clear();
         string CurrentCategory = "";
@@ -67,5 +59,5 @@ public class DrinksMenu : MenuItem
         }
     }
 
-    public static List<Drinks> GetCategory(string type) => defaultMenu.FindAll(x => x.Category == type);
+    public List<Drinks> GetCategory(string type) => Items.FindAll(x => x.Category == type);
 }

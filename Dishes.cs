@@ -1,5 +1,4 @@
-﻿using Menus;
-
+﻿
 public class Dishes : MenuItem<Dish>
 {
     private int selectedFoodMenuOption;
@@ -7,56 +6,45 @@ public class Dishes : MenuItem<Dish>
     public Dishes() : base("Dish.json")
     {
         selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
-        HandleFoodMenuSelection();
+        HandleSelection();
         PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) == true ? "Dinner" : "Lunch");
     }
 
-    protected override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
+    public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
         var lastDish = dishlist.LastOrDefault();
-
         int consoleWidth = Console.WindowWidth;
         int timeslotLength = header.Length;
         int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
         Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
+
         Console.WriteLine(header);
-
-        foreach (var dish in dishlist)
+        Console.WriteLine(); Console.WriteLine("==================================================================================================================");
+        for (int i = 0; i < dishlist.Count; i++)
         {
-            if (currentHoliday != dish.Name)
+            Console.WriteLine($"{i + 1}. {dishlist[i].Name,-20} {dishlist[i].Price,74}");
+            if (dishlist[i].Description.Length > 52)
             {
-                Console.WriteLine("------------------------------------------------------------------------------------");
-                Console.WriteLine();
-                currentHoliday = dish.Name;
+                Console.WriteLine($"{dishlist[i].Description.Substring(0, 50)}");
+                Console.WriteLine(dishlist[i].Description.Substring(50, dishlist[i].Description.Length - 50));
             }
-
-            Console.WriteLine($"Name: {dish.Name}");
-            Console.WriteLine($"Description: {dish.Description}");
-            Console.WriteLine($"Ingredients: {string.Join(", ", dish.Ingredients)}");
-            Console.WriteLine($"Timeslot: {dish.Timeslot}");
-            Console.WriteLine($"Price: {dish.Price}");
-            Console.WriteLine($"Potential Allergens: {string.Join(", ", dish.PotentialAllergens)}");
-            Console.WriteLine($"Icon: {dish.Category}");
-            if (dish.Holiday != "")
-                Console.WriteLine($"Holiday: {dish.Holiday}");
-            Console.WriteLine($"Season: {dish.Season}");
-            Console.WriteLine();
-
-            if (dish == lastDish)
+            else
             {
-                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine($"Ingredients: {string.Join(", ", dishlist[i].Ingredients)}");
                 Console.WriteLine();
+                Thread.Sleep(100);
             }
+            Console.WriteLine("==================================================================================================================");
 
-        }
-        if (keyContinue)
-        {
-            Console.WriteLine("Press any key to continue");
-            Console.ReadKey();
+            if (keyContinue)
+            {
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
         }
     }
 
-    public void HandleFoodMenuSelection()
+    public override void HandleSelection()
     {
         Console.Clear();
 
@@ -69,7 +57,15 @@ public class Dishes : MenuItem<Dish>
                 PrintInfo(GetTimeSlotMenu("Dinner"), "Dinner");
                 break;
             case 3:
-                HandleFilterMenuSelection();
+                List<Dish>? filteredDishes = HandleFilterMenuSelection();
+                if (filteredDishes != null && filteredDishes.Count > 0)
+                {
+                    PrintInfo(filteredDishes, "Filtered Menu");
+                }
+                else
+                {
+                    Console.WriteLine("No dishes found for the selected filters.");
+                }
                 break;
             case 4:
                 break;
@@ -96,7 +92,7 @@ public class Dishes : MenuItem<Dish>
         return null;
     }
 
-    public static bool ifDinner(TimeOnly time)
+    private static bool ifDinner(TimeOnly time)
     {
         TimeOnly startTime = new TimeOnly(18, 0);
         TimeOnly endTime = new TimeOnly(22, 0);
@@ -109,7 +105,7 @@ public class Dishes : MenuItem<Dish>
         return false;
     }
 
-    public static (DateOnly date, TimeOnly time) SetTime()
+    private static (DateOnly date, TimeOnly time) SetTime()
     {
         DateTime now = DateTime.Now;
 
@@ -117,7 +113,6 @@ public class Dishes : MenuItem<Dish>
         TimeOnly time = TimeOnly.FromDateTime(now);
 
         return (date, time);
-
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------

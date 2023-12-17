@@ -1,11 +1,11 @@
-﻿public class DailyMenuGenerator
+﻿/*public class DailyMenuGenerator
 {
     public static void DisplayDailyMenu()
     {
 
-        List<Dishes> Dishess = JsonFileHandler.ReadFromFile<Dishes>("Dishes.json");
+        List<Dishes> dishlist = JsonFileHandler.ReadFromFile<Dishes>("Dishes.json");
 
-        //foreach (var Dishes in Dishess)
+        //foreach (var Dishes in dishlist)
         //{
         //    Console.WriteLine($"{Dishes.Name} - {Dishes.Price}");
         //}
@@ -18,7 +18,7 @@
         //}
 
 
-        Dishes randomMeal = GetRandom(Dishess);
+        Dishes randomMeal = GetRandom(dishlist);
         Drinks randomDrink = GetRandom(drinks);
 
         double totalOriginalPrice = randomMeal.Price + randomDrink.Price;
@@ -49,4 +49,4 @@
         int randomIndex = random.Next(Dishes.Count);
         return Dishes[randomIndex];
     }
-}
+}*/

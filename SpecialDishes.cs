@@ -6,7 +6,7 @@ public class SpecialDishes : MenuItem<Dish>
     private static List<DateTime> keys = new List<DateTime>();
     public static List<Dish> rawSeasonalMenu;
 
-    public SpecialDishes(bool isHolidayMenu) : base(isHolidayMenu ? "HolidayMenu.json" : "SeasonalMenu.json")
+    public SpecialDishes(bool isHolidayMenu) : base(isHolidayMenu ? "HolidayDishes.json" : "SeasonalDishes.json")
     {
         if (isHolidayMenu)
         {
@@ -40,7 +40,7 @@ public class SpecialDishes : MenuItem<Dish>
         { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
     };
 
-    protected override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
+    public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
         string currentHoliday = "";
         var lastDish = dishlist.LastOrDefault();
