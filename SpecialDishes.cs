@@ -46,10 +46,10 @@ public class SpecialDishes : MenuItem<Dish>
     {
         string currentHoliday = "";
         var lastDish = dishlist.LastOrDefault();
-
         int consoleWidth = Console.WindowWidth;
         int timeslotLength = header.Length;
         int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
+        Console.Clear();
         Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
         Console.WriteLine(header);
         Console.WriteLine();
@@ -128,9 +128,12 @@ public class SpecialDishes : MenuItem<Dish>
 
     private void GetNearestMenu()
     {
-        Console.WriteLine("No holiday found for today.");
-        Console.WriteLine("Do you want to see the menu of the nearest holiday?");
-        int choice = MenuSelector.RunMenuNavigator(new List<string>() { "yes", "no" });
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine(" No holiday found for today.");
+        Console.WriteLine(" Do you want to see the menu of the nearest holiday?");
+        Console.WriteLine();
+        int choice = MenuSelector.RunMenuNavigator(new List<string>() { " yes", " no" });
         Console.Clear();
         Console.WriteLine();
 

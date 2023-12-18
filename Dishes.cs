@@ -5,13 +5,14 @@ public class Dishes : MenuItem<Dish>
 
     public Dishes() : base("Dish.json")
     {
-        selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
-        HandleSelection();
+        selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" }) + 1;
         PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) == true ? "Dinner" : "Lunch");
+        HandleSelection();
     }
 
     public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
+        Console.Clear();
         var lastDish = dishlist.LastOrDefault();
         int consoleWidth = Console.WindowWidth;
         int timeslotLength = header.Length;

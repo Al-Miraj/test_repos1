@@ -47,7 +47,8 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     AboutUs.travel();
                     break;
                 case 3:
-                    SpecialDishes specialdish = new SpecialDishes(false);
+                    FoodDrinkEntryPoint foodDrinkEntryPoint = new FoodDrinkEntryPoint();
+                    foodDrinkEntryPoint.GetCorrectMenu();
                     break;
                 case 4:
                     DrinksMenu drinksMenu = new DrinksMenu();
