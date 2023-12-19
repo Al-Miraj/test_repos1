@@ -25,7 +25,7 @@ public class Dashboard
         RunDashboardMenu();
     }
 
-    public void GetReservation()
+    public void GetFeedbackReservation()
     {
         Console.Clear();
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
@@ -76,14 +76,11 @@ public class Dashboard
     public void OrderHistory()
     {
         Console.Clear();
-        Console.WriteLine("Your past reservations:\n");
-        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works: WORKS
-        if (reservations.Count == 0)
-        {
-            Console.WriteLine("You have not booked at this restaurant yet.");
-            return;
-        }
-        reservations.ForEach(Console.WriteLine);
+        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
+        List<string> options = reservations.Select(r => r.ToString()).ToList();
+        options.Add("Back");
+        int selectedOption = MenuSelector.RunMenuNavigator(options);
+        if (selectedOption == options.IndexOf(options.Last())) { return; }
     }
 
     

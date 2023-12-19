@@ -9,7 +9,7 @@
 
     public void Execute()
     {
-        _dashboard.GetReservation();
+        _dashboard.GetFeedbackReservation();
     }
 
     public override string ToString()

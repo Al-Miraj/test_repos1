@@ -41,6 +41,11 @@ public abstract class Account
     public abstract List<ICommand> GetCommands(Dashboard dashboard);
     public override string ToString()
     {
-        return $"ID: {ID}\nName: {Name}\nEmail: {Email}";   //Password not saved for privacy
+        return
+            $" ID: {ID}" +
+            $" \n    Name: {Name}" +
+            $" \n    Email: {Email}" +
+            $"\n";
     }
+
 }
