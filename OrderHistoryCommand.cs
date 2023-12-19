@@ -9,4 +9,9 @@
     {
         _dashboard.OrderHistory();
     }
+
+    public override string ToString()
+    {
+        return "Order History";
+    }
 }
