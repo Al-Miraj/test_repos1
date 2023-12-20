@@ -103,7 +103,7 @@ static class LoginSystem
 
     public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.ID) : 0;
     
-    private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email == email && account.Password == password);
+    private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email.ToLower() == email.ToLower() && account.Password == password);
 
     public static string GetAccountName()
     {
