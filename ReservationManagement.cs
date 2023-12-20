@@ -7,8 +7,8 @@ public static class ReservationManagement
     public static Account CurrentUser { get; set; } = Restaurant.AdminAccounts[0];
     private static Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
     private static bool IsAdmin = userRole == Restaurant.UserRole.Admin || userRole == Restaurant.UserRole.SuperAdmin;
-    private static List<Reservation> ReservationsOfUser
-    { get { return GetReservationsOfUser(); } }
+    private static List<Reservation> ReservationsOfUser =>
+        GetReservationsOfUser();
 
 
     public static void Display()
