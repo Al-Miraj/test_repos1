@@ -21,29 +21,31 @@
 
 public class FoodDrinkEntryPoint
 {
-    private int selectedMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { " Normal Menu", " Seasonal Menu", " Holiday Menu", " Drinks", " Exit" });
+    private Dishes dishes;
+    private SpecialDishes specialDishes;
+    private DrinksMenu drinks;
 
     public void GetCorrectMenu()
     {
-        Dishes dishes;
-        SpecialDishes specialDishes;
-        DrinksMenu drinks;
+        int selectedMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Normal Menu", "Seasonal Menu", "Holiday Menu", "Drinks", "Exit" });
 
-        switch (selectedMenuOption + 1)
+        switch (selectedMenuOption)
         {
-            case 1:
+            case 0:
                 dishes = new Dishes();
                 break;
-            case 2:
+            case 1:
                 specialDishes = new SpecialDishes(false);
                 break;
-            case 3:
+            case 2:
                 specialDishes = new SpecialDishes(true);
                 break;
-            case 4:
+            case 3:
                 drinks = new DrinksMenu();
                 break;
             default:
+                Console.WriteLine("Invalid selection. Please try again.");
+                GetCorrectMenu();
                 break;
         }
     }

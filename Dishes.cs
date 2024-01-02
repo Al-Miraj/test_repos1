@@ -2,11 +2,16 @@
 public class Dishes : MenuItem<Dish>
 {
     private int selectedFoodMenuOption;
+    private static bool shown;
 
     public Dishes() : base("Dish.json")
     {
-        selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" }) + 1;
-        PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) == true ? "Dinner" : "Lunch");
+        if (!shown)
+            PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) ? "Dinner" : "Lunch");
+            shown = true;
+
+        selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
+
         HandleSelection();
     }
 
@@ -46,6 +51,7 @@ public class Dishes : MenuItem<Dish>
         {
             Console.WriteLine("Press any key to continue");
             Console.ReadKey();
+            Console.Clear();
         }
     }
 
@@ -55,13 +61,13 @@ public class Dishes : MenuItem<Dish>
 
         switch (selectedFoodMenuOption)
         {
-            case 1:
+            case 0:
                 PrintInfo(GetTimeSlotMenu("Lunch"), "Lunch");
                 break;
-            case 2:
+            case 1:
                 PrintInfo(GetTimeSlotMenu("Dinner"), "Dinner");
                 break;
-            case 3:
+            case 2:
                 List<Dish>? filteredDishes = HandleFilterMenuSelection();
                 if (filteredDishes != null && filteredDishes.Count > 0)
                 {
@@ -72,7 +78,7 @@ public class Dishes : MenuItem<Dish>
                     Console.WriteLine("No dishes found for the selected filters.");
                 }
                 break;
-            case 4:
+            case 3:
                 break;
         }
         return;
@@ -81,7 +87,6 @@ public class Dishes : MenuItem<Dish>
     private (List<Dish>, string timeslot)? GetDefaultMenu()
     {
         var dt = SetTime();
-        DateOnly date = dt.date;
         TimeOnly time = dt.time;
 
         if (ifDinner(time))
@@ -113,7 +118,6 @@ public class Dishes : MenuItem<Dish>
     private static (DateOnly date, TimeOnly time) SetTime()
     {
         DateTime now = DateTime.Now;
-
         DateOnly date = DateOnly.FromDateTime(now);
         TimeOnly time = TimeOnly.FromDateTime(now);
 
@@ -123,27 +127,10 @@ public class Dishes : MenuItem<Dish>
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------------------------
-
-    private static int selectedFilterMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { " Filter by Ingredients", " Filter by Price", " Filter by Category", " Exit" });
-    private static int selectedTimeSlotOption = MenuSelector.RunMenuNavigator(new List<string>() { " Lunch", " Dinner", " Exit" });
-
-    private static string HandleTimeSLotSelection()
-    {
-        switch (selectedTimeSlotOption)
-        {
-            case 1:
-                return "Lunch";
-            case 2:
-                return "Dinner";
-            case 3:
-                return "Exit";
-            default:
-                return "";
-        }
-    }
-
     private List<Dish>? HandleFilterMenuSelection()
     {
+        int selectedFilterMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { " Filter by Ingredients", " Filter by Price", " Filter by Category", " Exit" });
+
         switch (selectedFilterMenuOption)
         {
             case 1:
@@ -170,9 +157,11 @@ public class Dishes : MenuItem<Dish>
         return null;
     }
 
-    private static string HandleTimeSlotSelection()
+    private string HandleTimeSlotSelection()
     {
         Console.Clear();
+
+        int selectedTimeSlotOption = MenuSelector.RunMenuNavigator(new List<string>() { " Lunch", " Dinner", " Exit" });
 
         switch (selectedTimeSlotOption)
         {
@@ -181,7 +170,6 @@ public class Dishes : MenuItem<Dish>
             case 2:
                 return "Dinner";
             case 3:
-                Environment.Exit(0);
                 break;
         }
 
