@@ -23,6 +23,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
         {
             Console.Clear();
 
+            Console.ForegroundColor = ConsoleColor.Red;
 
             // Inside the while loop so that the name gets displayed each time the options menu is shown
             Console.WriteLine("    __            ____       ___              ______                            _     ");
@@ -30,6 +31,8 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
             Console.WriteLine("  / /   / _ \\   / / / / _ \\/ / / ___/ _ \\   / /_  / ___/ __ `/ __ \\/ ___/ __ `/ / ___/");
             Console.WriteLine(" / /___/  __/  / /_/ /  __/ / / /__/  __/  / __/ / /  / /_/ / / / / /__/ /_/ / (__  ) ");
             Console.WriteLine("/_____/\\___/  /_____/\\___/_/_/\\___/\\___/  /_/   /_/   \\__,_/_/ /_/\\___/\\__,_/_/____/ \n ");
+            Console.WriteLine();
+            Console.ResetColor();
 
 
             int selectedOption = MenuSelector.RunMenuNavigator(menuOptions);

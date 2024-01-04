@@ -9,6 +9,8 @@ public class Dishes : MenuItem<Dish>
         if (!shown)
             PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) ? "Dinner" : "Lunch");
             shown = true;
+            Console.Clear();
+        
 
         selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
 
@@ -133,9 +135,9 @@ public class Dishes : MenuItem<Dish>
 
         switch (selectedFilterMenuOption)
         {
-            case 1:
+            case 0:
                 return FilterIngredients(HandleTimeSlotSelection());
-            case 2:
+            case 1:
                 Console.WriteLine("Enter the maximum price:");
                 if (double.TryParse(Console.ReadLine(), out double maxPrice))
                 {
@@ -146,9 +148,9 @@ public class Dishes : MenuItem<Dish>
                     Console.WriteLine("Invalid price input. Please enter a valid price.");
                 }
                 break;
-            case 3:
+            case 2:
                 return FilterCategory(HandleTimeSlotSelection().ToString());
-            case 4:
+            case 3:
                 break;
             default:
                 break;
@@ -213,6 +215,7 @@ public class Dishes : MenuItem<Dish>
 
     public List<Dish> FilterIngredients(string menuType)
     {
+        Console.WriteLine();
         Console.WriteLine("Enter the ingredients (use comma):");
         string ingredientRaw = Console.ReadLine().ToLower();
         List<string> ingredients = ingredientRaw.Split(", ").ToList();

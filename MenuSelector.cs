@@ -16,13 +16,17 @@ public static class MenuSelector
             {
                 if (i == selectedOption)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"{Cursor} {options[i]}");
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"   {options[i]}");
                 }
             }
+
+            Console.ResetColor();
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
