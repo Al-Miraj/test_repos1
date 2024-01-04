@@ -1,6 +1,6 @@
 ﻿public static class MenuSelector
 {
-    private static string Cursor = " >";
+    private static string Cursor = " ->";
 
     public static int RunMenuNavigator(List<string> options)
     {
