@@ -130,31 +130,36 @@
 
     private void AddAdmin(SuperAdminAccount superAdmin)
     {
+        // Interface with the user to get new admin details
         Console.WriteLine("Enter the email for the new admin:");
         string email = Console.ReadLine();
         Console.WriteLine("Enter the password for the new admin:");
         string password = Console.ReadLine();
 
+        // Call the SuperAdminAccount method to add the new admin
         superAdmin.AddAdmin(email, password);
-        Console.WriteLine("Admin added successfully.");
 
-        // Pause to allow the user to see the confirmation message
-        Console.WriteLine("\n[Press any key to return to the dashboard.]");
+        // Now the action is complete, redirect or return to the dashboard menu
+        Console.WriteLine("Press any key to return to the dashboard.");
         Console.ReadKey();
+        RunDashboardMenu();
     }
+
 
     private void RemoveAdmin(SuperAdminAccount superAdmin)
     {
         Console.WriteLine("Enter the email of the admin to remove:");
         string email = Console.ReadLine();
 
+        // Call the SuperAdminAccount method to remove the admin
         superAdmin.RemoveAdmin(email);
-        Console.WriteLine("Admin removed successfully.");
 
-        // Pause to allow the user to see the confirmation message
-        Console.WriteLine("\n[Press any key to return to the dashboard.]");
+        // Now the action is complete, redirect or return to the dashboard menu
+        Console.WriteLine("Press any key to return to the dashboard.");
         Console.ReadKey();
+        RunDashboardMenu();
     }
+
 
 
 

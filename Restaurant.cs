@@ -152,6 +152,8 @@ public static class Restaurant
         return reservations;
     }
 
+
+
     public static void UpdateRestaurantFiles()
     {
         XmlFileHandler.WriteToFile(Accounts, AccountsXmlFileName);

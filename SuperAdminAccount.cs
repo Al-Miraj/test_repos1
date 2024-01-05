@@ -24,19 +24,25 @@
     public void AddAdmin(string email, string password)
     {
         // Check if admin with this email already exists
-        var existingAdmin = Restaurant.AdminAccounts.Any(a => a.Email == email);
-        if (existingAdmin)
+        if (LoginSystem.Accounts.Any(a => a.Email == email))
         {
             Console.WriteLine("An admin with this email already exists.");
             return;
         }
 
+        // Add the new admin
         int newId = GenerateNewId();
-        var newAdmin = new AdminAccount(newId, "New Admin", email, password);
-        // Assuming you hash passwords
-        Restaurant.AdminAccounts.Add(newAdmin);
-        // You may want to persist this change to a database or file
-        Console.WriteLine("Admin added successfully.");
+        string adminName = "New Admin"; // You need to decide how to set the name for new admins
+        var newAdmin = new AdminAccount(newId, adminName, email, password);
+        AdminAccount newAdmin = new AdminAccount(newId, email, password);
+        LoginSystem.Accounts.Add(newAdmin);
+
+        // Save the updated list of accounts
+        XmlFileHandler.WriteToFile(LoginSystem.Accounts, "Accounts.xml");
+        // Or for JSON:
+        // Utensils.WriteJson("Accounts.json", LoginSystem.Accounts);
+
+        Console.WriteLine("New admin added.");
     }
 
 
@@ -46,14 +52,31 @@
         if (adminToRemove != null)
         {
             Restaurant.AdminAccounts.Remove(adminToRemove);
-            // Update your data storage to reflect this change
             Console.WriteLine("Admin removed successfully.");
+
+            // Save the updated list to the file
+            XmlFileHandler.WriteToFile(Restaurant.AdminAccounts, "AdminAccounts.xml");
+            // If you're using JSON, use the Utensils class to write to a JSON file instead
+            // Utensils.WriteJson("AdminAccounts.json", Restaurant.AdminAccounts);
         }
         else
         {
             Console.WriteLine("Admin account not found.");
         }
     }
+
+    public void ListAdmins()
+    {
+        Console.WriteLine("Listing all admins:");
+        foreach (var admin in Restaurant.AdminAccounts)
+        {
+            Console.WriteLine($"Email: {admin.Email}");
+        }
+    }
+
+
+
+
 
 
 
