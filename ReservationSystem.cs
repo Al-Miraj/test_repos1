@@ -5,6 +5,8 @@ using System.Text.Json;
 public static class ReservationSystem // Made class static so loginsystem and dashboard don't rely on instances
 {
     public static Random Random = new Random();
+    public static List<Reservation> Reservations { get; set; } = new List<Reservation>();
+
 
     public static void RunSystem()
     {

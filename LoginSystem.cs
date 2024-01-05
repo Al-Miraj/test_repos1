@@ -14,17 +14,20 @@ using System.Xml.Linq;
 
 static class LoginSystem
 {
+    public static List<Account> Accounts { get; set; }
     public static void Start()
     {
         Console.WriteLine("Welcome!\n\nWhat do you want to do:");
-        List<string> LoginRegisterOptions = new List<string>() { "Log into existing account", "Create new account" };
+        List<string> LoginRegisterOptions = new List<string>() { "Log into existing account", "Create new account", "Login as Superadmin" };
         int selectedOption = MenuSelector.RunMenuNavigator(LoginRegisterOptions);
         switch (selectedOption)
         {
             case 0: Console.Clear(); Login(); break;
             case 1: Console.Clear(); Register(); break;
+            case 2: Console.Clear(); LoginAsSuperAdmin(); break;
         }
     }
+
 
     public static void Login()
     {
@@ -102,8 +105,49 @@ static class LoginSystem
     }
 
     public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.ID) : 0;
-    
-    private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email == email && account.Password == password);
+
+    private static Account? FindAccount(string email, string password)
+    {
+        // First, check for a SuperAdminAccount
+        var superAdminAccount = Restaurant.SuperAdminAccounts
+            .FirstOrDefault(acc => acc.Email == email && acc.Password == password);
+        if (superAdminAccount != null)
+        {
+            return superAdminAccount;
+        }
+
+        // Check other accounts (existing logic)
+        return Restaurant.Accounts.FirstOrDefault(account => account.Email == email && account.Password == password);
+    }
+
+    public static void LoginAsSuperAdmin()
+    {
+        Console.WriteLine("Superadmin login\nPlease enter your email:");
+        string email = Console.ReadLine();
+        Console.WriteLine("Please enter your password:");
+        string password = Console.ReadLine();
+
+        if (email == "superadmin@hotmail.com" && password == "Admin-1234")
+        {
+            Console.WriteLine("Logging in as Superadmin...");
+            // Use the static method to get the default superadmin account
+            SuperAdminAccount account = SuperAdminAccount.GetDefaultSuperAdmin();
+            Dashboard dashboard = new Dashboard(account);
+            ConnectUser(account, dashboard);
+            Console.WriteLine("\n[Press any key to continue to the dashboard.]");
+            Console.ReadKey();
+            dashboard.RunDashboardMenu();
+        }
+        else
+        {
+            Console.WriteLine("Login failed. Please check your credentials and try again.");
+        }
+    }
+
+
+
+
+
 
     public static string GetAccountName()
     {
@@ -195,7 +239,7 @@ static class LoginSystem
 
     public static bool IsValidEmail(string? text)
     {
-        if (text =="")
+        if (text == "")
         {
             return false;
         }
