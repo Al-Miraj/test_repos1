@@ -10,7 +10,7 @@
     public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
-        bool isSuperAdmin = CurrentUser is SuperAdminAccount;
+      
         Console.Clear();
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
@@ -24,12 +24,7 @@
             "Log out"
         };
 
-        if (isSuperAdmin)
-        {
-            // Add options specific to superadmin
-            dashboardOptions.Add("Add Admin");
-            dashboardOptions.Add("Remove Admin");
-        }
+       
 
         int selectedOption = MenuSelector.RunMenuNavigator(dashboardOptions);
 
@@ -57,21 +52,8 @@
                 LoginSystem.Logout();
                 return;
             case 5:
-                // Assuming this is the index for "Add Admin" option
-                if (isSuperAdmin)
-                {
-                    AddAdmin((SuperAdminAccount)CurrentUser);
-                }
-                break;
-            case 6:
-                // Assuming this is the index for "Remove Admin" option
-                if (isSuperAdmin)
-                {
-                    RemoveAdmin((SuperAdminAccount)CurrentUser);
-                }
                 break;
         }
-
         Console.WriteLine("\n[Press any key to return to your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
@@ -105,10 +87,7 @@
             Console.WriteLine();
         }
     }
-    private void SuperAdminManagement(SuperAdminAccount superAdmin)
-    {
-        // Logic for super admin management tasks (add/remove admin, view overview)
-    }
+    
 
     private void ReservationOverview()
     {
@@ -128,38 +107,7 @@
         RunDashboardMenu();
     }
 
-    private void AddAdmin(SuperAdminAccount superAdmin)
-    {
-        // Interface with the user to get new admin details
-        Console.WriteLine("Enter the email for the new admin:");
-        string email = Console.ReadLine();
-        Console.WriteLine("Enter the password for the new admin:");
-        string password = Console.ReadLine();
-
-        // Call the SuperAdminAccount method to add the new admin
-        superAdmin.AddAdmin(email, password);
-
-        // Now the action is complete, redirect or return to the dashboard menu
-        Console.WriteLine("Press any key to return to the dashboard.");
-        Console.ReadKey();
-        RunDashboardMenu();
-    }
-
-
-    private void RemoveAdmin(SuperAdminAccount superAdmin)
-    {
-        Console.WriteLine("Enter the email of the admin to remove:");
-        string email = Console.ReadLine();
-
-        // Call the SuperAdminAccount method to remove the admin
-        superAdmin.RemoveAdmin(email);
-
-        // Now the action is complete, redirect or return to the dashboard menu
-        Console.WriteLine("Press any key to return to the dashboard.");
-        Console.ReadKey();
-        RunDashboardMenu();
-    }
-
+    
 
 
 

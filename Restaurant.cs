@@ -7,7 +7,7 @@ public static class Restaurant
     public static string ReservationsXmlFileName = "Reservations.xml";
     public static string AccountsXmlFileName = "Accounts.xml";
     public static List<Account> Accounts = InitializeAccounts();
-    public static List<SuperAdminAccount> SuperAdminAccounts = InitializeSuperAdminAccounts();
+    
     public static List<AdminAccount> AdminAccounts { get { return GetAdminAccounts(); } }
     public static List<CustomerAccount> CustomerAccounts { get { return GetCustomerAccounts(); } }
     public static List<Deal> Deals = InitializeDeals();
@@ -61,17 +61,7 @@ public static class Restaurant
         return customerAccounts;
     }
 
-    private static List<SuperAdminAccount> InitializeSuperAdminAccounts()
-    {
-        List<SuperAdminAccount> superAdminAccounts = new List<SuperAdminAccount>();
-
-        // Optionally, initialize with a default super admin account for testing
-        // Remove or modify this in a production environment
-        SuperAdminAccount defaultSuperAdmin = new SuperAdminAccount(1, "Super Admin", "superadmin@email.com", "securepassword");
-        superAdminAccounts.Add(defaultSuperAdmin);
-
-        return superAdminAccounts;
-    }
+    
 
     private static List<Deal> InitializeDeals()
     {
