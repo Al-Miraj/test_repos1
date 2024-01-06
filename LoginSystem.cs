@@ -15,7 +15,7 @@ using System.Xml.Linq;
 static class LoginSystem
 {
     public static void Start()
-    {
+    {   
         Console.WriteLine("Welcome!\n\nWhat do you want to do:");
         List<string> LoginRegisterOptions = new List<string>() { "Log into existing account", "Create new account" };
         int selectedOption = MenuSelector.RunMenuNavigator(LoginRegisterOptions);
@@ -102,8 +102,12 @@ static class LoginSystem
     }
 
     public static int GetLatestId() => Restaurant.Accounts != null ? Restaurant.Accounts.Max(account => account.ID) : 0;
-    
-    private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email.ToLower() == email.ToLower() && account.Password == password);
+
+    private static Account FindAccount(string email, string password)
+    {
+        var account = Restaurant.Accounts.FirstOrDefault(account => account.Email.ToLower() == email.ToLower() && account.Password == password);
+        return account!;
+    }
 
     public static string GetAccountName()
     {

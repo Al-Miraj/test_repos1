@@ -14,7 +14,7 @@ public static class ReservationManagement
     public static void Display()
     {
         
-            List<string> options = new List<string>() // RM == ReservationManager
+            List<string> options = new List<string>()
         {
             "View all Reservations",
             "View future Reservations",
@@ -267,6 +267,7 @@ public static class ReservationManagement
         DateOnly date;
         Console.Write("Enter date (dd-MM-yyyy): ");
         string dateStr = Console.ReadLine().Trim();
+        Console.Clear();
         bool correctDateFormat = DateOnly.TryParseExact(dateStr, "d-M-yyyy", out date);
         if (correctDateFormat)
         {
@@ -276,7 +277,11 @@ public static class ReservationManagement
                 Console.WriteLine("There are no reservations on this date.");
                 return;
             }
-            Reservation reservation = GetReservation(reservationsOnDate);
+            Reservation? reservation = GetReservation(reservationsOnDate);
+            if (reservation == null) // User pressed "Back" option.
+            {
+                return;
+            }
             HandleAction(reservation);
         }
     }

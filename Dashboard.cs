@@ -15,6 +15,7 @@ public class Dashboard
     {
         Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
         Console.Clear();
+        Console.WriteLine(userRole);
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
         List<ICommand> commands = GetCommandsOfType(userRole);
@@ -31,8 +32,8 @@ public class Dashboard
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
         List<string> options = reservations.Select(r => r.ToString()).ToList();
         options.Add("Back");
-        if (reservations != null) { selectedOption = MenuSelector.RunMenuNavigator(options); }
-        else { return; }
+        if (reservations == null) { return; }
+        selectedOption = MenuSelector.RunMenuNavigator(options);
         if (selectedOption == options.IndexOf(options.Last()))
         {
             return;
@@ -49,11 +50,7 @@ public class Dashboard
         int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5 });
         rating++;
         Console.WriteLine($"You rated our service {rating} out of 5.");
-        if (rating < 3)
-        {
-            Console.WriteLine("We are sorry to hear that.");
-        }
-        Console.WriteLine("What could we have done better to improve your experience? Or what went good?");
+        Console.WriteLine(rating > 3 ? "" : "We are sorry to hear that " + "What could we have done better to improve your experience? Or what went good?");
         string message = Console.ReadLine()!;
         Console.WriteLine("Thank you for the feedback!");
         Feedback feedback = new Feedback()
@@ -106,17 +103,14 @@ public class Dashboard
 
     private List<ICommand> GetCommandsOfType(Restaurant.UserRole userRole) // more files, but more readability using c# Command Pattern
     {
-        if (userRole == Restaurant.UserRole.SuperAdmin)
+        switch (userRole)
         {
-            return ((SuperAdminAccount)CurrentUser).GetCommands(this);
-        }
-        else if (userRole == Restaurant.UserRole.Admin)
-        {
-            return ((AdminAccount)CurrentUser).GetCommands(this);
-        }
-        else
-        {
-            return ((CustomerAccount)CurrentUser).GetCommands(this);
+            case Restaurant.UserRole.SuperAdmin:
+                return ((SuperAdminAccount)CurrentUser).GetCommands(this);
+            case Restaurant.UserRole.Admin:
+                return ((AdminAccount)CurrentUser).GetCommands(this);
+            default:
+                return ((CustomerAccount)CurrentUser).GetCommands(this);
         }
     }
 }

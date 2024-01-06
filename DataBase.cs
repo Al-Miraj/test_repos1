@@ -20,5 +20,4 @@ public class Database : DbContext
     {
         return context.Feedbacks.ToList();
     }
-
 }
