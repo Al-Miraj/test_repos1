@@ -87,17 +87,27 @@
             Console.WriteLine();
         }
     }
-    
+
 
     private void ReservationOverview()
     {
         Console.Clear();
         Console.WriteLine("Reservation Overview\n");
 
-        // Example values, replace these with appropriate values for your application
+        // Prompt the user to enter a date
+        Console.Write("Enter a date to view reservations (dd-mm-yyyy): ");
+        DateOnly viewDate = ReservationSystem.GetReservationDate(); // Reuse existing method to get a valid date
+
+        // Prompt the user to choose a timeslot
+        Console.WriteLine("Choose a timeslot:");
+        string timeslot = ReservationSystem.GetTimeslot(); // Reuse existing method to get a timeslot
+
+        // Get the reserved table numbers for the selected date and timeslot
+        List<int> reservatedTableNumbers = ReservationSystem.GetReservatedTablesAtDateAndTimeslot(viewDate, timeslot);
+
+        // Example values for current table coordinate and number of people, adjust as needed
         (int, int) currentTableCoordinate = (1, 1);
-        List<int> reservatedTableNumbers = new List<int>(); // Replace with actual values
-        int numberOfPeople = 4; // Replace with actual value
+        int numberOfPeople = 4; // This might be used differently depending on your implementation
 
         // Display the visual map of the restaurant with reserved/available tables
         ReservationSystem.PrintTablesMapClean(currentTableCoordinate, reservatedTableNumbers, numberOfPeople);
@@ -107,7 +117,9 @@
         RunDashboardMenu();
     }
 
-    
+
+
+
 
 
 
