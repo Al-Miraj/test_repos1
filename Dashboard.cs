@@ -10,7 +10,8 @@
     public void RunDashboardMenu()
     {
         bool isAdmin = CurrentUser is AdminAccount;
-      
+        bool isSuperAdmin = CurrentUser is SuperAdminAccount; // Assuming SuperAdminAccount is a subclass of AdminAccount
+
         Console.Clear();
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
@@ -18,15 +19,20 @@
         List<string> dashboardOptions = new List<string>()
         {
             "Reservation Management",
-            isAdmin ? "Reservation Overview" : "Order History",
-            isAdmin ? "Customer Management" : "Reservation Overview",
+            "Reservation Overview",
+            isAdmin ? "Customer Management" : "Order History",
+            isSuperAdmin ? "Add Admin" : null, // SuperAdmin only option
+            isSuperAdmin ? "Delete Admin" : null, // SuperAdmin only option
             "Exit to main menu",
             "Log out"
-        };
-
-       
+        }.Where(option => option != null).ToList(); // Remove null entries from options
 
         int selectedOption = MenuSelector.RunMenuNavigator(dashboardOptions);
+
+
+
+
+        
 
         switch (selectedOption)
         {
@@ -46,11 +52,25 @@
                 { ReservationOverview(); }
                 break;
             case 3:
-                OptionMenu.RunMenu();
+                if (isSuperAdmin)
+                {
+                    AddAdmin();
+                }
+                else
+                {
+                    OptionMenu.RunMenu();
+                }
                 break;
             case 4:
-                LoginSystem.Logout();
-                return;
+                if (isSuperAdmin)
+                {
+                    DeleteAdmin();
+                }
+                else
+                {
+                    LoginSystem.Logout();
+                }
+                break;
             case 5:
                 break;
         }
@@ -116,6 +136,59 @@
         Console.ReadKey();
         RunDashboardMenu();
     }
+
+
+
+
+    public void AddAdmin()
+    {
+        Console.WriteLine("Enter the details for the new admin:");
+        string name = LoginSystem.GetAccountName();
+        string email = LoginSystem.GetAccountEmail();
+        string password = LoginSystem.GetAccountPassword(true);
+
+        // Call the static AddAdmin method on SuperAdminAccount, passing in the necessary parameters
+        bool success = SuperAdminAccount.AddAdmin(name, email, password);
+
+        if (success)
+        {
+            Console.WriteLine("Admin added successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Failed to add admin. An admin with this email may already exist.");
+        }
+    }
+
+    public void DeleteAdmin()
+    {
+        Console.WriteLine("Enter the email of the admin to delete:");
+        string adminEmail = Console.ReadLine();
+
+        // Ensure that CurrentUser is of type SuperAdminAccount before attempting to cast and call
+        if (CurrentUser is SuperAdminAccount superAdmin)
+        {
+            bool success = superAdmin.DeleteAdminByEmail(adminEmail);
+
+            if (success)
+            {
+                Console.WriteLine("Admin deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("No admin found with the provided email.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Current user does not have permission to delete admins.");
+        }
+    }
+
+
+
+
+
 
 
 

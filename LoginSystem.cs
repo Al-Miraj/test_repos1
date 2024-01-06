@@ -14,18 +14,36 @@ using System.Xml.Linq;
 
 static class LoginSystem
 {
-    public static List<Account> Accounts { get; set; }
+    public static List<Account> Accounts { get; set; } = new List<Account>();
+
     public static void Start()
     {
         Console.WriteLine("Welcome!\n\nWhat do you want to do:");
-        List<string> LoginRegisterOptions = new List<string>() { "Log into existing account", "Create new account" };
+        List<string> LoginRegisterOptions = new List<string>()
+    {
+        "Log into existing account",
+        "Create new account",
+        "Log in as SuperAdmin" // New option for SuperAdmin login
+    };
+
         int selectedOption = MenuSelector.RunMenuNavigator(LoginRegisterOptions);
         switch (selectedOption)
         {
-            case 0: Console.Clear(); Login(); break;
-            case 1: Console.Clear(); Register(); break;
+            case 0:
+                Console.Clear();
+                Login();
+                break;
+            case 1:
+                Console.Clear();
+                Register();
+                break;
+            case 2: // Case for SuperAdmin login
+                Console.Clear();
+                LoginSuperAdmin(); // This will be a new method you need to create
+                break;
         }
     }
+
 
 
     public static void Login()
@@ -96,6 +114,32 @@ static class LoginSystem
         Console.WriteLine("You're now logged out");
     }
 
+    public static void LoginSuperAdmin()
+    {
+        Console.WriteLine("Super Admin Log in\n");
+        string email = GetAccountEmail();
+        string password = GetAccountPassword(false);
+
+        // Check if the credentials match the SuperAdmin credentials
+        if (email == "superadmin@hotmail.com" && password == "Admin-1234") // In practice, use a hashed password
+        {
+            // Get the SuperAdminAccount instance
+            SuperAdminAccount superAdmin = SuperAdminAccount.GetInstance();
+            Console.WriteLine("Logging in as SuperAdmin...");
+            Dashboard dashboard = new Dashboard(superAdmin);
+            ConnectUser(superAdmin, dashboard);
+            Console.WriteLine("\n[Press any key to continue to the dashboard.]");
+            Console.ReadKey();
+            dashboard.RunDashboardMenu();
+        }
+        else
+        {
+            Console.WriteLine("Incorrect SuperAdmin credentials.");
+            // Optionally, return to the main menu or exit
+        }
+    }
+
+
     private static void ResetMenu()
     {
         OptionMenu.IsUserLoggedIn = false;
@@ -126,8 +170,30 @@ static class LoginSystem
 
 
 
-    private static Account? FindAccount(string email, string password) => Restaurant.Accounts.FirstOrDefault(account => account.Email == email && account.Password == password);
+    private static Account? FindAccount(string email, string password)
+    {
+        // Check for SuperAdminAccount first
+        if (email == "superadmin@hotmail.com" && password == "Admin-1234") // Password should be hashed in a real application
+        {
+            // Return the single instance of SuperAdminAccount
+            return SuperAdminAccount.GetInstance();
+        }
+        // Continue with existing logic for other accounts
+        return Accounts.FirstOrDefault(account => account.Email == email && account.Password == password); // Password should be hashed in a real application
+    }
 
+
+    public static int GenerateNewID()
+    {
+        if (Accounts != null && Accounts.Count > 0)
+        {
+            return Accounts.Max(a => a.ID) + 1;
+        }
+        else
+        {
+            return 1; // Start IDs from 1
+        }
+    }
 
     public static string GetAccountName()
     {
