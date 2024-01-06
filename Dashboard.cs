@@ -32,7 +32,7 @@
 
 
 
-        
+
 
         switch (selectedOption)
         {
@@ -72,6 +72,7 @@
                 }
                 break;
             case 5:
+                return;
                 break;
         }
         Console.WriteLine("\n[Press any key to return to your dashboard.]");
