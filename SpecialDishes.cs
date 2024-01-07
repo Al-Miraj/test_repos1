@@ -1,4 +1,8 @@
 ﻿
+using System.Drawing;
+using Colorful;
+using Console = Colorful.Console;
+
 public class SpecialDishes : MenuItem<Dish>
 {
     private static List<Dish> rawHolidayMenu;
@@ -25,6 +29,9 @@ public class SpecialDishes : MenuItem<Dish>
     {
         // International holidays
         { new DateTime(DateTime.Now.Year, 1, 1), "New Year" },
+        { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
+        { new DateTime(DateTime.Now.Year, 4, 27), "Koningsdag" },
+        { new DateTime(DateTime.Now.Year, 12, 5), "Sinterklaas" },
         { new DateTime(DateTime.Now.Year, 12, 25), "Christmas" },
         { new DateTime(DateTime.Now.Year, 12, 26), "Christmas" },
         { new DateTime(DateTime.Now.Year, 12, 27), "Christmas" },
@@ -33,58 +40,53 @@ public class SpecialDishes : MenuItem<Dish>
         { new DateTime(DateTime.Now.Year, 12, 30), "Christmas" },
         { new DateTime(DateTime.Now.Year, 12, 31), "Christmas" },
         { new DateTime(DateTime.Now.Year, 10, 31), "Halloween" },
-
-        // Nederlandse feestdagen
-
-        { new DateTime(DateTime.Now.Year, 4, 27), "Koningsdag" },
-        //{ new DateTime(DateTime.Now.Year, 5, 5), "Bevrijdingsdag" },
-        { new DateTime(DateTime.Now.Year, 12, 5), "Sinterklaas" },
-        { new DateTime(DateTime.Now.Year, 2, 28), "Carnaval" },
     };
 
     public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
-        string currentHoliday = "";
-        var lastDish = dishlist.LastOrDefault();
-        int consoleWidth = Console.WindowWidth;
-        int timeslotLength = header.Length;
-        int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
         Console.Clear();
-        Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
-        Console.WriteLine(header);
+        Console.ForegroundColor = Color.Cyan;
+        Console.WriteLine(header + " Menu", -107);
         Console.WriteLine();
+        Console.ResetColor();
+
+        // Set up column headers
+        Console.ForegroundColor = Color.Yellow;
+        Console.Write("{0,-50} ", "Name");
+        Console.ResetColor();
+
+        Console.ForegroundColor = Color.Orange;
+        Console.Write("{0,-140} ", "Description");
+        Console.ResetColor();
+
+        Console.ForegroundColor = Color.Green;
+        Console.WriteLine("{0,-15}", "Price");
+        Console.ResetColor();
+
+        Console.WriteLine(new string('-', 220));
+
         foreach (var dish in dishlist)
         {
-            if (currentHoliday != dish.Name)
-            {
-                Console.WriteLine("==================================================================================================================");
-                Console.WriteLine();
-                currentHoliday = dish.Name;
-            }
+            Console.Write("{0,-50} ", dish.Name);
 
-            Console.WriteLine($"Name: {dish.Name}");
-            Console.WriteLine($"Description: {dish.Description}");
-            Console.WriteLine($"Ingredients: {string.Join(", ", dish.Ingredients)}");
-            Console.WriteLine($"Timeslot: {dish.Timeslot}");
-            Console.WriteLine($"Price: {dish.Price}");
-            Console.WriteLine($"Potential Allergens: {string.Join(", ", dish.PotentialAllergens)}");
-            Console.WriteLine($"Icon: {dish.Category}");
-            if (dish.Holiday != "")
-                Console.WriteLine($"Holiday: {dish.Holiday}");
-            Console.WriteLine($"Season: {dish.Season}");
+            // Ensure the description fits the console window
+            Console.Write("{0,-140} ", dish.Description);
+
+            Console.ForegroundColor = Color.LightGreen;
+            Console.WriteLine("{0,-15:N2}", dish.Price);
+            Console.ResetColor();
+
             Console.WriteLine();
-
-            if (dish == lastDish)
-            {
-                Console.WriteLine("=================================================================================================================="); ;
-                Console.WriteLine();
-            }
-
         }
+
+        Console.WriteLine(new string('-', 220));
+
         if (keyContinue)
         {
-            Console.WriteLine("Press any key to continue");
-            Console.ReadKey();
+            Console.ForegroundColor = Color.Magenta;
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ResetColor();
+            Console.ReadKey(true);
         }
     }
 
@@ -137,7 +139,7 @@ public class SpecialDishes : MenuItem<Dish>
         Console.Clear();
         Console.WriteLine();
 
-        if (choice == 0) // 'yes' was selected
+        if (choice == 0) // 'yes' 
         {
             string closestHoliday = FindNextHoliday();
             Console.WriteLine($"Displaying the menu of the nearest holiday: {closestHoliday}");
@@ -159,16 +161,14 @@ public class SpecialDishes : MenuItem<Dish>
     public static string FindNextHoliday()
     {
         DateTime date = DateTime.Now.Date;
-        DateTime holidayDate = keys.Where(x => x >= date).FirstOrDefault();
+        DateTime holidayDate = keys.Where(x => x >= date).First();
 
         if (holidayDate != null && holidays.ContainsKey(holidayDate))
         {
             return holidays[holidayDate];
         }
-        else
-        {
-            return "No upcoming holiday found";
-        }
+
+        return "";
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------

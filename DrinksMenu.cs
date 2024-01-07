@@ -12,6 +12,7 @@ public class DrinksMenu : MenuItem<Drinks>
     private static int selectedOption;
     public DrinksMenu() : base("Drinks.json")
     {
+        Console.Clear();
         selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Complete menu", "Soda", "Wine", "Whiskey", "Cognac", "Beer", "Exit" });
         HandleSelection();
     }
@@ -35,26 +36,34 @@ public class DrinksMenu : MenuItem<Drinks>
             if (category == "Full")
             {
                 Console.Clear();
-                /*PrintDrinkMenu("Soda", Items);
-                PrintDrinkMenu("Wine", Items);
-                PrintDrinkMenu("Whiskey", Items);
-                PrintDrinkMenu("Cognac", Items);
-                PrintDrinkMenu("Beer", Items);*/
+                PrintInfo(Items, "Soda");
+                PrintInfo(Items, "Wine");
+                PrintInfo(Items, "Whiskey");
+                PrintInfo(Items, "Cognac");
+                PrintInfo(Items, "Beer");
 
-                PrintNonAlcoholicDrinkMenu("Soda", Items);
+                /*PrintNonAlcoholicDrinkMenu("Soda", Items);
                 PrintAlcoholicDrinkMenu("Wine", Items);
                 PrintAlcoholicDrinkMenu("Whiskey", Items);
                 PrintAlcoholicDrinkMenu("Cognac", Items);
-                PrintAlcoholicDrinkMenu("Beer", Items);
+                PrintAlcoholicDrinkMenu("Beer", Items);*/
             }
-            else
+            else if (category != null)
             {
                 Console.Clear();
-                var categoryDrinks = GetCategory(category);
-                (categoryDrinks.Any(d => d.Alcohol > 0) ? (Action<string, List<Drinks>>)PrintAlcoholicDrinkMenu : PrintNonAlcoholicDrinkMenu)(category, categoryDrinks);
+                //GetCategory("Soda").ForEach(Console.WriteLine);
+                PrintInfo(GetCategory(category), category);
+                //(categoryDrinks.Any(d => d.Alcohol > 0) ? (Action<string, List<Drinks>>)PrintAlcoholicDrinkMenu : PrintNonAlcoholicDrinkMenu)(category, categoryDrinks);
+            }
+
+            else
+            {
+                return;
             }
         }
     }
+
+    public List<Drinks> GetCategory(string type) => Items.FindAll(x => x.Category == type);
 
 
     public override void PrintInfo(List<Drinks> drinks, string category, bool KeyContinue = true)
@@ -68,11 +77,11 @@ public class DrinksMenu : MenuItem<Drinks>
         Console.WriteLine(new string('=', category.Length));*/
 
         // Determine if the category includes alcoholic drinks
-        bool includesAlcohol = drinks.Any(drink => drink.Alcohol > 0);
+        bool includesAlcohol = drinks.Any(drink => drink.Alcohol > 0.0);
 
         // Print headers
         Console.ForegroundColor = Color.Yellow;
-        Console.Write("{0,-50} ", "Name");
+        Console.Write("{0,-50} ", category);
         Console.ResetColor();
 
         Console.ForegroundColor = Color.Red;
@@ -118,7 +127,7 @@ public class DrinksMenu : MenuItem<Drinks>
         Console.WriteLine();
     }
     
-    public void PrintNonAlcoholicDrinkMenu(string category, List<Drinks> drinks)
+    /*public void PrintNonAlcoholicDrinkMenu(string category, List<Drinks> drinks)
     {
         Console.WriteLine(category.ToUpper());
         Console.WriteLine(new string('=', category.Length));
@@ -180,7 +189,5 @@ public class DrinksMenu : MenuItem<Drinks>
 
         Console.WriteLine();
         Console.WriteLine();
-    }
-
-    public List<Drinks> GetCategory(string type) => Items.FindAll(x => x.Category == type);
+    }*/
 }

@@ -43,6 +43,8 @@ public class FoodDrinkEntryPoint
             case 3:
                 drinks = new DrinksMenu();
                 break;
+            case 4:
+                return;
             default:
                 Console.WriteLine("Invalid selection. Please try again.");
                 GetCorrectMenu();

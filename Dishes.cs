@@ -1,4 +1,8 @@
 ﻿
+using System.Drawing;
+using Colorful;
+using Console = Colorful.Console;
+
 public class Dishes : MenuItem<Dish>
 {
     private int selectedFoodMenuOption;
@@ -17,43 +21,62 @@ public class Dishes : MenuItem<Dish>
         HandleSelection();
     }
 
+
+    //header is de categorie (meat, chicken etc)
+    public void PrintDishesByCategory(List<Dish> dishlist, string header, string category, bool keyContinue = true)
+    {
+        // Filter dishes by category or any other logic specific to Dishes
+        var filteredDishes = dishlist.Where(dish => dish.Category == category).ToList();
+
+        // Now call the base PrintInfo with the filtered list
+        PrintInfo(filteredDishes, header, keyContinue);
+    }
+
     public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
         Console.Clear();
-        var lastDish = dishlist.LastOrDefault();
-        int consoleWidth = Console.WindowWidth;
-        int timeslotLength = header.Length;
-        int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
-        Console.SetCursorPosition(Math.Max(startPosition, 0), 0); // Ensure the cursor position is not negative
+        Console.ForegroundColor = Color.Cyan;
+        Console.WriteLine(header + " Menu", -107);
+        Console.WriteLine();
+        Console.ResetColor();
 
-        Console.WriteLine(header);
-        Console.WriteLine(); 
-        Console.WriteLine("==================================================================================================================");
-        for (int i = 0; i < dishlist.Count; i++)
+        // Set up column headers
+        Console.ForegroundColor = Color.Yellow;
+        Console.Write("{0,-50} ", "Dish");
+        Console.ResetColor();
+
+        Console.ForegroundColor = Color.Orange;
+        Console.Write("{0,-140} ", "Description");
+        Console.ResetColor();
+
+        Console.ForegroundColor = Color.Green;
+        Console.WriteLine("{0,-15}", "Price");
+        Console.ResetColor();
+
+        Console.WriteLine(new string('-', 220));
+
+        foreach (var dish in dishlist)
         {
-            Console.WriteLine();
-            Console.WriteLine($"{i + 1}. {dishlist[i].Name,-20} {dishlist[i].Price,74}");
-            if (dishlist[i].Description.Length > 52)
-            {
-                Console.WriteLine($"{dishlist[i].Description.Substring(0, 50)}");
-                Console.WriteLine(dishlist[i].Description.Substring(50, dishlist[i].Description.Length - 50));
-            }
-            else
-            {
-                Console.WriteLine($"Ingredients: {string.Join(", ", dishlist[i].Ingredients)}");
-                Console.WriteLine();
-                Thread.Sleep(100);
-            }
-            Console.WriteLine();
-            Console.WriteLine("==================================================================================================================");
+            Console.Write("{0,-50} ", dish.Name);
 
+            // Ensure the description fits the console window
+            Console.Write("{0,-140} ", dish.Description);
+
+            Console.ForegroundColor = Color.LightGreen;
+            Console.WriteLine("{0,-15:N2}", dish.Price);
+            Console.ResetColor();
+
+            Console.WriteLine();
         }
+
+        Console.WriteLine(new string('-', 220));
 
         if (keyContinue)
         {
-            Console.WriteLine("Press any key to continue");
-            Console.ReadKey();
-            Console.Clear();
+            Console.ForegroundColor = Color.Magenta;
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ResetColor();
+            Console.ReadKey(true);
         }
     }
 
