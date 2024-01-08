@@ -34,7 +34,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.ReadKey();
                 Console.Clear();
             }
-        }
+        } 
 
         Console.Clear();
         Console.Write("Enter a date (dd-mm-yyyy): ");
@@ -77,6 +77,12 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Restaurant.UpdateRestaurantFiles();
     }
 
+    /*
+     
+    kou. written before the lights are out. what are we apologizing 
+     
+     */
+
 
     public static int GetCustomerID()  // in ReservationSystem or somewhere else?
     {
@@ -95,17 +101,17 @@ public static class ReservationSystem // Made class static so loginsystem and da
     public static int GetNumberOfPeople(bool isAdmin)
     {
         int numberOfPeople;
-        bool IsIncorrectFormat;
+        bool hasCorrectFormat;
         bool IsSmallerThan0;
         bool IsBiggerThan6;
 
         do
         {
             string number = Console.ReadLine().Trim();
-            IsIncorrectFormat = !int.TryParse(number, out numberOfPeople); //true if the format is incorrect
+            (hasCorrectFormat, numberOfPeople) = NumInCorrectFormat(number);
             IsSmallerThan0 = numberOfPeople <= 0;
             IsBiggerThan6 = numberOfPeople > 6;
-            if (IsIncorrectFormat)
+            if (!hasCorrectFormat)
                 Console.WriteLine("Invalid input. Please enter a valid number of people like: 1, 4, 6, etc");
             else if (IsSmallerThan0)
                 Console.WriteLine("Invalid input. Please enter a number greater than 0.");
@@ -113,9 +119,18 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.WriteLine("Our biggest table has 6 seats. Enter a number smaller than 6 or contact us for more information.");
             else if (IsBiggerThan6 && isAdmin)
                 break;
-        }
-        while (IsIncorrectFormat || IsSmallerThan0 || IsBiggerThan6);
+            }
+        while (!hasCorrectFormat || IsSmallerThan0 || IsBiggerThan6);
         return numberOfPeople;
+    }
+
+    public static bool NumInRange(int start, int end, int num) => num >= start && num <= end;
+
+    public static (bool, int) NumInCorrectFormat(string input)
+    {
+        int output;
+        bool HasCorrectFormat = int.TryParse(input, out output);
+        return (HasCorrectFormat, output);
     }
 
     public static DateOnly GetReservationDate()
