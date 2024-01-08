@@ -62,7 +62,16 @@ public class Reservation
     public Reservation() { }
 
 
+    public string GetReservationInfo()
+    {
+        return
+        $" Reservation Number: {ReservationNumber}" +
+        $" \n    Date: {Date}" +
+        $" \n    Timeslot: {TimeSlot}" +
+        $" \n    Price: {GetTotalPrice()}" +
+        $"\n";
 
+    }
     public override string ToString()
     {
         return 

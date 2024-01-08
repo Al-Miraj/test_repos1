@@ -8,11 +8,13 @@ public static class Restaurant
     public static string AccountsXmlFileName = "Accounts.xml";
     public static string FeedbackXmlFileName = "Feedback.xml";
     public static List<Account> Accounts = InitializeAccounts();
-    public static List<AdminAccount> AdminAccounts { get { return GetAdminAccounts(); } }
-    public static List<CustomerAccount> CustomerAccounts { get { return GetCustomerAccounts(); } }
+    public static List<SuperAdminAccount> SuperAdminAccounts => GetSuperAdminAccounts();
+    public static List<AdminAccount> AdminAccounts => GetAdminAccounts();
+    public static List<CustomerAccount> CustomerAccounts => GetCustomerAccounts();
     public static List<Deal> Deals = InitializeDeals();
     public static List<Table> Tables = InitializeTables();
     public static List<Reservation> Reservations = InitializeReservations();
+    public static Database database = new Database();
     /*public static List<Feedback> Feedback = InitializeFeedback(); // for feedback of customers*/
 
     // i.e first row has 4, the last has 2 tables in it
@@ -39,7 +41,7 @@ public static class Restaurant
         return accounts;
     }
 
-    public static List<SuperAdminAccount> GetSuperAdminAccount()
+    public static List<SuperAdminAccount> GetSuperAdminAccounts()
     {
         List<SuperAdminAccount> adminAccounts = new List<SuperAdminAccount>();
         foreach (Account account in Accounts)
@@ -219,4 +221,23 @@ public static class Restaurant
         }
     } // todo maybe have a deal handler or put this in Deal.cs
 
+    public enum UserRole // better alternative for booleans
+    {
+        Customer,
+        Admin,
+        SuperAdmin
+    }
+
+    public static UserRole GetUserRole(Account user) // sets the appropiate UserRole
+    {
+        switch (user)
+        {
+            case Account n when n is SuperAdminAccount:
+                return UserRole.SuperAdmin;
+            case Account n when n is AdminAccount:
+                return UserRole.Admin;
+            default:
+                return UserRole.Customer;
+        }
+    }
 }

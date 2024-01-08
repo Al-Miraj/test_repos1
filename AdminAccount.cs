@@ -31,6 +31,19 @@ public class AdminAccount : Account
     {
         return null;
     }
+
+    public override List<ICommand> GetCommands(Dashboard dashboard)
+    {
+        return new()
+        {
+            new ReservationManagerCommand(dashboard),
+            new CustomerManagementCommand(),
+            new DailyMenuCommand(),
+            new ReadFeedBackCommand(dashboard),
+            new OptionMenuCommand(),
+            new LogoutCommand()
+        };
+    }
 }
 
 

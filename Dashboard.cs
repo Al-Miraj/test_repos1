@@ -1,10 +1,10 @@
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-public class Dashboard : Reservation
+public class Dashboard
 {
     public Account CurrentUser { get; set; }
     private static int selectedOption;
-    Database database = new Database();
 
     public Dashboard(Account account)
     {
@@ -13,152 +13,79 @@ public class Dashboard : Reservation
 
     public void RunDashboardMenu()
     {
-        bool isAdmin = CurrentUser is AdminAccount;
-        bool isSuperAdmin = CurrentUser is SuperAdminAccount;
+        Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
         Console.Clear();
+        Console.WriteLine(userRole);
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
-
-        List<string?> dashboardOptions = new List<string?>()
-        { isSuperAdmin ? "Reservation Management" : (isAdmin ? "Reservation Management" : "Order History"), // todo: ipv order history misschien view profile details ofzo?   : ja, in reservation management heb je al order history (view reservations)
-          isSuperAdmin ? "Customer Management" : (isAdmin ? "Customer Management" : "Reservation Manager"), 
-          isSuperAdmin ? "Admin Management" : (isAdmin ? null : "Daily Menu"),
-          isSuperAdmin ? "Read Feedback" : (isAdmin ? "Read Feedback" : "Send Feedback"),
-          "Exit to main menu",
-          "Log out"
-        };
-
-        dashboardOptions.RemoveAll(option => option == null);
-
-        int selectedOption = MenuSelector.RunMenuNavigator(dashboardOptions);
-        switch (selectedOption)
-        {
-            case 0:
-                if (isAdmin || isSuperAdmin)
-                { ReservationManager(); }
-                else
-                { Console.Clear(); OrderHistory(); }
-                break;
-            case 1:
-                if (isAdmin || isSuperAdmin)
-                { CustomerManager(); }
-                else
-                { ReservationManager(); }
-                break;
-            case 2:
-                if (isSuperAdmin)
-                { SuperAdminAccount.SuperAdminStart(); } // Add this case for regular users
-                else
-                { DailyMenu(); }
-                break;
-            case 3:
-                if (isAdmin || isSuperAdmin)
-                { Console.Clear(); ReadFeedback(); }
-                else
-                { Console.Clear(); GetOrders(); }
-                break;
-            case 4:
-                OptionMenu.RunMenu(); // loop warning
-                break;
-            case 5:
-                LoginSystem.Logout();
-                return;
-            default:
-                break;
-        }
-
+        List<ICommand> commands = GetCommandsOfType(userRole);
+        int selectedOption = MenuSelector.RunMenuNavigator(commands);
+        commands[selectedOption].Execute();
         Console.WriteLine("\n[Press any key to return to the your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
     }
 
-    //private void DailyMenu()
-    //{
-    //    DailyMenuGenerator.DisplayDailyMenu();
-    //}
-
-    private void DailyMenu()
+    public void GetFeedbackReservation()
     {
-        DailyMenuGenerator.DisplayDailyMenu();
-    }
-
-    private void GetOrders()
-    {
-        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
-        List<string> options = reservations.Select(GetReservationInfo).ToList();
-        options.Add("Exit");
-        if (reservations != null) { selectedOption = MenuSelector.RunMenuNavigator(options); }
-        else { return; }
         Console.Clear();
+        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
+        List<string> options = reservations.Select(r => r.ToString()).ToList();
+        options.Add("Back");
+        if (reservations == null) { return; }
+        selectedOption = MenuSelector.RunMenuNavigator(options);
+        if (selectedOption == options.IndexOf(options.Last()))
+        {
+            return;
+        }
         options.Remove(options.Last());
         Reservation reservation = reservations[selectedOption];
         SendFeedback(reservation);
     }
+
     private void SendFeedback(Reservation reservation)
     {
+        Console.Clear();
         Console.WriteLine("How would you rate our service?");
         int rating = MenuSelector.RunMenuNavigator(new List<int>() { 1, 2, 3, 4, 5 });
         rating++;
         Console.WriteLine($"You rated our service {rating} out of 5.");
-        if (rating < 3)
-        {
-            Console.WriteLine("We are sorry to hear that.");
-        }
-        Console.WriteLine("What could we have done better to improve your experience? Or what went good?");
+        Console.WriteLine(rating > 3 ? "" : "We are sorry to hear that " + "What could we have done better to improve your experience? Or what went good?");
         string message = Console.ReadLine()!;
         Console.WriteLine("Thank you for the feedback!");
-        //Feedback feedback = new Feedback(((CustomerAccount)CurrentUser).Email, rating, message, reservation);
-        // todo: write to xml file
         Feedback feedback = new Feedback()
         {
             Email = ((CustomerAccount)CurrentUser).Email,
             Rating = rating,
             Message = message,
-            ReservationNumber = ((Reservation)reservation).ReservationNumber,
+            ReservationNumber = reservation.ReservationNumber,
         };
 
-        database.DataWriter(feedback);
+        Restaurant.database.DataWriter(feedback);
     }
-
-    private void ReservationManager()
+    
+    public void ReservationManager()
     {
         ReservationManagement.CurrentUser = CurrentUser;
         ReservationManagement.Display();
     }
 
-    private void CustomerManager()
+    public void OrderHistory()
     {
-        CustomerManagement.CurrentAdmin = (CurrentUser as AdminAccount)!;
-        CustomerManagement.Display();
+        Console.Clear();
+        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
+        List<string> options = reservations.Select(r => r.ToString()).ToList();
+        options.Add("Back");
+        int selectedOption = MenuSelector.RunMenuNavigator(options);
+        if (selectedOption == options.IndexOf(options.Last())) { return; }
     }
 
-    private void OrderHistory()
-    {
-        Console.WriteLine("Your past reservations:\n");
-        List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();  // todo check if works: WORKS
-        if (reservations.Count == 0)
-        {
-            Console.WriteLine("You have not booked at this restaurant yet.");
-            return;
-        }
-    }
+    
 
-    private string GetReservationInfo(Reservation reservation)
+    public void ReadFeedback() // made some private functions public for using Command Pattern
     {
-        return
-        $" Reservation Number: {reservation.ReservationNumber}" +
-        $" \n    Date: {reservation.Date}" +
-        $" \n    Timeslot: {reservation.TimeSlot}" +
-        $" \n    Price: {reservation.GetTotalPrice()}" +
-        $"\n";
-
-    }
-
-    private void ReadFeedback()
-    {
-        Database db = new Database();
         Console.WriteLine("Customer Feedback: \n");
-        List<Feedback> feedbacks = db.DataReader();
+        List<Feedback> feedbacks = Restaurant.database.DataReader();
         foreach (Feedback feedback in feedbacks)
         {
             DisplayFeedback(feedback);
@@ -172,5 +99,18 @@ public class Dashboard : Reservation
         Console.WriteLine(feedback.Email + "                  " + feedback.Rating + " out of 5");
         Console.WriteLine(feedback.Message);
         Console.WriteLine();
+    }
+
+    private List<ICommand> GetCommandsOfType(Restaurant.UserRole userRole) // more files, but more readability using c# Command Pattern
+    {
+        switch (userRole)
+        {
+            case Restaurant.UserRole.SuperAdmin:
+                return ((SuperAdminAccount)CurrentUser).GetCommands(this);
+            case Restaurant.UserRole.Admin:
+                return ((AdminAccount)CurrentUser).GetCommands(this);
+            default:
+                return ((CustomerAccount)CurrentUser).GetCommands(this);
+        }
     }
 }
