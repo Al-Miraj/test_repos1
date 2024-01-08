@@ -46,40 +46,40 @@ public class SpecialDishes : MenuItem<Dish>
     {
         Console.Clear();
         Console.ForegroundColor = Color.Cyan;
-        Console.WriteLine(header + " Menu", -107);
+        Console.WriteLine(header + " Menu", Console.WindowWidth / 2);
         Console.WriteLine();
         Console.ResetColor();
 
         // Set up column headers
         Console.ForegroundColor = Color.Yellow;
-        Console.Write("{0,-50} ", "Name");
-        Console.ResetColor();
-
-        Console.ForegroundColor = Color.Orange;
-        Console.Write("{0,-140} ", "Description");
+        Console.Write("{0,-50} ", "Dish");
         Console.ResetColor();
 
         Console.ForegroundColor = Color.Green;
-        Console.WriteLine("{0,-15}", "Price");
+        Console.Write("{0,-15}", "Price");
         Console.ResetColor();
 
-        Console.WriteLine(new string('-', 220));
+        Console.ForegroundColor = Color.Orange;
+        Console.WriteLine("{0,-140} ", "Description");
+        Console.ResetColor();
+
+        Console.WriteLine(new string('-', Console.WindowWidth));
 
         foreach (var dish in dishlist)
         {
+            Console.WriteLine();
             Console.Write("{0,-50} ", dish.Name);
 
-            // Ensure the description fits the console window
-            Console.Write("{0,-140} ", dish.Description);
-
             Console.ForegroundColor = Color.LightGreen;
-            Console.WriteLine("{0,-15:N2}", dish.Price);
+            Console.Write("{0,-15:N2}", dish.Price);
             Console.ResetColor();
+
+            Console.WriteLine("{0,-140} ", dish.Description);
 
             Console.WriteLine();
         }
 
-        Console.WriteLine(new string('-', 220));
+        Console.WriteLine(new string('-', Console.WindowWidth));
 
         if (keyContinue)
         {
@@ -87,6 +87,7 @@ public class SpecialDishes : MenuItem<Dish>
             Console.WriteLine("\nPress any key to continue...");
             Console.ResetColor();
             Console.ReadKey(true);
+            Console.Clear();
         }
     }
 

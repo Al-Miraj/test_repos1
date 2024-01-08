@@ -68,65 +68,57 @@ public class DrinksMenu : MenuItem<Drinks>
 
     public override void PrintInfo(List<Drinks> drinks, string category, bool KeyContinue = true)
     {
-        /*int consoleWidth = Console.WindowWidth;
-        int timeslotLength = category.Length;
-        int startPosition = (consoleWidth / 2) - (timeslotLength / 2);
-
-        Console.SetCursorPosition(Math.Max(0, startPosition), Console.CursorTop);
-        Console.WriteLine(category.ToUpper(), Color.BlueViolet);
-        Console.WriteLine(new string('=', category.Length));*/
-
-        // Determine if the category includes alcoholic drinks
         bool includesAlcohol = drinks.Any(drink => drink.Alcohol > 0.0);
 
-        // Print headers
+        // Header
         Console.ForegroundColor = Color.Yellow;
-        Console.Write("{0,-50} ", category);
-        Console.ResetColor();
-
-        Console.ForegroundColor = Color.Red;
-        Console.Write("{0,-140} ", "Description");
+        Console.Write("{0,-50}", category);
         Console.ResetColor();
 
         Console.ForegroundColor = Color.Green;
-        Console.Write("{0,-15}", "Price");
+        Console.Write("{0,-14}", "Price");
         Console.ResetColor();
 
         if (includesAlcohol)
         {
             Console.ForegroundColor = Color.Orange;
-            Console.WriteLine("{0,-15}", "Alcohol");
+            Console.Write("{0,-15}", "Alcohol");
             Console.ResetColor();
         }
-        else
-        {
-            Console.WriteLine();
-        }
 
-        int lineLength = includesAlcohol ? 220 : 205;
-        Console.WriteLine(new string('-', lineLength));
+        Console.ForegroundColor = Color.Pink;
+        Console.Write("{0,-140}", "Description");
+        Console.ResetColor();
+        
 
+        Console.WriteLine();
+        Console.WriteLine(new string('-', 210));
+
+        // Drink details
         foreach (var drink in drinks)
         {
             if (drink.Category.Equals(category))
             {
-                Console.Write("{0,-50} {1,-140} {2,-15:N2}", drink.Name, drink.Description, drink.Price);
+                Console.WriteLine();
+                Console.Write("{0,-50}", drink.Name);
+                Console.Write("{0,-15:N2}", drink.Price);
 
                 if (includesAlcohol)
                 {
-                    Console.WriteLine("{0,-15:P1}", drink.Alcohol / 100);
+                    Console.Write("{0,-15:P1}", drink.Alcohol / 100);
+                    Console.WriteLine("{0,-140}", drink.Description);
                 }
                 else
                 {
+                    Console.Write("{0,-140}", drink.Description);
                     Console.WriteLine();
                 }
             }
         }
 
         Console.WriteLine();
-        Console.WriteLine();
     }
-    
+
     /*public void PrintNonAlcoholicDrinkMenu(string category, List<Drinks> drinks)
     {
         Console.WriteLine(category.ToUpper());

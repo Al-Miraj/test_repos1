@@ -1,7 +1,7 @@
 ﻿
 
 //should be called first
-public abstract class MenuItem<T> : IMenu<T>
+public abstract class MenuItem<T>
 {
     protected List<T> Items;
 
