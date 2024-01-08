@@ -14,7 +14,6 @@ public sealed class CustomerAccount : Account
         {
             new OrderHistoryCommand(dashboard),
             new ReservationManagerCommand(dashboard),
-            new DailyMenuCommand(),
             new SendFeedBackCommand(dashboard),
             new OptionMenuCommand(),
             new LogoutCommand()

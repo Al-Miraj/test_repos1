@@ -38,7 +38,6 @@ public class AdminAccount : Account
         {
             new ReservationManagerCommand(dashboard),
             new CustomerManagementCommand(),
-            new DailyMenuCommand(),
             new ReadFeedBackCommand(dashboard),
             new OptionMenuCommand(),
             new LogoutCommand()

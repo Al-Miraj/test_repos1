@@ -59,15 +59,14 @@ class Program
         //Reservation reservationx = rs[0];
         //Console.WriteLine(reservationx.Date);
 
-        //MenuItem.Display();
 
 
 
 
+        OptionMenu.RunMenu();
 
 
-
-        LoginSystem.Start();
+        //LoginSystem.Start();
         //foreach (AdminAccount adminAcc in LoginSystem.AdminAccounts)
         //{
         //    Console.WriteLine(adminAcc.Name);
