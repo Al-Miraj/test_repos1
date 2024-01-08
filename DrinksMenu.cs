@@ -36,6 +36,8 @@ public class DrinksMenu : MenuItem<Drinks>
             if (category == "Full")
             {
                 Console.Clear();
+                Console.WriteLine(new string('-', 210));
+                Console.WriteLine();
                 PrintInfo(Items, "Soda");
                 PrintInfo(Items, "Wine");
                 PrintInfo(Items, "Whiskey");
@@ -58,6 +60,7 @@ public class DrinksMenu : MenuItem<Drinks>
 
             else
             {
+                Console.Clear();
                 return;
             }
         }
@@ -70,7 +73,6 @@ public class DrinksMenu : MenuItem<Drinks>
     {
         bool includesAlcohol = drinks.Any(drink => drink.Alcohol > 0.0);
 
-        // Header
         Console.ForegroundColor = Color.Yellow;
         Console.Write("{0,-50}", category);
         Console.ResetColor();
@@ -101,7 +103,7 @@ public class DrinksMenu : MenuItem<Drinks>
             {
                 Console.WriteLine();
                 Console.Write("{0,-50}", drink.Name);
-                Console.Write("{0,-15:N2}", drink.Price);
+                Console.Write("{0,-15:N2}", "€" + drink.Price);
 
                 if (includesAlcohol)
                 {
@@ -116,6 +118,8 @@ public class DrinksMenu : MenuItem<Drinks>
             }
         }
 
+        Console.WriteLine();
+        Console.WriteLine(new string('-', 210));
         Console.WriteLine();
     }
 

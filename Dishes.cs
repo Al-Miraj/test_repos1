@@ -14,7 +14,6 @@ public class Dishes : MenuItem<Dish>
             PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) ? "Dinner" : "Lunch");
             shown = true;
             Console.Clear();
-        
 
         selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
 
@@ -71,13 +70,12 @@ public class Dishes : MenuItem<Dish>
 
         Console.WriteLine(new string('-', Console.WindowWidth));
 
-        if (keyContinue)
-        {
-            Console.ForegroundColor = Color.Magenta;
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ResetColor();
-            Console.ReadKey(true);
-        }
+        Console.ForegroundColor = Color.Magenta;
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ResetColor();
+        Console.ReadKey(true);
+        Console.Clear();
+       
     }
 
     public override void HandleSelection()
@@ -103,7 +101,7 @@ public class Dishes : MenuItem<Dish>
                 }
                 break;
             case 3:
-                break;
+                return;
         }
         return;
     }
@@ -112,6 +110,8 @@ public class Dishes : MenuItem<Dish>
     {
         var dt = SetTime();
         TimeOnly time = dt.time;
+
+        Console.Clear();
 
         if (ifDinner(time))
         {
