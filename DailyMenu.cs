@@ -1,13 +1,13 @@
-﻿public class DailyMenuGenerator
+﻿/*public class DailyMenuGenerator
 {
     public static void DisplayDailyMenu()
     {
 
-        List<MenuItem> menuItems = JsonFileHandler.ReadFromFile<MenuItem>("Items.json");
+        List<Dishes> dishlist = JsonFileHandler.ReadFromFile<Dishes>("Dishes.json");
 
-        //foreach (var menuItem in menuItems)
+        //foreach (var Dishes in dishlist)
         //{
-        //    Console.WriteLine($"{menuItem.Name} - {menuItem.Price}");
+        //    Console.WriteLine($"{Dishes.Name} - {Dishes.Price}");
         //}
 
         List<Drinks> drinks = JsonFileHandler.ReadFromFile<Drinks>("Drinks.json");
@@ -18,7 +18,7 @@
         //}
 
 
-        MenuItem randomMeal = GetRandom(menuItems);
+        Dishes randomMeal = GetRandom(dishlist);
         Drinks randomDrink = GetRandom(drinks);
 
         double totalOriginalPrice = randomMeal.Price + randomDrink.Price;
@@ -43,10 +43,10 @@
 
 
     // Method that will be used to randomly select a meal and a drink from their respective lists
-    public static T GetRandom<T>(List<T> items)
+    public static T GetRandom<T>(List<T> Dishes)
     {
         Random random = new Random();
-        int randomIndex = random.Next(items.Count);
-        return items[randomIndex];
+        int randomIndex = random.Next(Dishes.Count);
+        return Dishes[randomIndex];
     }
-}
+}*/

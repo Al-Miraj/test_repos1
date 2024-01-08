@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Colorful.Console" Version="1.2.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
       <PrivateAssets>all</PrivateAssets>
@@ -39,7 +40,7 @@
 
 	<ItemGroup>
 	  <None Include="bin\Debug\net7.0\Drinks.json" />
-	  <None Include="bin\Debug\net7.0\Items.json" />
+	  <None Include="bin\Debug\net7.0\Dishes.json" />
 	</ItemGroup>
 
 </Project>

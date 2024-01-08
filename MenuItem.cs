@@ -1,55 +1,30 @@
-﻿using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Security;
+﻿
 
-public class MenuItem
+//should be called first
+public abstract class MenuItem<T> : IMenu<T>
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string[] Ingredients { get; set; }
-    public string Timeslot { get; set; }
-    public double Price { get; set; }
-    public string Category { get; set; }
-    public string[] PotentialAllergens { get; set; }
-    public string? Icon;
-    private static readonly string[] Allergens = new string[] { "Milk", "Eggs", "Peanuts", "Tree Nuts", "Fish", "Shellfish", "Soybeans", "Wheat", "Sesame" };
+    protected List<T> Items;
 
-
-    public MenuItem(string name, string description, List<string> ingredients, string timeslot, double price, List<string> potentialAllergens, string icon)
+    public MenuItem(string jsonFilePath)
     {
-        Name = name;
-        Description = description;
-        Ingredients = ingredients.ToArray();
-        Price = price;
-        Timeslot = timeslot;
-        Category = icon;
-
-        PotentialAllergens = potentialAllergens.ToArray();
-        Icon = icon switch  // Easier then regular switch 
-        {
-            "Meat" => "🥩",
-            "Chicken" => "🍗",
-            "Fish" => "🐟",
-            "Vegetarian" => "🥦",
-            _ => "",
-        };
+        Items = JsonFileHandler.ReadFromFile<T>(jsonFilePath);
     }
 
-    public string AllergensInfo // Property of the allergens
+    public virtual void HandleSelection() { }
+
+    public abstract void PrintInfo(List<T> dishlist, string header, bool keyContinue = true);
+
+
+    // Common methods that can be used in derived classes
+    public List<T> GetTimeSlotMenu(string timeSlot)
     {
-        get
-        {
-            // Iterating over the lowercased Allergens array to find match and 
-            var lowerAllergens = Array.ConvertAll(Allergens, s => s.ToLower());
-            var allergensInfo = Ingredients.Where(ingredient => lowerAllergens.Contains(ingredient.ToLower()));
-            if (!allergensInfo.Any())
-            {
-                return "No known allergens.";
-            }
-            else
-            {
-                return $"Allergens: {string.Join(", ", allergensInfo)}";
-            }
-        }
+        // werkt alleen als Items van de type Dish is
+        return Items
+            .Select(item => item as Dish)
+            .Where(dish => dish != null && dish.Timeslot == timeSlot)
+            .Cast<T>()
+            .ToList();
     }
+
+
 }
