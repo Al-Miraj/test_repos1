@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.Design;
 using System.Diagnostics.Tracing;
 using System.Text.Json;
 
@@ -42,6 +43,13 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
         Console.WriteLine("Choose your timeslot:");
         string timeslot = GetTimeslot();
+
+        bool restaurantIsFull = IsFullyReservated(GetAvailability(date, timeslot), numberOfPeople);
+        if (restaurantIsFull)
+        {
+            WaitingListOffer();
+            return;
+        }
 
         Table? table = GetChosenTable(numberOfPeople, date, timeslot);
         if (table != null)
@@ -175,11 +183,18 @@ public static class ReservationSystem // Made class static so loginsystem and da
     public static void WaitingListOffer()
     {
         Console.Clear();
+        Console.WriteLine("We're sorry. We don't have any space for that date and timeslot.\n");
         Console.WriteLine("Would you like to receive an email in case a table becomes available?");
-        List<string> options = new() { "Yes", "No, thanks" };
+        List<string> options = new() { "Yes", "Reservate for another timeslot/date", "No, thanks" };
         int option = MenuSelector.RunMenuNavigator(options);
-        if (option == 1)
+        if (option == 2)
+        {
             return;
+        }
+        else if (option == 1)
+        {
+            Reservate(false);
+        }
         Console.Clear();
         if (OptionMenu.IsUserLoggedIn)
         { 
@@ -203,16 +218,23 @@ public static class ReservationSystem // Made class static so loginsystem and da
                 Console.WriteLine("Thank you for using the waiting list!");
                 Console.WriteLine($"An email will be send to {email} if a table is free.");
                 // maybe add function to send email when the Reservated tables at the right date and timeslot are below 15;
-                SendEmailIfAvailable(email);
+                /*SendEmailIfAvailable(email);*/
                 return;
             }
         }
     }
 
-    private static void SendEmailIfAvailable(string email)
+    public static bool IsFullyReservated(List<int> reservatedTablesNumbers, int numberOfPeople)
     {
+        // Filter out all tables that don't have enough seats.
+        List<Table> tablesWithCapacity = Restaurant.Tables.FindAll(table => table.Capacity >= numberOfPeople);
+        List<int> tableNumbersWithCapacity = tablesWithCapacity.Select(table => table.TableNumber).ToList();
+        List<int> availableTableNumbers = tableNumbersWithCapacity.Except(reservatedTablesNumbers).ToList();
+        return availableTableNumbers.Count <= 0;
+    }
 
-    } 
+    
+
 
     public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
@@ -230,11 +252,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
             PrintTablesMapClean(currentTableCoordinate, reservatedTablesNumbers, numberOfPeople);
             PrintTableInfo(currentTableCoordinate);
 
-            if (reservatedTablesNumbers.Count >= 15)
-            {
-                WaitingListOffer();
-                break;
-            }
+            
 
             //TableSelectionFeedback(selectedTable, numberOfPeople);
             keyInfo = Console.ReadKey();
