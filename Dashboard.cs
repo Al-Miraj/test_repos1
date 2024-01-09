@@ -20,8 +20,6 @@ public class Dashboard
         List<ICommand> commands = GetCommandsOfType(userRole);
         int selectedOption = MenuSelector.RunMenuNavigator(commands);
         commands[selectedOption].Execute();
-        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
-        Console.ReadKey();
         RunDashboardMenu();
     }
 
