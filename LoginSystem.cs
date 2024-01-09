@@ -92,6 +92,7 @@ static class LoginSystem
         Console.WriteLine("Logging out...");
         ResetMenu();
         Console.WriteLine("You're now logged out");
+        OptionMenu.RunMenu();
     }
 
     private static void ResetMenu()

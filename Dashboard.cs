@@ -20,6 +20,10 @@ public class Dashboard
         List<ICommand> commands = GetCommandsOfType(userRole);
         int selectedOption = MenuSelector.RunMenuNavigator(commands);
         commands[selectedOption].Execute();
+        if (OptionMenu.IsUserLoggedIn == false)
+        {
+            return;
+        }
         Console.WriteLine("\n[Press any key to return to the your dashboard.]");
         Console.ReadKey();
         RunDashboardMenu();
@@ -83,6 +87,7 @@ public class Dashboard
 
     public void ReadFeedback() // made some private functions public for using Command Pattern
     {
+        Console.Clear();
         Console.WriteLine("Customer Feedback: \n");
         List<Feedback> feedbacks = Restaurant.database.DataReader();
         foreach (Feedback feedback in feedbacks)
