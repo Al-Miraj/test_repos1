@@ -93,7 +93,7 @@ public class Dishes : MenuItem<Dish>
                 List<Dish>? filteredDishes = HandleFilterMenuSelection();
                 if (filteredDishes != null && filteredDishes.Count > 0)
                 {
-                    PrintInfo(filteredDishes, "Filtered Menu");
+                    PrintInfo(filteredDishes, "Filtered");
                 }
                 else
                 {

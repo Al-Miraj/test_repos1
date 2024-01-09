@@ -17,6 +17,13 @@ public class DrinksMenu : MenuItem<Drinks>
         HandleSelection();
     }
 
+    public DrinksMenu(List<Drinks> Items) : base(Items)
+    {
+        Console.Clear();
+        selectedOption = MenuSelector.RunMenuNavigator(new List<string>() { "Complete menu", "Soda", "Wine", "Whiskey", "Cognac", "Beer", "Exit" });
+        HandleSelection();
+    }
+
 
     public override void HandleSelection()
     {
@@ -43,12 +50,6 @@ public class DrinksMenu : MenuItem<Drinks>
                 PrintInfo(Items, "Whiskey");
                 PrintInfo(Items, "Cognac");
                 PrintInfo(Items, "Beer");
-
-                /*PrintNonAlcoholicDrinkMenu("Soda", Items);
-                PrintAlcoholicDrinkMenu("Wine", Items);
-                PrintAlcoholicDrinkMenu("Whiskey", Items);
-                PrintAlcoholicDrinkMenu("Cognac", Items);
-                PrintAlcoholicDrinkMenu("Beer", Items);*/
             }
             else if (category != null)
             {
@@ -122,68 +123,4 @@ public class DrinksMenu : MenuItem<Drinks>
         Console.WriteLine(new string('-', 210));
         Console.WriteLine();
     }
-
-    /*public void PrintNonAlcoholicDrinkMenu(string category, List<Drinks> drinks)
-    {
-        Console.WriteLine(category.ToUpper());
-        Console.WriteLine(new string('=', category.Length));
-
-        Console.ForegroundColor = Color.Yellow;
-        Console.Write("{0,-20} ", "Name");
-
-        // Print "Description" in Dark Red
-        Console.ForegroundColor = Color.Red;
-        Console.Write("{0,-50} ", "Description");
-
-        // Print "Price" in Dark Green and then reset color
-        Console.ForegroundColor = Color.Green;
-        Console.WriteLine("{0,-5}", "Price");
-        Console.ResetColor();
-
-        Console.WriteLine(new string('-', 80));
-        foreach (var drink in drinks)
-        {
-            if (drink.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("{0,-20} {1,-50} {2,-5:N2}", drink.Name, drink.Description, drink.Price);
-            }
-        }
-
-        Console.WriteLine();
-        Console.WriteLine();
-    }
-
-    public void PrintAlcoholicDrinkMenu(string category, List<Drinks> drinks)
-    {
-        Console.WriteLine(category.ToUpper());
-        Console.WriteLine(new string('=', category.Length));
-
-        Console.ForegroundColor = Color.Yellow;
-        Console.Write("{0,-50} ", "Name");
-
-        // Print "Description" in Dark Red
-        Console.ForegroundColor = Color.Red;
-        Console.Write("{0,-140} ", "Description");
-
-        // Print "Price" in Dark Green and then reset color
-        Console.ForegroundColor = Color.Green;
-        Console.Write("{0,-15}", "Price");
-        Console.ResetColor();
-
-        Console.ForegroundColor = Color.Orange;
-        Console.WriteLine("{0,-15}", "Alcohol");
-        Console.ResetColor();
-
-        Console.WriteLine(new string('-', 220));
-        foreach (var drink in drinks)
-        {
-            if (drink.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("{0,-50} {1,-140} ${2,-15:N2} {3,-15:P1}", drink.Name, drink.Description, drink.Price, drink.Alcohol / 100);
-            }
-        }
-
-        Console.WriteLine();
-        Console.WriteLine();
-    }*/
 }

@@ -3,11 +3,15 @@
 //should be called first
 public abstract class MenuItem<T>
 {
-    protected List<T> Items;
+    public List<T> Items;
 
     public MenuItem(string jsonFilePath)
     {
         Items = JsonFileHandler.ReadFromFile<T>(jsonFilePath);
+    }
+    public MenuItem(List<T> items)
+    {
+        Items = items;
     }
 
     public virtual void HandleSelection() { }
