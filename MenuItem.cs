@@ -1,16 +1,20 @@
-﻿
-
-//should be called first
-public abstract class MenuItem<T> : IMenu<T>
+﻿public abstract class MenuItem<T>
 {
-    protected List<T> Items;
+    public List<T> Items;
 
     public MenuItem(string jsonFilePath)
     {
         Items = JsonFileHandler.ReadFromFile<T>(jsonFilePath);
     }
+    public MenuItem(List<T> items)
+    {
+        Items = items;
+    }
 
-    public virtual void HandleSelection() { }
+    public virtual string HandleSelection()
+    {
+        return "";
+    }
 
     public abstract void PrintInfo(List<T> dishlist, string header, bool keyContinue = true);
 

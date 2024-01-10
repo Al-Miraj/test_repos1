@@ -1,54 +1,58 @@
-﻿/*public class FoodMenuNavigator
-{
-    int selectedMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { " Normal Menu", " Seasonal Menu", " Holiday Menu", " Drinks", " Exit" });
-
-    public void GetCorrectMenu()
-    {
-        Dishes dishes;
-        SpecialDishes specialDishes;
-        DrinksMenu drinks;
-
-        selectedMenuOption switch
-        {
-            1 => dishes = new Dishes(),
-            2 => specialDishes = new SpecialDishes(false),
-            3 => specialDishes = new SpecialDishes(true),
-            4 => drinks = new DrinksMenu(),
-            _ => return,
-        };
-    }
-}*/
-
-public class FoodDrinkEntryPoint
+﻿public class FoodDrinkEntryPoint
 {
     private Dishes dishes;
     private SpecialDishes specialDishes;
     private DrinksMenu drinks;
+    private bool shown;
 
-    public void GetCorrectMenu()
+    public void GetCorrectMenu(List<Drinks> customMenu = null)
     {
-        int selectedMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Normal Menu", "Seasonal Menu", "Holiday Menu", "Drinks", "Exit" });
+        bool isValidSelection = false;
+        bool shouldReturnToMain = false; // Flag to control the return to main menu
 
-        switch (selectedMenuOption)
+        while (!isValidSelection)
         {
-            case 0:
-                dishes = new Dishes();
-                break;
-            case 1:
-                specialDishes = new SpecialDishes(false);
-                break;
-            case 2:
-                specialDishes = new SpecialDishes(true);
-                break;
-            case 3:
-                drinks = new DrinksMenu();
-                break;
-            case 4:
-                return;
-            default:
-                Console.WriteLine("Invalid selection. Please try again.");
-                GetCorrectMenu();
-                break;
+            int selectedMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Normal Menu", "Seasonal Menu", "Holiday Menu", "Drinks", "Exit" });
+            
+            Console.Clear();
+
+            switch (selectedMenuOption)
+            {
+                case 0:
+                    if (!shown)
+                    {
+                        dishes = new Dishes(false);
+                        shown = true;
+                    }
+                    dishes.SelectOption();
+                    dishes.HandleSelection();
+                    break;
+                case 1:
+                    specialDishes = new SpecialDishes(false);
+                    break;
+                case 2:
+                    specialDishes = new SpecialDishes(true);
+                    break;
+                case 3:
+                    drinks = (customMenu != null && customMenu.Any()) ? new DrinksMenu(customMenu) : new DrinksMenu();
+                    drinks.SelectOption();
+                    drinks.PrintCorrectMenu(drinks.HandleSelection());
+                    break;
+                case 4:
+                    shouldReturnToMain = true; // User chooses to exit, set flag to true
+                    isValidSelection = true;
+                    break;
+                default:
+                    Console.WriteLine("Invalid selection. Please try again.");
+                    break;
+            }
+        }
+
+        if (shouldReturnToMain)
+        {
+            Console.WriteLine("\n\n[Press any key to return to the main menu.]");
+            Console.ReadKey();
+            OptionMenu.RunMenu();
         }
     }
 }

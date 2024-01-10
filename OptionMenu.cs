@@ -55,6 +55,15 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     break;
                 case 4:
                     DrinksMenu drinksMenu = new DrinksMenu();
+                    while (true)
+                    {
+                        drinksMenu.SelectOption();
+                        string option = drinksMenu.HandleSelection();
+                        if (option == "")
+                            break;
+                        drinksMenu.PrintCorrectMenu(option);
+                        
+                    }
                     break;
                 case 5:
                     Restaurant.DisplayDeals();

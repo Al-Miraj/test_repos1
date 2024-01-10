@@ -1,24 +1,32 @@
-﻿
-using System.Drawing;
+﻿using System.Drawing;
 using Colorful;
 using Console = Colorful.Console;
 
 public class Dishes : MenuItem<Dish>
 {
     private int selectedFoodMenuOption;
-    private static bool shown;
 
-    public Dishes() : base("Dish.json")
+    public int SelectedFoodMenuOption
+    {
+        get { return selectedFoodMenuOption; }
+        set { selectedFoodMenuOption = value; }
+    }
+
+    public Dishes(bool shown) : base("Dish.json")
     {
         if (!shown)
+        {
             PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) ? "Dinner" : "Lunch");
             shown = true;
-            Console.Clear();
-        
+        }
+        Console.Clear();
+    }
 
+    public Dishes(List<Dish> Items) : base(Items) { }
+
+    public void SelectOption()
+    {
         selectedFoodMenuOption = MenuSelector.RunMenuNavigator(new List<string>() { "Lunch", "Dinner", "Filter Menu", "Exit" });
-
-        HandleSelection();
     }
 
 
@@ -34,9 +42,11 @@ public class Dishes : MenuItem<Dish>
 
     public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         Console.Clear();
         Console.ForegroundColor = Color.Cyan;
-        Console.WriteLine(header + " Menu", -107);
+        Console.WriteLine(header + " Menu", Console.WindowWidth / 2);
         Console.WriteLine();
         Console.ResetColor();
 
@@ -45,45 +55,43 @@ public class Dishes : MenuItem<Dish>
         Console.Write("{0,-50} ", "Dish");
         Console.ResetColor();
 
-        Console.ForegroundColor = Color.Orange;
-        Console.Write("{0,-140} ", "Description");
-        Console.ResetColor();
-
         Console.ForegroundColor = Color.Green;
-        Console.WriteLine("{0,-15}", "Price");
+        Console.Write("{0,-15}", "Price");
         Console.ResetColor();
 
-        Console.WriteLine(new string('-', 220));
+        Console.ForegroundColor = Color.Orange;
+        Console.WriteLine("{0,-140} ", "Description");
+        Console.ResetColor();
+
+        Console.WriteLine(new string('-', Console.WindowWidth));
 
         foreach (var dish in dishlist)
         {
+            Console.WriteLine();
             Console.Write("{0,-50} ", dish.Name);
 
-            // Ensure the description fits the console window
-            Console.Write("{0,-140} ", dish.Description);
-
             Console.ForegroundColor = Color.LightGreen;
-            Console.WriteLine("{0,-15:N2}", dish.Price);
+            Console.Write("{0,-15:N2}", "€" + dish.Price);
             Console.ResetColor();
+
+            Console.WriteLine("{0,-140} ", dish.Description);
 
             Console.WriteLine();
         }
 
-        Console.WriteLine(new string('-', 220));
+        Console.WriteLine(new string('-', Console.WindowWidth));
 
-        if (keyContinue)
-        {
-            Console.ForegroundColor = Color.Magenta;
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ResetColor();
-            Console.ReadKey(true);
-        }
-    }
-
-    public override void HandleSelection()
-    {
+        Console.ForegroundColor = Color.Magenta;
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ResetColor();
+        Console.ReadKey(true);
         Console.Clear();
 
+    }
+
+    public override string HandleSelection()
+    {
+        Console.Clear();
         switch (selectedFoodMenuOption)
         {
             case 0:
@@ -96,7 +104,7 @@ public class Dishes : MenuItem<Dish>
                 List<Dish>? filteredDishes = HandleFilterMenuSelection();
                 if (filteredDishes != null && filteredDishes.Count > 0)
                 {
-                    PrintInfo(filteredDishes, "Filtered Menu");
+                    PrintInfo(filteredDishes, "Filtered");
                 }
                 else
                 {
@@ -104,12 +112,12 @@ public class Dishes : MenuItem<Dish>
                 }
                 break;
             case 3:
-                break;
+                return "";
         }
-        return;
+        return "";
     }
 
-    private (List<Dish>, string timeslot)? GetDefaultMenu()
+    public (List<Dish>, string timeslot)? GetDefaultMenu()
     {
         var dt = SetTime();
         TimeOnly time = dt.time;
@@ -127,7 +135,7 @@ public class Dishes : MenuItem<Dish>
         return null;
     }
 
-    private static bool ifDinner(TimeOnly time)
+    public static bool ifDinner(TimeOnly time)
     {
         TimeOnly startTime = new TimeOnly(18, 0);
         TimeOnly endTime = new TimeOnly(22, 0);
@@ -140,7 +148,7 @@ public class Dishes : MenuItem<Dish>
         return false;
     }
 
-    private static (DateOnly date, TimeOnly time) SetTime()
+    public static (DateOnly date, TimeOnly time) SetTime()
     {
         DateTime now = DateTime.Now;
         DateOnly date = DateOnly.FromDateTime(now);
@@ -159,7 +167,12 @@ public class Dishes : MenuItem<Dish>
         switch (selectedFilterMenuOption)
         {
             case 0:
-                return FilterIngredients(HandleTimeSlotSelection());
+                Console.WriteLine();
+                Console.WriteLine("Enter the ingredients (use comma):");
+                string ingredientRaw = Console.ReadLine().ToLower();
+                List<string> ingredients = ingredientRaw.Split(", ").ToList();
+
+                return FilterIngredients(HandleTimeSlotSelection(), ingredients);
             case 1:
                 Console.WriteLine("Enter the maximum price:");
                 if (double.TryParse(Console.ReadLine(), out double maxPrice))
@@ -172,7 +185,9 @@ public class Dishes : MenuItem<Dish>
                 }
                 break;
             case 2:
-                return FilterCategory(HandleTimeSlotSelection().ToString());
+                Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
+                List<string> categoryList = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return FilterCategory(HandleTimeSlotSelection().ToString(), categoryList);
             case 3:
                 break;
             default:
@@ -201,13 +216,11 @@ public class Dishes : MenuItem<Dish>
         return "";
     }
 
-    private List<Dish>? FilterCategory(string menuType)
+    public List<Dish>? FilterCategory(string menuType, List<string> categories)
     {
         List<Dish> unsortedMenu = menuType == "Dinner" ? GetTimeSlotMenu("Dinner") : GetTimeSlotMenu("Lunch");
-        Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
-        List<string> categoryList = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-        foreach (string category in categoryList)
+        foreach (string category in categories)
         {
             switch (category)
             {
@@ -236,13 +249,8 @@ public class Dishes : MenuItem<Dish>
         return finalMenu.Where(x => x.Price <= price).OrderBy(x => x.Price).ToList();
     }
 
-    public List<Dish> FilterIngredients(string menuType)
+    public List<Dish> FilterIngredients(string menuType, List<string> ingredients)
     {
-        Console.WriteLine();
-        Console.WriteLine("Enter the ingredients (use comma):");
-        string ingredientRaw = Console.ReadLine().ToLower();
-        List<string> ingredients = ingredientRaw.Split(", ").ToList();
-
         List<Dish> unsortedDishes = menuType == "Dinner" ? GetTimeSlotMenu("Dinner") : GetTimeSlotMenu("Lunch");
         List<Dish> filteredByIngredients = unsortedDishes.Where(x => x.Ingredients.SelectMany(i => i.ToLower().Split(" ")).Any(ingredient => ingredients.Contains(ingredient))).ToList();
         List<Dish> filteredByAllergens = unsortedDishes.Where(x => x.PotentialAllergens.Select(i => i.ToLower()).Any(allergen => ingredients.Contains(allergen.ToLower()))).ToList();
