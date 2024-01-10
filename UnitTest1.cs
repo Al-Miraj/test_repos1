@@ -75,8 +75,63 @@ namespace TestDashboardRelated
                 new LogoutCommand()
             };
             List<ICommand> actual = admin.GetCommands(dashboard);
+        
             Assert.IsTrue(expected.Count == actual.Count);
+        
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.IsTrue(expected[i].GetType() == actual[i].GetType());
+            }
         }
+
+        [TestMethod]
+        public void TestCommandPattern_CustomerAccount()
+        {
+            CustomerAccount customer = new();
+            Dashboard dashboard = new(customer);
+            List<ICommand> expected = new()
+            {
+                new OrderHistoryCommand(dashboard),
+                new ReservationManagerCommand(dashboard),
+                new SendFeedBackCommand(dashboard),
+                new ReadFeedBackCommand(dashboard),
+                new OptionMenuCommand(),
+                new LogoutCommand()
+            };
+            List<ICommand> actual = customer.GetCommands(dashboard);
+        
+            Assert.IsTrue(expected.Count == actual.Count, "Command counts do not match");
+        
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.IsTrue(expected[i].GetType() == actual[i].GetType(), $"Command at index {i} does not match");
+            }
+        }
+        
+        [TestMethod]
+        public void TestCommandPattern_SuperAdminAccount()
+        {
+            SuperAdminAccount superAdmin = new();
+            Dashboard dashboard = new(superAdmin);
+            List<ICommand> expected = new()
+            {
+                new ReservationManagerCommand(dashboard),
+                new CustomerManagementCommand(),
+                new AdminManagementCommand(),
+                new ReadFeedBackCommand(dashboard),
+                new OptionMenuCommand(),
+                new LogoutCommand()
+            };
+            List<ICommand> actual = superAdmin.GetCommands(dashboard);
+        
+            Assert.IsTrue(expected.Count == actual.Count, "Command counts do not match");
+        
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.IsTrue(expected[i].GetType() == actual[i].GetType(), $"Command at index {i} does not match");
+            }
+        }
+
 
         [TestMethod]
         public void TestValidEmail()
