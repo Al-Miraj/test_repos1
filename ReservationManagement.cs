@@ -108,7 +108,7 @@ public static class ReservationManagement
                 reservation = GetReservation(ReservationsOfUser);
             }
             if (reservation == null)
-                return;
+                Display();
             HandleAction(reservation);
             Restaurant.UpdateRestaurantFiles();
             Display();
@@ -265,25 +265,39 @@ public static class ReservationManagement
     private static void SearchReservationsByDate() // maybe: add option to enter on reservations and if you want to do something with the reservation
     {
         DateOnly date;
-        Console.Write("Enter date (dd-MM-yyyy): ");
-        string dateStr = Console.ReadLine().Trim();
-        Console.Clear();
-        bool correctDateFormat = DateOnly.TryParseExact(dateStr, "d-M-yyyy", out date);
-        if (correctDateFormat)
+        do
         {
-            List<Reservation> reservationsOnDate = ReservationsOfUser.FindAll(reservation => reservation.Date == date);
-            if (reservationsOnDate.Count == 0)
+            Console.Write("Enter date (dd-MM-yyyy): ");
+            string dateStr = Console.ReadLine().Trim();
+            Console.Clear();
+            bool correctDateFormat = DateOnly.TryParseExact(dateStr, "dd-MM-yyyy", out date);
+            if (correctDateFormat)
             {
-                Console.WriteLine("There are no reservations on this date.");
-                return;
+                List<Reservation> reservationsOnDate = ReservationsOfUser.FindAll(reservation => reservation.Date == date);
+                if (reservationsOnDate.Count == 0)
+                {
+                    Console.WriteLine("There are no reservations on this date.");
+                    Console.WriteLine("\n[Press any key to continue]");
+                    Console.ReadKey();
+                    break;
+                }
+                Reservation? reservation = GetReservation(reservationsOnDate);
+                if (reservation == null) // User pressed "Back" option.
+                {
+                    Console.WriteLine("There are no reservations on this date.");
+                    Console.WriteLine("\n[Press any key to continue]");
+                    Console.ReadKey();
+                    break;
+                }
+                HandleAction(reservation);
+                break;
             }
-            Reservation? reservation = GetReservation(reservationsOnDate);
-            if (reservation == null) // User pressed "Back" option.
+            else
             {
-                return;
+                Console.WriteLine("Date must be entered in dd-MM-yyyy format.");
             }
-            HandleAction(reservation);
-        }
+        } while (true);
+        Display();
     }
 
     private static void SearchReservations()

@@ -14,7 +14,6 @@ public class Dashboard
     {
         Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
         Console.Clear();
-        Console.WriteLine(userRole);
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
         List<ICommand> commands = GetCommandsOfType(userRole);
