@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System.ComponentModel.Design;
 using System.Diagnostics.Tracing;
 using System.Text.Json;
@@ -39,8 +40,8 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.Clear();
         Console.Write("Enter a date (dd-mm-yyyy): ");
         DateOnly date = GetReservationDate();
-        Console.Clear();
 
+        Console.Clear();
         Console.WriteLine("Choose your timeslot:");
         string timeslot = GetTimeslot();
 
@@ -77,12 +78,6 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Restaurant.UpdateRestaurantFiles();
     }
 
-    /*
-     
-    kou. written before the lights are out. what are we apologizing 
-     
-     */
-
 
     public static int GetCustomerID()  // in ReservationSystem or somewhere else?
     {
@@ -108,7 +103,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         do
         {
             string number = Console.ReadLine().Trim();
-            (hasCorrectFormat, numberOfPeople) = NumInCorrectFormat(number);
+            (hasCorrectFormat, numberOfPeople) = GetValidatedNumberFormat(number);
             IsSmallerThan0 = numberOfPeople <= 0;
             IsBiggerThan6 = numberOfPeople > 6;
             if (!hasCorrectFormat)
@@ -126,45 +121,52 @@ public static class ReservationSystem // Made class static so loginsystem and da
 
     public static bool NumInRange(int start, int end, int num) => num >= start && num <= end;
 
-    public static (bool, int) NumInCorrectFormat(string input)
+    public static (bool, int) GetValidatedNumberFormat(string input)
     {
         int output;
         bool HasCorrectFormat = int.TryParse(input, out output);
         return (HasCorrectFormat, output);
     }
 
+    public static (bool, DateOnly) GetValidatedReservationDateFormat(string date)
+    {
+        DateOnly reservationDate;
+        bool isCorrectFormat = DateOnly.TryParseExact(date, "d-M-yyyy", out reservationDate);
+        return (isCorrectFormat, reservationDate);
+    }
+
+    public static bool ReservationDateIsWithinRange(DateOnly reservationDate)
+    {
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+        DateOnly yearFromNow = today.AddYears(1);
+        bool dateHasNotPassed = today <= reservationDate;
+        bool dateIsWithinYearFromNow = reservationDate < yearFromNow;
+
+        return dateHasNotPassed && dateIsWithinYearFromNow;
+    }
+
     public static DateOnly GetReservationDate()
     {
         DateOnly reservationDate;
-        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-        DateOnly yearFromNow = today.AddYears(1);
-        bool formatIsIncorrect;
-        bool dateHasPassed;
-        bool dateIsMoreThanYearFromNow;
+        bool formatIsCorrect;
+        bool dateIsWithinRange;
 
         do
         {
             string date = Console.ReadLine().Trim();
 
-            // formatIsIncorrect is true if the format is incorrect
-            formatIsIncorrect = !DateOnly.TryParseExact(date, "d-M-yyyy", out reservationDate);
-            dateHasPassed = reservationDate < today;
-            dateIsMoreThanYearFromNow = reservationDate > yearFromNow;
-            if (formatIsIncorrect)
+            (formatIsCorrect, reservationDate) = GetValidatedReservationDateFormat(date);
+            dateIsWithinRange = ReservationDateIsWithinRange(reservationDate);
+            if (!formatIsCorrect)
             {
                 Console.WriteLine($"Invalid date format '{date}'. Please enter a date in the dd-mm-yyyy format.");
             }
-            else if (dateHasPassed)
+            else if (!dateIsWithinRange)
             {
-                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not already passed.");
+                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not already passed and is not more than a year from today.");
             }
-            else if (dateIsMoreThanYearFromNow)
-            {
-                Console.WriteLine($"Invalid date '{date}'. Please enter a date that has not more than a year from today.");
-            }
-
         }
-        while (formatIsIncorrect || dateHasPassed || dateIsMoreThanYearFromNow);
+        while (!formatIsCorrect || !dateIsWithinRange);
 
         return reservationDate;
     }
@@ -195,7 +197,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return availability;
     }
 
-    public static void WaitingListOffer()
+    private static void WaitingListOffer()
     {
         Console.Clear();
         Console.WriteLine("We're sorry. We don't have any space for that date and timeslot.\n");
@@ -239,7 +241,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
     }
 
-    public static bool IsFullyReservated(List<int> reservatedTablesNumbers, int numberOfPeople)
+    private static bool IsFullyReservated(List<int> reservatedTablesNumbers, int numberOfPeople)
     {
         // Filter out all tables that don't have enough seats.
         List<Table> tablesWithCapacity = Restaurant.Tables.FindAll(table => table.Capacity >= numberOfPeople);
@@ -251,7 +253,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
     
 
 
-    public static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
+    private static Table? GetChosenTable(int numberOfPeople, DateOnly date, string timeslot)
     {
         List<int> reservatedTablesNumbers = GetAvailability(date, timeslot);
         Console.CursorVisible = false;
@@ -343,7 +345,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
     }
 
-    public static void PrintEntranceDisplay()
+    private static void PrintEntranceDisplay()
     {
         Console.WriteLine("\n");
         Console.WriteLine("\\");
@@ -380,7 +382,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.WriteLine("\n\n");
     }
 
-    public static void SetColor(Table table, List<int> reservatedTableNumbers, int numberOfPeople)
+    private static void SetColor(Table table, List<int> reservatedTableNumbers, int numberOfPeople)
     {
         if (reservatedTableNumbers.Contains(table.TableNumber))
         { Console.ForegroundColor = ConsoleColor.Red; }
@@ -390,7 +392,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         { Console.ForegroundColor = ConsoleColor.DarkGreen; }
     }
 
-    public static (int, int) GetNewCoordinate((int x, int y) coordinate, string direction)
+    private static (int, int) GetNewCoordinate((int x, int y) coordinate, string direction)
     {
         HashSet<(int, int)> validCoordinates = new HashSet<(int, int)>()
         {
@@ -423,7 +425,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         return coordinate;
     }
 
-    public static void PrintTableInfo((int, int) tableCoordinate)
+    private static void PrintTableInfo((int, int) tableCoordinate)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -452,7 +454,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.SetCursorPosition(currentCursorPosition.x, currentCursorPosition.y);
     }
 
-    public static void PrintLegend((int x, int y) coordinate)
+    private static void PrintLegend((int x, int y) coordinate)
     {
         var legend = new[]
         {
@@ -471,7 +473,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
     }
 
-    public static void DisplayReservationDetails(Reservation R)
+    private static void DisplayReservationDetails(Reservation R)
     {
         Table T = R.SelectedTable;
         string numOfPeople = R.NumberOfPeople > 1 ? $"{R.NumberOfPeople} guests" : $"{R.NumberOfPeople} guest";
