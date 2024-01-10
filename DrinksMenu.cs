@@ -59,7 +59,7 @@ public class DrinksMenu : MenuItem<Drinks>
             PrintInfo(Items, "Cognac");
             PrintInfo(Items, "Beer");
         }
-        else if (category != null)
+        else if (category != null && category.Length > 0)
         {
             Console.Clear();
             //GetCategory("Soda").ForEach(Console.WriteLine);
@@ -67,11 +67,11 @@ public class DrinksMenu : MenuItem<Drinks>
             //(categoryDrinks.Any(d => d.Alcohol > 0) ? (Action<string, List<Drinks>>)PrintAlcoholicDrinkMenu : PrintNonAlcoholicDrinkMenu)(category, categoryDrinks);
         }
 
-        else
-        {
-            Console.Clear();
-            return;
-        }
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
+        Console.Clear();
+        return;
+        
     }
 
     public List<Drinks> GetCategory(string type) => Items.FindAll(x => x.Category == type);
@@ -79,6 +79,8 @@ public class DrinksMenu : MenuItem<Drinks>
 
     public override void PrintInfo(List<Drinks> drinks, string category, bool KeyContinue = true)
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         bool includesAlcohol = drinks.Any(drink => drink.Alcohol > 0.0);
 
         Console.ForegroundColor = Color.Yellow;

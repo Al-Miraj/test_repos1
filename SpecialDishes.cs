@@ -5,7 +5,7 @@ using Console = Colorful.Console;
 
 public class SpecialDishes : MenuItem<Dish>
 {
-    private static List<Dish> rawHolidayMenu;
+    public static List<Dish> rawHolidayMenu;
     private List<Dish> finishedHolidayMenu = new List<Dish>();
     private static List<DateTime> keys = new List<DateTime>();
     public static List<Dish> rawSeasonalMenu;
@@ -15,14 +15,21 @@ public class SpecialDishes : MenuItem<Dish>
         if (isHolidayMenu)
         {
             rawHolidayMenu = Items;
+            keys.Clear();
             keys.AddRange(holidays.Keys);
             getHoliday(DateTime.Now.Date);
         }
         else
         {
+            keys.Clear();
             rawSeasonalMenu = Items;
             PrintInfo(MainNavigator(), GetSeason(DateTime.Today.Month));
         }
+    }
+     
+    public SpecialDishes(List<Dish> Items) : base (Items)
+    {
+        rawSeasonalMenu = Items;
     }
 
     private static Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>
@@ -45,9 +52,9 @@ public class SpecialDishes : MenuItem<Dish>
     public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
         Console.Clear();
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
         Console.ForegroundColor = Color.Cyan;
-        Console.WriteLine(header + " Menu", Console.WindowWidth / 2);
-        Console.WriteLine();
+        Console.WriteLine(header + " Menu", Console.WindowWidth + "\n");
         Console.ResetColor();
 
         // Set up column headers
@@ -71,7 +78,7 @@ public class SpecialDishes : MenuItem<Dish>
             Console.Write("{0,-50} ", dish.Name);
 
             Console.ForegroundColor = Color.LightGreen;
-            Console.Write("{0,-15:N2}", dish.Price);
+            Console.Write("{0,-15:N2}", "€" + dish.Price);
             Console.ResetColor();
 
             Console.WriteLine("{0,-140} ", dish.Description);
@@ -123,10 +130,14 @@ public class SpecialDishes : MenuItem<Dish>
             Console.WriteLine($"today is {holidays[key]}");
             finishedHolidayMenu.AddRange(getHolidayMenu(holidays[key]));
             PrintInfo(finishedHolidayMenu, holidays[key]);
+            Console.WriteLine();
             return;
         }
 
-        GetNearestMenu();
+        else
+        {
+            GetNearestMenu();
+        }
     }
 
     private void GetNearestMenu()
@@ -137,12 +148,12 @@ public class SpecialDishes : MenuItem<Dish>
         Console.WriteLine(" Do you want to see the menu of the nearest holiday?");
         Console.WriteLine();
         int choice = MenuSelector.RunMenuNavigator(new List<string>() { " yes", " no" });
-        Console.Clear();
         Console.WriteLine();
 
         if (choice == 0) // 'yes' 
         {
-            string closestHoliday = FindNextHoliday();
+            string closestHoliday = FindNextHoliday(DateTime.Now);
+            Console.Clear();
             Console.WriteLine($"Displaying the menu of the nearest holiday: {closestHoliday}");
             Console.WriteLine();
             Thread.Sleep(250);
@@ -155,21 +166,30 @@ public class SpecialDishes : MenuItem<Dish>
         Console.WriteLine();
         DisplayAllHolidays();
         Console.WriteLine();
+        Console.WriteLine("press any key to continue");
+        Console.WriteLine();
+        Console.ReadKey();
+        Console.Clear();
         return;
     }
     public static List<Dish> getHolidayMenu(string holiday) => rawHolidayMenu.FindAll(x => x.Holiday == holiday);
 
-    public static string FindNextHoliday()
+    public static string FindNextHoliday(DateTime currentDate)
     {
-        DateTime date = DateTime.Now.Date;
-        DateTime holidayDate = keys.Where(x => x >= date).First();
-
-        if (holidayDate != null && holidays.ContainsKey(holidayDate))
+        if (keys.Count == 0)
         {
-            return holidays[holidayDate];
+            // Populate keys with dates for the specific year of currentDate
+            keys.AddRange(holidays.Keys.Select(date => new DateTime(currentDate.Year, date.Month, date.Day)));
         }
 
-        return "";
+        DateTime holidayDate = keys.Where(x => x >= currentDate).FirstOrDefault();
+
+        if (holidayDate != default && holidays.ContainsKey(new DateTime(holidays.Keys.First().Year, holidayDate.Month, holidayDate.Day)))
+        {
+            return holidays[new DateTime(holidays.Keys.First().Year, holidayDate.Month, holidayDate.Day)];
+        }
+
+        return "No upcoming holidays";
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------

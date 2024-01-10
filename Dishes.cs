@@ -12,16 +12,14 @@ public class Dishes : MenuItem<Dish>
         set { selectedFoodMenuOption = value; }
     }
 
-    private static bool shown;
-
-    public Dishes() : base("Dish.json")
+    public Dishes(bool shown) : base("Dish.json")
     {
         if (!shown)
+        {
             PrintInfo(GetDefaultMenu().Value.Item1, ifDinner(TimeOnly.FromDateTime(DateTime.Now)) ? "Dinner" : "Lunch");
-        shown = true;
+            shown = true;
+        }
         Console.Clear();
-
-        HandleSelection();
     }
 
     public Dishes(List<Dish> Items) : base(Items) { }
@@ -44,6 +42,8 @@ public class Dishes : MenuItem<Dish>
 
     public override void PrintInfo(List<Dish> dishlist, string header, bool keyContinue = true)
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         Console.Clear();
         Console.ForegroundColor = Color.Cyan;
         Console.WriteLine(header + " Menu", Console.WindowWidth / 2);
@@ -71,7 +71,7 @@ public class Dishes : MenuItem<Dish>
             Console.Write("{0,-50} ", dish.Name);
 
             Console.ForegroundColor = Color.LightGreen;
-            Console.Write("{0,-15:N2}", dish.Price);
+            Console.Write("{0,-15:N2}", "€" + dish.Price);
             Console.ResetColor();
 
             Console.WriteLine("{0,-140} ", dish.Description);
@@ -117,12 +117,10 @@ public class Dishes : MenuItem<Dish>
         return "";
     }
 
-    private (List<Dish>, string timeslot)? GetDefaultMenu()
+    public (List<Dish>, string timeslot)? GetDefaultMenu()
     {
         var dt = SetTime();
         TimeOnly time = dt.time;
-
-        Console.Clear();
 
         if (ifDinner(time))
         {
@@ -137,7 +135,7 @@ public class Dishes : MenuItem<Dish>
         return null;
     }
 
-    private static bool ifDinner(TimeOnly time)
+    public static bool ifDinner(TimeOnly time)
     {
         TimeOnly startTime = new TimeOnly(18, 0);
         TimeOnly endTime = new TimeOnly(22, 0);
@@ -150,7 +148,7 @@ public class Dishes : MenuItem<Dish>
         return false;
     }
 
-    private static (DateOnly date, TimeOnly time) SetTime()
+    public static (DateOnly date, TimeOnly time) SetTime()
     {
         DateTime now = DateTime.Now;
         DateOnly date = DateOnly.FromDateTime(now);
@@ -169,7 +167,12 @@ public class Dishes : MenuItem<Dish>
         switch (selectedFilterMenuOption)
         {
             case 0:
-                return FilterIngredients(HandleTimeSlotSelection());
+                Console.WriteLine();
+                Console.WriteLine("Enter the ingredients (use comma):");
+                string ingredientRaw = Console.ReadLine().ToLower();
+                List<string> ingredients = ingredientRaw.Split(", ").ToList();
+
+                return FilterIngredients(HandleTimeSlotSelection(), ingredients);
             case 1:
                 Console.WriteLine("Enter the maximum price:");
                 if (double.TryParse(Console.ReadLine(), out double maxPrice))
@@ -246,13 +249,8 @@ public class Dishes : MenuItem<Dish>
         return finalMenu.Where(x => x.Price <= price).OrderBy(x => x.Price).ToList();
     }
 
-    public List<Dish> FilterIngredients(string menuType)
+    public List<Dish> FilterIngredients(string menuType, List<string> ingredients)
     {
-        Console.WriteLine();
-        Console.WriteLine("Enter the ingredients (use comma):");
-        string ingredientRaw = Console.ReadLine().ToLower();
-        List<string> ingredients = ingredientRaw.Split(", ").ToList();
-
         List<Dish> unsortedDishes = menuType == "Dinner" ? GetTimeSlotMenu("Dinner") : GetTimeSlotMenu("Lunch");
         List<Dish> filteredByIngredients = unsortedDishes.Where(x => x.Ingredients.SelectMany(i => i.ToLower().Split(" ")).Any(ingredient => ingredients.Contains(ingredient))).ToList();
         List<Dish> filteredByAllergens = unsortedDishes.Where(x => x.PotentialAllergens.Select(i => i.ToLower()).Any(allergen => ingredients.Contains(allergen.ToLower()))).ToList();
