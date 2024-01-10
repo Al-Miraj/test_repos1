@@ -47,17 +47,50 @@ public static class JsonFileHandler
 {
     public static void WriteToFile<T>(List<T> data, string fileName)
     {
-        StreamWriter writer = new StreamWriter(fileName);
-        writer.Write(JsonConvert.SerializeObject(data, new JsonSerializerSettings { Formatting = Formatting.Indented }));
-        writer.Close();
+        try
+        {
+            StreamWriter writer = new StreamWriter(fileName);
+            writer.Write(JsonConvert.SerializeObject(data, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+            writer.Close();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"Access to the path is denied: {ex.Message}");
+        }
+        catch (DirectoryNotFoundException ex)
+        {
+            Console.WriteLine($"The specified path is invalid: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"An I/O error occurred: {ex.Message}");
+        }        
     }
 
     public static List<T> ReadFromFile<T>(string fileName)
     {
-        StreamReader reader = new StreamReader(fileName);
-        string jsonString = reader.ReadToEnd();
-        reader.Close();
-        List<T> contents = JsonConvert.DeserializeObject<List<T>>(jsonString)!;
-        return contents;
+        try
+        {
+            StreamReader reader = new StreamReader(fileName);
+            string jsonString = reader.ReadToEnd();
+            reader.Close();
+            List<T> contents = JsonConvert.DeserializeObject<List<T>>(jsonString)!;
+            return contents;
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"File not found: {ex.Message}");
+            return default;
+        }
+        catch (JsonReaderException ex)
+        {
+            Console.WriteLine($"Invalid JSON format: {ex.Message}");
+            return default;
+        }
+        catch (JsonSerializationException ex)
+        {
+            Console.WriteLine($"Deserialization failed: {ex.Message}");
+            return default;
+        }
     }
 }
