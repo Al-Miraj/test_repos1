@@ -202,7 +202,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         Console.Clear();
         Console.WriteLine("We're sorry. We don't have any space for that date and timeslot.\n");
         Console.WriteLine("Would you like to receive an email in case a table becomes available?");
-        List<string> options = new() { "Yes", "Reservate for another timeslot/date", "No, thanks" };
+        List<string> options = new() { "Yes", "Reserve another timeslot/date", "No, thanks" };
         int option = MenuSelector.RunMenuNavigator(options);
         if (option == 2)
         {
@@ -211,6 +211,7 @@ public static class ReservationSystem // Made class static so loginsystem and da
         else if (option == 1)
         {
             Reservate(false);
+            return;
         }
         Console.Clear();
         if (OptionMenu.IsUserLoggedIn)
@@ -220,24 +221,13 @@ public static class ReservationSystem // Made class static so loginsystem and da
         }
         else
         {
-            Console.WriteLine("Please enter your email or sign in.");
-            options = new() { "Enter email", "Create new account or login" };
-            option = MenuSelector.RunMenuNavigator(options);
-            if (option == 1)
-            {
-                Console.Clear();
-                LoginSystem.Start();
-            }
-            else
-            {
-                Console.Clear();
-                string email = LoginSystem.GetAccountEmail();
-                Console.WriteLine("Thank you for using the waiting list!");
-                Console.WriteLine($"An email will be send to {email} if a table is free.");
-                // maybe add function to send email when the Reservated tables at the right date and timeslot are below 15;
-                /*SendEmailIfAvailable(email);*/
-                return;
-            }
+            Console.Clear();
+            string email = LoginSystem.GetAccountEmail();
+            Console.WriteLine("Thank you for using the waiting list!");
+            Console.WriteLine($"An email will be send to {email} if a table is free.");
+            // maybe add function to send email when the Reservated tables at the right date and timeslot are below 15;
+            /*SendEmailIfAvailable(email);*/
+            return;
         }
     }
 

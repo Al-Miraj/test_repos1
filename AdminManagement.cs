@@ -68,10 +68,14 @@
 
     private static void AdminAccountsOverview()
     {
+        Console.Clear();
         List<SuperAdminAccount> superAdminAccounts = Restaurant.GetSuperAdminAccounts();
         List<AdminAccount> adminAccounts = Restaurant.GetAdminAccounts();
         superAdminAccounts.ForEach(Console.WriteLine);
         adminAccounts.ForEach(Console.WriteLine);
+        Console.WriteLine("\n[Press any key to return to the User Dashboard.]");
+        Console.ReadKey();
+
     }
 
     

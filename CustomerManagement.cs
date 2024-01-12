@@ -25,8 +25,6 @@ public static class CustomerManagement
             else
                 ViewCustomers();
             Restaurant.UpdateRestaurantFiles();
-            Console.WriteLine("\n[Press any key to return to the Customer Account Management menu.]");
-            Console.ReadKey();
         }
     }
 
@@ -38,6 +36,8 @@ public static class CustomerManagement
         CustomerAccount customer = LoginSystem.CreateCustomerAccount();
         Console.WriteLine("Customer added!");
         Console.WriteLine(customer.ToString());
+        Console.WriteLine("\n[Press any key to return to the Customer Account Management menu.]");
+        Console.ReadKey();
     }
 
     private static void ViewCustomers()

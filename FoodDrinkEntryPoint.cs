@@ -50,8 +50,6 @@
 
         if (shouldReturnToMain)
         {
-            Console.WriteLine("\n\n[Press any key to return to the main menu.]");
-            Console.ReadKey();
             OptionMenu.RunMenu();
         }
     }

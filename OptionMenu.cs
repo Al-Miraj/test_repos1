@@ -41,13 +41,19 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
             {
                 case 0:
                     ReservationSystem.RunSystem();
+                    Console.WriteLine("\n\n[Press any key to return to the main menu.]");
+                    Console.ReadKey();
                     break;
                 case 1:
                     About.RestaurantInformation();
+                    Console.WriteLine("\n\n[Press any key to return to the main menu.]");
+                    Console.ReadKey();
                     break;
                 case 2:
                     Contact.ContactInformation();
                     AboutUs.travel();
+                    Console.WriteLine("\n\n[Press any key to return to the main menu.]");
+                    Console.ReadKey();
                     break;
                 case 3:
                     FoodDrinkEntryPoint foodDrinkEntryPoint = new FoodDrinkEntryPoint();
@@ -67,6 +73,8 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                     break;
                 case 5:
                     Restaurant.DisplayDeals();
+                    Console.WriteLine("\n\n[Press any key to return to the main menu.]");
+                    Console.ReadKey();
                     break;
                 case 6:
                     if (IsUserLoggedIn)
@@ -77,16 +85,14 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                 case 7:
                     Restaurant.UpdateRestaurantFiles();
                     Console.WriteLine("Goodbye! Thank you for visiting.");
-                    Environment.Exit(0);
-                    break;
+                    return;
                 default:
                     Console.WriteLine("Invalid choice. Please select a valid option.");
+                    Console.WriteLine("\n\n[Press any key to return to the main menu.]");
+                    Console.ReadKey();
                     Console.ReadLine();
                     break;
             }
-
-            Console.WriteLine("\n\n[Press any key to return to the main menu.]");
-            Console.ReadKey();
         }
     }
 }

@@ -66,6 +66,7 @@ public class Reservation
     {
         return
         $" Reservation Number: {ReservationNumber}" +
+        $" \n    Customer ID: {CustomerID}" +
         $" \n    Date: {Date}" +
         $" \n    Timeslot: {TimeSlot}" +
         $" \n    Price: {GetTotalPrice()}" +

@@ -12,6 +12,7 @@ public static class MenuSelector
         while (true)
         {
             Console.SetCursorPosition(x, y);
+
             for (int i = 0; i < options.Count; i++)
             {
                 if (i == selectedOption)

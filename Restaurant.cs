@@ -43,15 +43,15 @@ public static class Restaurant
 
     public static List<SuperAdminAccount> GetSuperAdminAccounts()
     {
-        List<SuperAdminAccount> adminAccounts = new List<SuperAdminAccount>();
+        List<SuperAdminAccount> superAdminAccounts = new List<SuperAdminAccount>();
         foreach (Account account in Accounts)
         {
-            if (account is SuperAdminAccount admin)
+            if (account is SuperAdminAccount superAdmin)
             {
-                adminAccounts.Add(admin);
+                superAdminAccounts.Add(superAdmin);
             }
         }
-        return adminAccounts;
+        return superAdminAccounts;
     }
 
     public static List<AdminAccount> GetAdminAccounts()
@@ -59,7 +59,7 @@ public static class Restaurant
         List<AdminAccount> adminAccounts = new List<AdminAccount>();
         foreach (Account account in Accounts)
         {
-            if (account is AdminAccount admin)
+            if (account is AdminAccount admin && account is not SuperAdminAccount)
             {
                 adminAccounts.Add(admin);
             }
@@ -232,10 +232,12 @@ public static class Restaurant
     {
         switch (user)
         {
-            case Account n when n is SuperAdminAccount:
+            case Account account when account is SuperAdminAccount:
                 return UserRole.SuperAdmin;
-            case Account n when n is AdminAccount:
+            case Account account when account is AdminAccount:
                 return UserRole.Admin;
+            case Account account when account is CustomerAccount:
+                return UserRole.Customer;
             default:
                 return UserRole.Customer;
         }

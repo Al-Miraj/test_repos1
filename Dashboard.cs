@@ -13,7 +13,8 @@ public class Dashboard
     public void RunDashboardMenu()
     {
         Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
-        Console.Clear();
+        Console.Clear();        
+
         Console.WriteLine($"Welcome {CurrentUser.Name}!");
         Console.WriteLine("This is your dashboard.");
         List<ICommand> commands = GetCommandsOfType(userRole);
@@ -23,8 +24,6 @@ public class Dashboard
         {
             return;
         }
-        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
-        Console.ReadKey();
         RunDashboardMenu();
     }
 
@@ -32,6 +31,13 @@ public class Dashboard
     {
         Console.Clear();
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
+        if ( reservations.Count == 0 )
+        {
+            Console.WriteLine("You have not made any reservations on this account yet.");
+            Console.WriteLine("\n[Press any key to return to the your dashboard.]");
+            Console.ReadKey();
+            return;
+        }
         List<string> options = reservations.Select(r => r.ToString()).ToList();
         options.Add("Back");
         if (reservations == null) { return; }
@@ -64,11 +70,15 @@ public class Dashboard
         };
 
         Restaurant.database.DataWriter(feedback);
+
+        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
+        Console.ReadKey();
     }
 
     public void ReservationManager()
     {
         ReservationManagement.CurrentUser = CurrentUser;
+        ReservationManagement.UserRole = Restaurant.GetUserRole(CurrentUser);
         ReservationManagement.Display();
     }
 
@@ -76,10 +86,20 @@ public class Dashboard
     {
         Console.Clear();
         List<Reservation> reservations = ((CustomerAccount)CurrentUser).GetReservations();
+        if ( reservations.Count == 0 )
+        {
+            Console.WriteLine("You have not made any reservations on this account yet.");
+            Console.WriteLine("\n[Press any key to return to the your dashboard.]");
+            Console.ReadKey();
+            return;
+        }
         List<string> options = reservations.Select(r => r.ToString()).ToList();
-        options.Add("Back");
-        int selectedOption = MenuSelector.RunMenuNavigator(options);
-        if (selectedOption == options.IndexOf(options.Last())) { return; }
+        foreach (string option in options)
+        {
+            Console.WriteLine(option + "\n");
+        }
+        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
+        Console.ReadKey();
     }
 
 
@@ -93,15 +113,21 @@ public class Dashboard
         {
             DisplayFeedback(feedback);
         }
-        Console.WriteLine("Press any key to continue");
+        Console.WriteLine("\n[Press any key to return to the your dashboard.]");
         Console.ReadKey();
     }
 
     private void DisplayFeedback(Feedback feedback)
+
     {
-        Console.WriteLine(feedback.Email + "                  " + feedback.Rating + " out of 5");
+
+        Console.Write("{0, -25} ", feedback.Email);
+        Console.Write("{0, -2} ", feedback.Rating);
+        Console.WriteLine("{0, -8}", "out of 5");
         Console.WriteLine(feedback.Message);
+
         Console.WriteLine();
+
     }
 
     private List<ICommand> GetCommandsOfType(Restaurant.UserRole userRole) // more files, but more readability using c# Command Pattern

@@ -5,27 +5,27 @@ using System.Runtime.CompilerServices;
 public static class ReservationManagement
 {
     public static Account CurrentUser { get; set; } = Restaurant.AdminAccounts[0];
-    private static Restaurant.UserRole userRole = Restaurant.GetUserRole(CurrentUser);
-    private static bool IsAdmin = userRole == Restaurant.UserRole.Admin || userRole == Restaurant.UserRole.SuperAdmin;
+    public static Restaurant.UserRole UserRole { get; set; } = Restaurant.GetUserRole(CurrentUser);
     private static List<Reservation> ReservationsOfUser =>
         GetReservationsOfUser();
 
 
     public static void Display()
     {
-        
-            List<string> options = new List<string>()
+        Console.WriteLine();
+        List<string> options = new List<string>()
         {
             "View all Reservations",
-            "View future Reservations",
+            "Update Reservations",
             "Add Reservation",
-            "View Reservations on date",
-            "View Table Availablity",
-            $"Back to {userRole} Dashboard"
+            "Search Reservation",
+            "View Table Availablity on date",
+            $"Back to {UserRole} Dashboard"
         };
         while (true)
         {
             Console.Clear();
+            Console.WriteLine(UserRole.ToString());
             Console.WriteLine("Reservation Manager:");
             int selectedOption = MenuSelector.RunMenuNavigator(options);
             switch (selectedOption)
@@ -33,23 +33,29 @@ public static class ReservationManagement
                 case 0:
                     Console.Clear();
                     ViewReservations(false);
-                    return;
+                    break;
                 case 1:
                     Console.Clear();
                     ViewReservations();
-                    return;
+                    break;
                 case 2:
                     Console.Clear();
                     AddReservation();
-                    return;
+                    Console.WriteLine("\n[Press any key to return to the Reservation Manager menu.]");
+                    Console.ReadKey();
+                    break;
                 case 3:
                     Console.Clear();
                     SearchReservations();
-                    return;
+                    Console.WriteLine("\n[Press any key to return to the Reservation Manager menu.]");
+                    Console.ReadKey();
+                    break;
                 case 4:
                     Console.Clear();
                     ViewTableAvailability();
-                    return;
+                    Console.WriteLine("\n[Press any key to return to the Reservation Manager menu.]");
+                    Console.ReadKey();
+                    break;
                 case 5:
                     return;
                 default:
@@ -58,8 +64,6 @@ public static class ReservationManagement
             }
 
             Restaurant.UpdateRestaurantFiles();
-            Console.WriteLine("\n[Press any key to return to the Reservation Manager menu.]");
-            Console.ReadKey();
         }
     }
 
@@ -68,6 +72,11 @@ public static class ReservationManagement
     {
         Console.Clear();
         Console.WriteLine("Reservation Overview\n");
+        if (CurrentUser.GetReservations().Count == 0)
+        {
+            Console.WriteLine("You have not made any reservations on this account yet.");
+            return;
+        }
         Console.Write("Enter the date that you want to see the table availability of (dd-mm-yyyy): ");
         DateOnly overviewDate = ReservationSystem.GetReservationDate();
         Console.WriteLine("Choose timeslot that you want to see the table availability of: ");
@@ -81,7 +90,7 @@ public static class ReservationManagement
     private static List<Reservation> GetReservationsOfUser()
     {
         List<Reservation> reservations;
-        if (IsAdmin)
+        if (CurrentUser is AdminAccount)
         {
             reservations = Restaurant.Reservations;
         }
@@ -108,52 +117,53 @@ public static class ReservationManagement
                 reservation = GetReservation(ReservationsOfUser);
             }
             if (reservation == null)
-                Display();
+                return;
             HandleAction(reservation);
             Restaurant.UpdateRestaurantFiles();
-            Display();
         }
     }
 
     private static void HandleAction(Reservation reservation)
     {
-            Console.WriteLine("\nAction:\n");
-            List<string> options = new()
+        Console.Clear();
+        Console.WriteLine(reservation.ToString());
+        Console.WriteLine("\nAction:\n");
+        List<string> options = new()
         {
             "Update",
             "Cancel",
             "Back"
         };
-            while (true)
+        while (true)
+        {
+            int selectedOption = MenuSelector.RunMenuNavigator(options);
+            switch (selectedOption)
             {
-                int selectedOption = MenuSelector.RunMenuNavigator(options);
-                switch (selectedOption)
-                {
-                    case 0:
-                        Console.Clear();
-                        if (reservation.Date >= DateOnly.FromDateTime(DateTime.Now))
-                            UpdateReservation(reservation);
-                        else
-                        {
-                            Console.WriteLine("Can't update past reservations.");
-                        }
-                        return;
-                    case 1:
-                        Console.Clear();
-                        CancelReservation(reservation);
-                        return;
-                    case 2:
-                        return;
-                    default:
-                        Console.WriteLine("Invalid choice. Please select a valid option.");
-                        return;
-                }
+                case 0:
+                    Console.Clear();
+                    if (reservation.Date >= DateOnly.FromDateTime(DateTime.Now))
+                        UpdateReservation(reservation);
+                    else
+                    {
+                        Console.WriteLine("Can't update past reservations.");
+                    }
+                    return;
+                case 1:
+                    Console.Clear();
+                    CancelReservation(reservation);
+                    return;
+                case 2:
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Please select a valid option.");
+                    return;
             }
+        }
     }
 
 
     private static void AddReservation() =>
-        ReservationSystem.Reservate(IsAdmin);
+        ReservationSystem.Reservate(CurrentUser is AdminAccount);
 
     private static void UpdateReservation(Reservation reservation)
     {
@@ -201,12 +211,13 @@ public static class ReservationManagement
         while (true)
         {
             Console.WriteLine("Enter the new amount of people that are coming:");
-            int numberOfPeople = ReservationSystem.GetNumberOfPeople(IsAdmin);
+            int numberOfPeople = ReservationSystem.GetNumberOfPeople(CurrentUser is AdminAccount);
             if (numberOfPeople > reservation.SelectedTable.Capacity)
             {
                 Console.WriteLine("The table you reservated does not have enough seats.\n");
                 continue;
             }
+            reservation.NumberOfPeople = numberOfPeople;
             break;
         }
     }
@@ -214,12 +225,12 @@ public static class ReservationManagement
     private static Reservation? GetReservation(List<Reservation> reservations)
     {
         Console.WriteLine("Reservation Overview:\n");
-        List<string> options = reservations.Select(r => r.GetReservationInfo()).ToList();
-        options.Add("Back");
-        int selectedOption = MenuSelector.RunMenuNavigator(options);
-        if (selectedOption == options.Count - 1) { return null; }
-        options.Remove(options.Last());
-        return reservations[selectedOption];
+        List<string> reservationInfos = reservations.Select(r => r.GetReservationInfo()).ToList();
+        reservationInfos.Insert(0, "Back");
+        int selectedOption = MenuSelector.RunMenuNavigator(reservationInfos);
+        if (selectedOption == 0) { return null; }
+        reservationInfos.Remove(reservationInfos[0]);
+        return reservations[selectedOption - 1];
     }
 
     private static void CancelReservation(Reservation reservation)
@@ -284,10 +295,10 @@ public static class ReservationManagement
                 Reservation? reservation = GetReservation(reservationsOnDate);
                 if (reservation == null) // User pressed "Back" option.
                 {
-                    Console.WriteLine("There are no reservations on this date.");
                     Console.WriteLine("\n[Press any key to continue]");
                     Console.ReadKey();
                     break;
+                    // wat gebeurt er na press any key to continue? gaat die naar waar je verwacht dat ie gaat.
                 }
                 HandleAction(reservation);
                 break;
