@@ -106,19 +106,30 @@ public static class ReservationManagement
         while (true)
         {
             Console.Clear();
-            Reservation? reservation;
+            Reservation? reservation = null;
             if (future)
             {
                 List<Reservation> upcomingReservations = ReservationsOfUser.FindAll(reservation => reservation.Date >= DateOnly.FromDateTime(DateTime.Now));
                 reservation = GetReservation(upcomingReservations);
+                if (reservation != null)
+                {
+                    HandleAction(reservation);
+                }
             }
             else
             {
-                reservation = GetReservation(ReservationsOfUser);
+                Console.WriteLine("Reservation Overview:\n");
+                foreach (Reservation reservation_ in ReservationsOfUser)
+                {
+                    Console.WriteLine(reservation_.GetReservationInfo() + "\n");
+                }
+                Console.WriteLine("\n[Press any key to return to the Reservation Manager menu.]");
+                Console.ReadKey();
+
             }
             if (reservation == null)
                 return;
-            HandleAction(reservation);
+            
             Restaurant.UpdateRestaurantFiles();
         }
     }
@@ -295,8 +306,6 @@ public static class ReservationManagement
                 Reservation? reservation = GetReservation(reservationsOnDate);
                 if (reservation == null) // User pressed "Back" option.
                 {
-                    Console.WriteLine("\n[Press any key to continue]");
-                    Console.ReadKey();
                     break;
                     // wat gebeurt er na press any key to continue? gaat die naar waar je verwacht dat ie gaat.
                 }
@@ -327,7 +336,7 @@ public static class ReservationManagement
         }
     }
 
-    private static bool ReservationsIsEmpty(List<Reservation> reservations)
+    public static bool ReservationsIsEmpty(List<Reservation> reservations)
     {
         if (reservations.Count == 0)
         {

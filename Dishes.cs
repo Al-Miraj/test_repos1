@@ -110,6 +110,9 @@ public class Dishes : MenuItem<Dish>
                 {
                     Console.WriteLine("No dishes found for the selected filters.");
                 }
+                Console.WriteLine("\n[Press any key to return to the Menu]");
+                Console.ReadKey();
+                Console.Clear();
                 break;
             case 3:
                 return "";
@@ -185,10 +188,12 @@ public class Dishes : MenuItem<Dish>
                 }
                 break;
             case 2:
-                Console.WriteLine("Enter the category (1. Meat, 2. Chicken, 3. Fish, 4. Vegetarian, 5. Exit):");
+                Console.WriteLine("Enter the number of the category (i.e. 1, 2 for filtering on Meat and Chicken) +" +
+                    "\n[1] Meat \n[2] Chicken \n[3] Fish \n[4] Vegetarian \n[5] Exit");
                 List<string> categoryList = Console.ReadLine().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 return FilterCategory(HandleTimeSlotSelection().ToString(), categoryList);
             case 3:
+                Console.Clear();
                 break;
             default:
                 break;

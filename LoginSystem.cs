@@ -12,7 +12,7 @@ using System.Data;
 using System.Xml.Linq;
 
 
-static class LoginSystem
+public static class LoginSystem
 {
     public static void Start()
     {   

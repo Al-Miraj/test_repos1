@@ -16,7 +16,7 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
             "Menu",
             "Drinks",
             "Deals",
-            "Login/Register",
+            IsUserLoggedIn ? "Dashboard" : "Login/Register",
             "Exit"
         };
         while (true)
@@ -85,7 +85,8 @@ public static class OptionMenu // Made class static so LoginSystem and Dashboard
                 case 7:
                     Restaurant.UpdateRestaurantFiles();
                     Console.WriteLine("Goodbye! Thank you for visiting.");
-                    return;
+                    Environment.Exit(0);
+                    break;
                 default:
                     Console.WriteLine("Invalid choice. Please select a valid option.");
                     Console.WriteLine("\n\n[Press any key to return to the main menu.]");

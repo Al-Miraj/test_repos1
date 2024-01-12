@@ -69,6 +69,8 @@ public class Reservation
         $" \n    Customer ID: {CustomerID}" +
         $" \n    Date: {Date}" +
         $" \n    Timeslot: {TimeSlot}" +
+        $" \n    Amount of People: {NumberOfPeople}" +
+        $" \n    Table number: {SelectedTable.TableNumber}" +
         $" \n    Price: {GetTotalPrice()}" +
         $"\n";
 
