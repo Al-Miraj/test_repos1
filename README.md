@@ -1,3 +1,5 @@
+We use Product_Branch as our main branch.
+
 Before starting application, 
   user should download DB Browser, to be able to connect with the database. Download the latest 7 version.
   our program does not support net 8.0
@@ -28,3 +30,5 @@ Before starting application,
       
 When starting application, 
   make sure the window size of cmd is maximum. (Not fullscreen! [f11])
+
+(When text is bigger than the console screen, sometimes the console.clear() isn't working properly) you'll see this as you scroll to much upwards.
