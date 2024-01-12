@@ -28,3 +28,6 @@ Before starting application,
       
 When starting application, 
   make sure the window size of cmd is maximum. (Not fullscreen! [f11])
+
+
+(When text is bigger than the console screen, sometimes the console.clear() isn't working properly) you'll see this as you scroll to much upwards.
