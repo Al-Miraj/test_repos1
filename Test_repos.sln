@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniProject1_V1", "MiniProject1_V1.csproj", "{32E0302E-0005-4F29-B436-1DD81F01B086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniProject1_V1", "MiniProject1_V1.csproj", "{32E0302E-0005-4F29-B436-1DD81F01B086}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "testspecialmenus", "..\testspecialmenus\testspecialmenus.csproj", "{CE4D1119-E177-4895-A66C-D52682605E2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Normal menu tests", "..\Normal menu tests\Normal menu tests.csproj", "{DCC2DDBC-0BF5-464B-8DBD-5AB3AB450403}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{32E0302E-0005-4F29-B436-1DD81F01B086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32E0302E-0005-4F29-B436-1DD81F01B086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32E0302E-0005-4F29-B436-1DD81F01B086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE4D1119-E177-4895-A66C-D52682605E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE4D1119-E177-4895-A66C-D52682605E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE4D1119-E177-4895-A66C-D52682605E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE4D1119-E177-4895-A66C-D52682605E2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC2DDBC-0BF5-464B-8DBD-5AB3AB450403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC2DDBC-0BF5-464B-8DBD-5AB3AB450403}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC2DDBC-0BF5-464B-8DBD-5AB3AB450403}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC2DDBC-0BF5-464B-8DBD-5AB3AB450403}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,323 @@
+[
+  {
+    "Name": "Spring Asparagus Salad",
+    "Description": "A refreshing salad with fresh asparagus spears, cherry tomatoes, and mixed greens topped with a zesty lemon vinaigrette.",
+    "Ingredients": [ "Asparagus", "Cherry Tomatoes", "Mixed Greens", "Lemon" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 10.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Vegetarian",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Pea and Spinach Risotto",
+    "Description": "Creamy risotto cooked with tender peas, spinach, and parmesan cheese.",
+    "Ingredients": [ "Arborio Rice", "Peas", "Spinach", "Parmesan Cheese" ],
+    "Timeslot": "Dinner",
+    "Price": 14.99,
+    "PotentialAllergens": [ "Dairy" ],
+    "Icon": "Vegetarian",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Strawberry Spinach Salad",
+    "Description": "A delightful combination of baby spinach, fresh strawberries, almonds, and feta cheese drizzled with balsamic vinaigrette.",
+    "Ingredients": [ "Baby Spinach", "Strawberries", "Almonds", "Feta Cheese", "Balsamic Vinaigrette" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 12.99,
+    "PotentialAllergens": [ "Dairy", "Nuts" ],
+    "Icon": "Vegetarian",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Artichoke and Lemon Chicken",
+    "Description": "Grilled chicken breast topped with artichoke hearts in a tangy lemon sauce, served with roasted potatoes.",
+    "Ingredients": [ "Chicken Breast", "Artichoke Hearts", "Lemon", "Potatoes" ],
+    "Timeslot": "Dinner",
+    "Price": 16.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Spring Vegetable Frittata",
+    "Description": "An oven-baked frittata filled with seasonal vegetables like zucchini, bell peppers, and fresh herbs.",
+    "Ingredients": [ "Eggs", "Zucchini", "Bell Peppers", "Herbs" ],
+    "Timeslot": "Brunch/Lunch",
+    "Price": 11.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Vegetarian",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Lemon Herb Grilled Salmon",
+    "Description": "Fresh salmon fillet marinated in a zesty lemon herb sauce, grilled to perfection.",
+    "Ingredients": [ "Salmon Fillet", "Lemon", "Herbs" ],
+    "Timeslot": "Dinner",
+    "Price": 18.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Seafood",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Springtime Veggie Pasta",
+    "Description": "Pasta tossed with seasonal veggies like cherry tomatoes, asparagus, and peas in a light garlic butter sauce.",
+    "Ingredients": [ "Pasta", "Cherry Tomatoes", "Asparagus", "Peas", "Garlic", "Butter" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 13.99,
+    "PotentialAllergens": [ "Dairy" ],
+    "Icon": "Vegetarian",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Berry Citrus Tart",
+    "Description": "A tangy citrus-infused tart topped with fresh mixed berries and a light glaze.",
+    "Ingredients": [ "Citrus Zest", "Mixed Berries", "Pastry Dough" ],
+    "Timeslot": "Dessert",
+    "Price": 9.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Dessert",
+    "Season": "Spring"
+  },
+  {
+    "Name": "Caprese Salad",
+    "Description": "A classic Italian salad featuring fresh tomatoes, mozzarella, and basil, drizzled with balsamic reduction.",
+    "Ingredients": [ "Tomatoes", "Mozzarella", "Basil", "Balsamic Vinegar" ],
+    "Timeslot": "Appetizer",
+    "Price": 12.99,
+    "PotentialAllergens": [ "Dairy" ],
+    "Icon": "Vegetarian",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Grilled Shrimp Skewers",
+    "Description": "Juicy shrimp skewers marinated in garlic, lemon, and herbs, served with a side of fresh mango salsa.",
+    "Ingredients": [ "Shrimp", "Garlic", "Lemon", "Herbs", "Mango" ],
+    "Timeslot": "Dinner",
+    "Price": 18.99,
+    "PotentialAllergens": [ "Shellfish" ],
+    "Icon": "Seafood",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Summer Vegetable Pasta",
+    "Description": "Pasta tossed with grilled summer vegetables, garlic, olive oil, and fresh herbs.",
+    "Ingredients": [ "Pasta", "Zucchini", "Cherry Tomatoes", "Garlic", "Fresh Herbs" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 14.99,
+    "PotentialAllergens": [ "Gluten" ],
+    "Icon": "Vegetarian",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Watermelon Feta Salad",
+    "Description": "Chunks of refreshing watermelon with feta cheese, mint, and a zesty citrus dressing.",
+    "Ingredients": [ "Watermelon", "Feta Cheese", "Mint", "Citrus" ],
+    "Timeslot": "Appetizer",
+    "Price": 10.99,
+    "PotentialAllergens": [ "Dairy" ],
+    "Icon": "Vegetarian",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Grilled Chicken Caesar Salad",
+    "Description": "Grilled chicken over crisp romaine lettuce with croutons, Parmesan cheese, and Caesar dressing.",
+    "Ingredients": [ "Chicken Breast", "Romaine Lettuce", "Croutons", "Parmesan Cheese" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 16.99,
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
+    "Icon": "Meat",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Mango Avocado Salsa",
+    "Description": "A vibrant salsa made with ripe mango, avocado, red onion, cilantro, and lime juice.",
+    "Ingredients": [ "Mango", "Avocado", "Red Onion", "Cilantro", "Lime Juice" ],
+    "Timeslot": "Appetizer",
+    "Price": 9.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Vegetarian",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Berry Spinach Salad",
+    "Description": "Fresh spinach leaves tossed with assorted berries, goat cheese, and a raspberry vinaigrette.",
+    "Ingredients": [ "Spinach", "Assorted Berries", "Goat Cheese", "Raspberry Vinaigrette" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 13.99,
+    "PotentialAllergens": [ "Dairy" ],
+    "Icon": "Vegetarian",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Lemon Herb Grilled Fish",
+    "Description": "Lightly seasoned fish fillet grilled with lemon and herbs, served with roasted summer vegetables.",
+    "Ingredients": [ "Fish Fillet", "Lemon", "Herbs", "Summer Vegetables" ],
+    "Timeslot": "Dinner",
+    "Price": 19.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Seafood",
+    "Season": "Summer"
+  },
+  {
+    "Name": "Butternut Squash Soup",
+    "Description": "Creamy butternut squash soup with a hint of cinnamon and nutmeg, topped with roasted pumpkin seeds.",
+    "Ingredients": [ "Butternut Squash", "Cinnamon", "Nutmeg", "Pumpkin Seeds" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 11.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Vegetarian",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Maple Glazed Pork Chops",
+    "Description": "Juicy pork chops glazed with a maple syrup reduction, served with roasted apples and sage-infused potatoes.",
+    "Ingredients": [ "Pork Chops", "Maple Syrup", "Apples", "Sage", "Potatoes" ],
+    "Timeslot": "Dinner",
+    "Price": 20.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Harvest Salad",
+    "Description": "Mixed greens with roasted butternut squash, cranberries, pecans, and a balsamic vinaigrette.",
+    "Ingredients": [ "Mixed Greens", "Butternut Squash", "Cranberries", "Pecans", "Balsamic Vinaigrette" ],
+    "Timeslot": "Appetizer",
+    "Price": 12.99,
+    "PotentialAllergens": [ "Nuts" ],
+    "Icon": "Vegetarian",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Apple Cider Glazed Chicken",
+    "Description": "Chicken breasts glazed in apple cider reduction, served with roasted root vegetables and thyme-infused rice.",
+    "Ingredients": [ "Chicken Breasts", "Apple Cider", "Root Vegetables", "Thyme", "Rice" ],
+    "Timeslot": "Dinner",
+    "Price": 18.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Pumpkin Ravioli",
+    "Description": "Homemade ravioli stuffed with roasted pumpkin, ricotta, and a sage brown butter sauce.",
+    "Ingredients": [ "Pumpkin", "Ricotta Cheese", "Sage", "Pasta Dough" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 15.99,
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
+    "Icon": "Vegetarian",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Cranberry Walnut Bread",
+    "Description": "Freshly baked bread loaded with cranberries and walnuts, served with whipped honey butter.",
+    "Ingredients": [ "Flour", "Cranberries", "Walnuts", "Honey Butter" ],
+    "Timeslot": "Appetizer",
+    "Price": 8.99,
+    "PotentialAllergens": [ "Nuts", "Gluten" ],
+    "Icon": "Vegetarian",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Roasted Vegetable Quinoa Bowl",
+    "Description": "Quinoa mixed with roasted seasonal vegetables, topped with a tahini dressing and toasted pumpkin seeds.",
+    "Ingredients": [ "Quinoa", "Seasonal Vegetables", "Tahini", "Pumpkin Seeds" ],
+    "Timeslot": "Lunch/Dinner",
+    "Price": 14.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Vegetarian",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Cinnamon Apple Crisp",
+    "Description": "Warm cinnamon-spiced apple slices topped with a crispy oat and brown sugar crumble, served with vanilla ice cream.",
+    "Ingredients": [ "Apples", "Cinnamon", "Oats", "Brown Sugar", "Vanilla Ice Cream" ],
+    "Timeslot": "Dessert",
+    "Price": 9.99,
+    "PotentialAllergens": [ "Gluten", "Dairy" ],
+    "Icon": "Dessert",
+    "Season": "Fall"
+  },
+  {
+    "Name": "Slow-Cooked Beef Stew",
+    "Description": "Tender beef chunks stewed with root vegetables, aromatic herbs, and red wine, served with crusty bread.",
+    "Ingredients": [ "Beef Chunks", "Root Vegetables", "Red Wine", "Herbs", "Crusty Bread" ],
+    "Timeslot": "Dinner",
+    "Price": 22.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Roasted Winter Vegetable Lasagna",
+    "Description": "Layers of roasted seasonal vegetables, creamy béchamel, and melted cheese between sheets of pasta.",
+    "Ingredients": [ "Seasonal Vegetables", "Pasta", "Béchamel Sauce", "Cheese" ],
+    "Timeslot": "Dinner",
+    "Price": 19.99,
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
+    "Icon": "Vegetarian",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Braised Lamb Shanks",
+    "Description": "Lamb shanks slow-cooked in a rich red wine sauce with rosemary and served with garlic mashed potatoes.",
+    "Ingredients": [ "Lamb Shanks", "Red Wine", "Rosemary", "Potatoes", "Garlic" ],
+    "Timeslot": "Dinner",
+    "Price": 28.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Butternut Squash Ravioli",
+    "Description": "Handmade ravioli stuffed with roasted butternut squash and topped with a sage-infused brown butter sauce.",
+    "Ingredients": [ "Butternut Squash", "Ravioli Dough", "Sage", "Butter" ],
+    "Timeslot": "Dinner",
+    "Price": 17.99,
+    "PotentialAllergens": [ "Dairy", "Gluten" ],
+    "Icon": "Vegetarian",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Pot Roast with Winter Vegetables",
+    "Description": "Tender pot roast served with a medley of roasted winter vegetables and a side of savory gravy.",
+    "Ingredients": [ "Pot Roast", "Winter Vegetables", "Gravy" ],
+    "Timeslot": "Dinner",
+    "Price": 24.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Mushroom and Chestnut Risotto",
+    "Description": "Creamy risotto with sautéed mushrooms, roasted chestnuts, and a touch of parmesan cheese.",
+    "Ingredients": [ "Arborio Rice", "Mushrooms", "Chestnuts", "Parmesan Cheese" ],
+    "Timeslot": "Dinner",
+    "Price": 18.99,
+    "PotentialAllergens": [ "Dairy" ],
+    "Icon": "Vegetarian",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Pork Tenderloin with Cranberry Glaze",
+    "Description": "Juicy pork tenderloin glazed with tangy cranberry sauce, accompanied by roasted sweet potatoes.",
+    "Ingredients": [ "Pork Tenderloin", "Cranberry Glaze", "Sweet Potatoes" ],
+    "Timeslot": "Dinner",
+    "Price": 21.99,
+    "PotentialAllergens": [ "None" ],
+    "Icon": "Meat",
+    "Season": "Winter"
+  },
+  {
+    "Name": "Vegetable Pot Pie",
+    "Description": "A hearty pot pie filled with seasonal vegetables, lentils, and topped with a flaky puff pastry crust.",
+    "Ingredients": [ "Seasonal Vegetables", "Lentils", "Puff Pastry" ],
+    "Timeslot": "Dinner",
+    "Price": 16.99,
+    "PotentialAllergens": [ "Gluten" ],
+    "Icon": "Vegetarian",
+    "Season": "Winter"
+  }
+
+]
